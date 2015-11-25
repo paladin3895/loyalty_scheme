@@ -12,5 +12,8 @@
 */
 
 $app->get('/', function () use ($app) {
-    return $app->welcome();
+    $user = \App\Models\Entity::first();
+    $user->name = 'david';
+    $user->email = 'duydatyds@gmail.com';
+    return $user;
 });
