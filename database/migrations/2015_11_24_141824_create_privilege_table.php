@@ -19,6 +19,7 @@ class CreatePrivilegeTable extends Migration
             $table->tinyInteger('type');
             $table->text('context');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

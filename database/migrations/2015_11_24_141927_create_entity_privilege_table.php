@@ -12,10 +12,21 @@ class CreateEntityPrivilegeTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_privilege', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
+        Schema::create('entity_privilege', function (Blueprint $table) {
+            $table->integer('entity_id')->unsigned();
             $table->integer('privilege_id')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('entity_id')
+                  ->references('id')
+                  ->on('entity')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreign('privilege_id')
+                  ->references('id')
+                  ->on('privilege')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 
@@ -26,6 +37,6 @@ class CreateEntityPrivilegeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_privilege');
+        Schema::dropIfExists('entity_privilege');
     }
 }

@@ -18,6 +18,7 @@ class CreatePolicyTable extends Migration
             $table->text('description');
             $table->text('config');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

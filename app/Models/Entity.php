@@ -32,14 +32,26 @@ class Entity extends BaseModel
         'attributes' => 'object'
     ];
 
-    public function getAttribute($key) {
+    public function getAttribute($key)
+    {
         if (!isset($this->bucket)) $this->bucket = json_decode($this->attributes['attributes']);
         return $this->bucket->$key;
     }
 
-    public function setAttribute($key, $value) {
+    public function setAttribute($key, $value)
+    {
         if (!isset($this->bucket)) $this->bucket = json_decode($this->attributes['attributes']);
         $this->bucket->$key = $value;
         $this->attributes['attributes'] = json_encode($this->bucket);
+    }
+
+    public function checkpoints()
+    {
+        return $this->hasMany('App\Models\Checkpoint', 'entity_id', 'id');
+    }
+
+    public function privileges()
+    {
+        return $this->hasMany('App\Models\Privilege', 'entity_id', 'id');
     }
 }

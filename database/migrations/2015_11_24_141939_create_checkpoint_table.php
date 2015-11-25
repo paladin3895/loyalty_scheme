@@ -14,10 +14,21 @@ class CreateCheckpointTable extends Migration
     {
         Schema::create('checkpoint', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
+            $table->integer('entity_id')->unsigned();
             $table->integer('schema_id')->unsigned();
             $table->text('state');
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('entity_id')
+                  ->references('id')
+                  ->on('entity')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreign('schema_id')
+                  ->references('id')
+                  ->on('schema')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
     }
 

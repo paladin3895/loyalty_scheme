@@ -18,6 +18,7 @@ class CreateSchemaTable extends Migration
             $table->text('nodes');
             $table->text('links');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -16,6 +16,7 @@ class CreateEntityTable extends Migration
             $table->increments('id');
             $table->text('attributes');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
