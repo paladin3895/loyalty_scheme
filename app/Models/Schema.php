@@ -19,15 +19,13 @@ class Schema extends BaseModel
      */
     protected $fillable = ['name', 'description', 'nodes', 'links'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
     protected $casts = [
         'nodes' => 'array',
         'links' => 'array',
     ];
+
+    public function getPoliciesAttribute()
+    {
+        // TODO: implement logic here to retrieve policies
+    }
 }

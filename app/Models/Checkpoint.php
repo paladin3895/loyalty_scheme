@@ -19,14 +19,12 @@ class Checkpoint extends BaseModel
      */
     protected $fillable = ['entity_id', 'schema_id', 'state'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
     protected $casts = [
         'state' => 'array'
     ];
+
+    public function entity()
+    {
+        return $this->belongsTo('App\Models\Entity');
+    }
 }

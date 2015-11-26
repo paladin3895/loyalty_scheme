@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Privilege extends BaseModel
 {
-
+    use Traits\DynamicFieldTrait;
     /**
      * The database table used by the model.
      *
@@ -19,14 +19,9 @@ class Privilege extends BaseModel
      */
     protected $fillable = ['name', 'description', 'type', 'context'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [];
+    protected $staticFields = ['id', 'name', 'description', 'type', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
 
-    protected $bucket;
+    protected $dynamicField = 'context';
 
     protected $casts = [
         'context' => 'object'

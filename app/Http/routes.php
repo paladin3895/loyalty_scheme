@@ -13,7 +13,7 @@
 
 $app->get('/', function () use ($app) {
     $user = \App\Models\Entity::first();
-    $user->name = 'david';
+    $user->name = 'david pham';
     $user->email = 'duydatyds@gmail.com';
-    return $user;
+    return $user->privileges()->get();
 });

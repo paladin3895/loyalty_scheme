@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Policy extends BaseModel
 {
-
+    use Traits\DynamicFieldTrait;
     /**
      * The database table used by the model.
      *
@@ -19,14 +19,9 @@ class Policy extends BaseModel
      */
     protected $fillable = ['name', 'description', 'config'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [];
+    protected $staticFields = ['id', 'name', 'description', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
 
-    protected $bucket;
+    protected $dynamicField = 'config';
 
     protected $casts = [
         'config' => 'object'
