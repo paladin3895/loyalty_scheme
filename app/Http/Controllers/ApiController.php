@@ -22,21 +22,19 @@ abstract class ApiController extends BaseController
     public function index(Request $request)
     {
         $records = $this->repository->get();
-        return $records;
+        return $this->success($records->toArray());
     }
 
     public function extract(Request $request)
     {
         $records = $this->repository->count();
-        return [
-            'count' => $records
-        ];
+        return $this->success(['count' => $records]);
     }
 
     public function show($id)
     {
         $record = $this->repository->find($id);
-        return $record;
+        return $this->success($record->toArray());
     }
 
     public function create(Request $request)
@@ -46,7 +44,7 @@ abstract class ApiController extends BaseController
         $data = $request->input($this->entpoind);
         $record = $this->repository->create($data);
         if (!$record) throw new \Exception('cannot create endpoint');
-        return $record;
+        return $this->success($record->toArray());
     }
 
     public function update($id, Request $request)
@@ -58,7 +56,7 @@ abstract class ApiController extends BaseController
         if (!$record) throw new \Exception('endpoint not found');
         if (!$record->update($data))
             throw new \Exception('cannot update endpoint');
-        return $record;
+        return $this->success($record->toArray());
     }
 
     public function delete($id)
@@ -67,11 +65,14 @@ abstract class ApiController extends BaseController
         if (!$record) throw new \Exception('endpoint not found');
         if (!$record->delete())
             throw new \Exception('cannot delete endpoint');
-        return $record;
+        return $this->success($record->toArray());
     }
 
-    public function apply()
+    protected function success(array $data)
     {
-
+        return [
+            'status' => 1,
+            "$this->endpoint" => $data
+        ];
     }
 }
