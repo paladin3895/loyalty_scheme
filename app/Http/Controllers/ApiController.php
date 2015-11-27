@@ -11,8 +11,6 @@ abstract class ApiController extends BaseController
 {
     protected $endpoint;
 
-    protected $validations;
-
     protected $repository;
 
     public function __construct() {
@@ -37,28 +35,6 @@ abstract class ApiController extends BaseController
         return $this->success($record->toArray());
     }
 
-    public function create(Request $request)
-    {
-        if (!$request->has($this->endpoint))
-            throw new \Exception('no endpoint data');
-        $data = $request->input($this->entpoind);
-        $record = $this->repository->create($data);
-        if (!$record) throw new \Exception('cannot create endpoint');
-        return $this->success($record->toArray());
-    }
-
-    public function update($id, Request $request)
-    {
-        if (!$request->has($this->endpoint))
-            throw new \Exception('no endpoint data');
-        $data = $request->input($this->entpoind);
-        $record = $this->repository->find($id);
-        if (!$record) throw new \Exception('endpoint not found');
-        if (!$record->update($data))
-            throw new \Exception('cannot update endpoint');
-        return $this->success($record->toArray());
-    }
-
     public function delete($id)
     {
         $record = $this->repository->find($id);
@@ -67,6 +43,12 @@ abstract class ApiController extends BaseController
             throw new \Exception('cannot delete endpoint');
         return $this->success($record->toArray());
     }
+
+    abstract public function create(Request $request);
+
+    abstract public function update($id, Request $request);
+
+    abstract public function change($id, Request $request);
 
     protected function success(array $data)
     {
