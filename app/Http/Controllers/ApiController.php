@@ -11,6 +11,8 @@ abstract class ApiController extends BaseController
 {
     protected $endpoint;
 
+    protected $endpoints;
+
     protected $repository;
 
     public function __construct() {
@@ -25,13 +27,18 @@ abstract class ApiController extends BaseController
 
     public function extract(Request $request)
     {
-        $records = $this->repository->count();
-        return $this->success(['count' => $records]);
+        $results['count'] = $this->repository->count();
+        $response = new Response();
+        foreach ($results as $key => $value) {
+            $response->header("Data-{$this->endpoint}-{$key}", $value);
+        }
+        return $response;
     }
 
     public function show($id)
     {
         $record = $this->repository->find($id);
+        if (!$record) throw new \Exception('endpoint not found');
         return $this->success($record->toArray());
     }
 
