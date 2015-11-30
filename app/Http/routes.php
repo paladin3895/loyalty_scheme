@@ -48,4 +48,19 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
     $api->patch('/privilege/{id:[0-9]+}', ['as' => 'privilege_update', 'uses' => 'PrivilegeController@update']);
     $api->delete('/privilege/{id:[0-9]+}', ['as' => 'privilege_delete', 'uses' => 'PrivilegeController@delete']);
     $api->match('head', '/privilege', ['as' => 'privilege_extract', 'uses' => 'PrivilegeController@extract']);
+
+    $api->get('/entity/{entity_id:[0-9]+}/schema/{schema_id:[0-9]+}', [
+        'as' => 'entity_get_schema_checkpoint',
+        'uses' => 'CompoundController@getEntitySchemaCheckpoint'
+    ]);
+
+    $api->post('/entity/{entity_id:[0-9]+}/schema/{schema_id:[0-9]+}', [
+        'as' => 'entity_apply_schema',
+        'uses' => 'CompoundController@applyEntitySchema'
+    ]);
+
+    $api->get('/entity/{entity_id:[0-9]}/privileges', [
+        'as' => 'entity_get_privileges',
+        'uses' => 'CompoundController@getEntityPrivileges'
+    ]);
 });

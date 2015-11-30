@@ -9,7 +9,5 @@ class SchemaController extends ApiController
 {
     protected $endpoint = 'schema';
 
-    protected $validations = [];
-
     protected $repository = 'App\Models\Schema';
 }

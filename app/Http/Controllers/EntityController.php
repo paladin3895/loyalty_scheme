@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Liquid\Schema;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

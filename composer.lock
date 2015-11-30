@@ -1201,12 +1201,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/queue.git",
-                "reference": "f226292511b585441d4c746e1bb847afe4dc9eb8"
+                "reference": "a57ed9d9ba1384537993caaac84056504642e757"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/illuminate/queue/zipball/a57ed9d9ba1384537993caaac84056504642e757",
-                "reference": "f226292511b585441d4c746e1bb847afe4dc9eb8",
+                "reference": "a57ed9d9ba1384537993caaac84056504642e757",
                 "shasum": ""
             },
             "require": {
@@ -1222,7 +1222,7 @@
             "suggest": {
                 "aws/aws-sdk-php": "Required to use the SQS queue driver (~3.0).",
                 "illuminate/redis": "Required to use the redis queue driver (5.1.*).",
-                "iron-io/iron_mq": "Required to use the iron queue driver (~2.0|~4.0).",
+                "iron-io/iron_mq": "Required to use the iron queue driver (~2.0).",
                 "pda/pheanstalk": "Required to use the beanstalk queue driver (~3.0)."
             },
             "type": "library",
@@ -1251,7 +1251,7 @@
             ],
             "description": "The Illuminate Queue package.",
             "homepage": "http://laravel.com",
-            "time": "2015-11-19 14:14:48"
+            "time": "2015-11-26 14:42:48"
         },
         {
             "name": "illuminate/routing",
@@ -1707,12 +1707,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "055125a98d92ce5fa8946e5f80cdf52405244120"
+                "reference": "cab3ff71ffc802af272928ff71341cfc51e8ee98"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/Seldaek/monolog/zipball/cab3ff71ffc802af272928ff71341cfc51e8ee98",
-                "reference": "055125a98d92ce5fa8946e5f80cdf52405244120",
+                "reference": "cab3ff71ffc802af272928ff71341cfc51e8ee98",
                 "shasum": ""
             },
             "require": {
@@ -1777,7 +1777,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-11-21 00:43:47"
+            "time": "2015-11-26 23:48:42"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -2121,12 +2121,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "e5d89401d5264d29a6b41cc0c413e11b4ac44f04"
+                "reference": "d371ecb85254a8dff7f6d843bf49d1197e7d533e"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/debug/zipball/d371ecb85254a8dff7f6d843bf49d1197e7d533e",
-                "reference": "e5d89401d5264d29a6b41cc0c413e11b4ac44f04",
+                "reference": "d371ecb85254a8dff7f6d843bf49d1197e7d533e",
                 "shasum": ""
             },
             "require": {
@@ -2170,7 +2170,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-26 07:00:59"
+            "time": "2015-11-27 05:45:55"
         },
         {
             "name": "symfony/dom-crawler",
@@ -2825,12 +2825,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "008e69f17a1286c29b8a60082119b7d6eee69082"
+                "reference": "4e85a5fd3c8e51e2757fc6f17537f0564d251a17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/008e69f17a1286c29b8a60082119b7d6eee69082",
-                "reference": "008e69f17a1286c29b8a60082119b7d6eee69082",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/4e85a5fd3c8e51e2757fc6f17537f0564d251a17",
+                "reference": "4e85a5fd3c8e51e2757fc6f17537f0564d251a17",
                 "shasum": ""
             },
             "require": {
@@ -2867,7 +2867,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2015-11-16 08:55:57"
+            "time": "2015-11-27 10:17:02"
         },
         {
             "name": "phpspec/prophecy",

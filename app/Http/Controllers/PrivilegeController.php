@@ -9,7 +9,5 @@ class PrivilegeController extends ApiController
 {
     protected $endpoint = 'privilege';
 
-    protected $validations = [];
-
     protected $repository = 'App\Models\Privilege';
 }

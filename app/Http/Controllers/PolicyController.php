@@ -9,7 +9,5 @@ class PolicyController extends ApiController
 {
     protected $endpoint = 'policy';
 
-    protected $validations = [];
-
     protected $repository = 'App\Models\Policy';
 }
