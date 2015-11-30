@@ -11,8 +11,6 @@ abstract class ApiController extends BaseController
 {
     protected $endpoint;
 
-    protected $endpoints;
-
     protected $repository;
 
     public function __construct() {
@@ -53,9 +51,9 @@ abstract class ApiController extends BaseController
 
     abstract public function create(Request $request);
 
-    abstract public function update($id, Request $request);
+    abstract public function edit($id, Request $request);
 
-    abstract public function change($id, Request $request);
+    abstract public function update($id, Request $request);
 
     protected function success(array $data)
     {

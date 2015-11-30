@@ -27,4 +27,10 @@ trait DynamicFieldTrait
             parent::setAttribute($key, $value);
         }
     }
+
+    public function clearDynamicFields()
+    {
+        $this->attributes[$this->dynamicField] = '{}';
+        $this->bucket = null;
+    }
 }
