@@ -25,22 +25,22 @@ class CompoundController
 
         $checkpoint = $entity->checkpoints()->where('schema_id', $schema_id)->first();
         if (!$checkpoint) throw new \Exception('no checkpoint for this schema');
-
-        return $this->success($checkpoint->toArray());
+        return $this->success(['checkpoint' => $checkpoint->toArray()]);
     }
 
-    public function applyEntitySchema($entity_id, $schema_id, Schema $liquid_schema)
+    public function applyEntitySchema($entity_id, $schema_id, \Liquid\Schema $liquid_schema)
     {
         $entity = $this->entity->find($entity_id);
         if (!$entity) throw new \Exception('entity not exists');
+        $entity = $entity->toArray();
 
         $schema = $this->schema->find($schema_id);
         if (!$schema) throw new \Exception('schema not exists');
 
         $registry = $liquid_schema->build($schema->toArray());
-        $registry->process(($entity->toArray())['attributes']);
+        $registry->process($entity['attributes']);
 
-        return $this->success($this->repository->find($entity_id)->toArray());
+        return $this->success(['entity' => $this->repository->find($entity_id)->toArray()]);
     }
 
     public function getEntityPrivileges($entity_id)
@@ -50,14 +50,16 @@ class CompoundController
 
         $privileges = $entity->privileges()->get();
 
-        return $this->success($privileges->toArray());
+        return $this->success(['privileges' => $privileges->toArray()]);
     }
 
-    protected function success(array $data)
+    public function success(array $data)
     {
-        return [
-            'status' => 1,
-            "$this->endpoint" => $data
-        ];
+        $results = [];
+        $results['status'] = 1;
+        foreach ($data as $key => $value) {
+            $results[$key] = $value;
+        }
+        return $results;
     }
 }

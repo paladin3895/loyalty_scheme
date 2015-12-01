@@ -40,6 +40,8 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
     $api->patch('/policy/{id:[0-9]+}', ['as' => 'policy_update', 'uses' => 'PolicyController@update']);
     $api->delete('/policy/{id:[0-9]+}', ['as' => 'policy_delete', 'uses' => 'PolicyController@delete']);
     $api->match('head', '/policy', ['as' => 'policy_extract', 'uses' => 'PolicyController@extract']);
+    $api->get('/policy/units', ['as' => 'policy_units', 'uses' => 'PolicyController@unitComponents']);
+    $api->get('/policy/algorithms', ['as' => 'policy_algorithms', 'uses' => 'PolicyController@algorithmComponents']);
 
     $api->post('/privileges', ['as' => 'privilege_create', 'uses' => 'PrivilegeController@create']);
     $api->get('/privileges', ['as' => 'privilege_index', 'uses' => 'PrivilegeController@index']);
@@ -59,7 +61,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         'uses' => 'CompoundController@applyEntitySchema'
     ]);
 
-    $api->get('/entity/{entity_id:[0-9]}/privileges', [
+    $api->get('/entity/{entity_id:[0-9]+}/privileges', [
         'as' => 'entity_get_privileges',
         'uses' => 'CompoundController@getEntityPrivileges'
     ]);
