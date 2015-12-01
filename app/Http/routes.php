@@ -11,8 +11,7 @@
 |
 */
 
-// $app->get('/', function () use ($app) {
-// });
+$app->get('/', ['as' => 'liquid', 'uses' => 'LiquidController@index']);
 
 $api = app('Dingo\Api\Routing\Router');
 
