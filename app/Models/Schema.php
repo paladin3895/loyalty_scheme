@@ -17,15 +17,15 @@ class Schema extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'nodes', 'links'];
+    protected $fillable = ['name', 'description'];
 
-    protected $casts = [
-        'nodes' => 'array',
-        'links' => 'array',
-    ];
-
-    public function getPoliciesAttribute()
+    public function nodes()
     {
-        // TODO: implement logic here to retrieve policies
+        return $this->hasMany('App\Models\Node', 'schema_id', 'id');
+    }
+
+    public function links()
+    {
+        return $this->hasMany('App\Models\Link', 'schema_id', 'id');
     }
 }

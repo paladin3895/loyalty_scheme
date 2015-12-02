@@ -1,4 +1,3 @@
-
 function init() {
   var GO = go.GraphObject.make;  // for conciseness in defining templates
   myDiagram =
@@ -69,8 +68,7 @@ function init() {
              });
   }
   // define the Node templates for regular nodes
-  var lightText = 'black';
-  myDiagram.nodeTemplateMap.add("continous",  // the default category
+  myDiagram.nodeTemplateMap.add("policy",  // the default category
     GO(go.Node, "Spot", nodeStyle(),
       // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
       GO(go.Panel, "Auto",
@@ -78,93 +76,14 @@ function init() {
           { fill: "lightgreen", stroke: null }),
         GO(go.TextBlock,
           {
-            font: "bold 11pt Helvetica, Arial, sans-serif",
-            stroke: lightText,
+            font: "bold 10pt Helvetica, Arial, sans-serif",
+            stroke: 'black',
             margin: 8,
-            maxSize: new go.Size(160, NaN),
+            maxSize: new go.Size(100, NaN),
             wrap: go.TextBlock.WrapFit,
             editable: true
           },
           new go.Binding("text", "name").makeTwoWay())
-      ),
-      // four named ports, one on each side:
-      makePort("T", go.Spot.Top, false, true),
-      // makePort("L", go.Spot.Left, true, true),
-      // makePort("R", go.Spot.Right, true, true)
-      makePort("B", go.Spot.Bottom, true, true)
-    ));
-  myDiagram.nodeTemplateMap.add("parallel",  // the default category
-    GO(go.Node, "Spot", nodeStyle(),
-      // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-      GO(go.Panel, "Auto",
-        GO(go.Shape, "Rectangle",
-          { fill: "lightblue", stroke: null }),
-        GO(go.TextBlock,
-          {
-            font: "bold 11pt Helvetica, Arial, sans-serif",
-            stroke: lightText,
-            margin: 8,
-            maxSize: new go.Size(160, NaN),
-            wrap: go.TextBlock.WrapFit,
-            editable: true
-          },
-          new go.Binding("text", "name").makeTwoWay())
-      ),
-      // four named ports, one on each side:
-      makePort("T", go.Spot.Top, false, true),
-      // makePort("L", go.Spot.Left, true, true),
-      // makePort("R", go.Spot.Right, true, true)
-      makePort("B", go.Spot.Bottom, true, true)
-    ));
-  myDiagram.nodeTemplateMap.add("merging",  // the default category
-    GO(go.Node, "Spot", nodeStyle(),
-      // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-      GO(go.Panel, "Auto",
-        GO(go.Shape, "Rectangle",
-          { fill: "yellow", stroke: null }),
-        GO(go.TextBlock,
-          {
-            font: "bold 11pt Helvetica, Arial, sans-serif",
-            stroke: lightText,
-            margin: 8,
-            maxSize: new go.Size(160, NaN),
-            wrap: go.TextBlock.WrapFit,
-            editable: true
-          },
-          new go.Binding("text", "name").makeTwoWay())
-      ),
-      // four named ports, one on each side:
-      makePort("T", go.Spot.Top, false, true),
-      // makePort("L", go.Spot.Left, true, true),
-      // makePort("R", go.Spot.Right, true, true)
-      makePort("B", go.Spot.Bottom, true, true)
-    ));
-  myDiagram.nodeTemplateMap.add("executive",  // the default category
-    GO(go.Node, "Spot", nodeStyle(),
-      // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-      GO(go.Panel, "Auto",
-        GO(go.Shape, "Rectangle",
-          { fill: "lightcoral", stroke: null }),
-        GO(go.TextBlock,
-          {
-            font: "bold 11pt Helvetica, Arial, sans-serif",
-            stroke: lightText,
-            margin: 8,
-            maxSize: new go.Size(160, NaN),
-            wrap: go.TextBlock.WrapFit,
-            editable: true
-          },
-          new go.Binding("text", "name").makeTwoWay()),
-          GO(go.TextBlock,
-            {
-              font: "bold 11pt Helvetica, Arial, sans-serif",
-              stroke: lightText,
-              margin: 8,
-              maxSize: new go.Size(160, NaN),
-              wrap: go.TextBlock.WrapFit,
-              editable: true
-            },
-          new go.Binding("text", "description").makeTwoWay())
       ),
       // four named ports, one on each side:
       makePort("T", go.Spot.Top, false, true),
@@ -231,27 +150,10 @@ function init() {
   myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
   myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
   load();  // load an initial diagram from some JSON text
-  // initialize the Palette that is on the left side of the page
-  myPalette =
-    GO(go.Palette, "myPalette",  // must name or refer to the DIV HTML element
-      {
-        initialContentAlignment: go.Spot.Center,
-        "animationManager.duration": 800, // slightly longer than default (600ms) animation
-        nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
-        model: new go.GraphLinksModel([  // specify the contents of the Palette
-          // { category: "Start", text: "Start" },
-          { name: "continous", category: "continous", units: [] },
-          { name: "parallel", category: "parallel", units: [] },
-          { name: "merging", category: "merging", units: [] },
-          { name: "executive", category: "executive", units: [] },
-          // { text: "???", figure: "Diamond" },
-          // { category: "End", text: "End" },
-          // { category: "Comment", text: "Comment" }
-        ])
-      });
+
   listSchema();
   getUnitFormats();
-  // getAlgorithmFormats();
+  getAlgorithmFormats(GO);
 }
 
 // Make link labels visible if coming out of a "conditional" node.
@@ -413,10 +315,39 @@ function getUnitFormats() {
   })
 }
 
-function getAlgorithmFormats() {
+function getAlgorithmFormats(GO) {
   ajax('GET', 'policy/algorithms', {},
   function (data) {
-    parseFormats(data);
+    data = JSON.parse(data);
+    var nodes = [];
+    for (node in data) {
+      nodes.push({
+        name: node,
+        category: 'policy',
+        algorithm: data,
+        units: []
+      });
+    }
+    // parseFormats(data);
+    // initialize the Palette that is on the left side of the page
+    myPalette =
+      GO(go.Palette, "myPalette",  // must name or refer to the DIV HTML element
+        {
+          initialContentAlignment: go.Spot.Center,
+          "animationManager.duration": 800, // slightly longer than default (600ms) animation
+          nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
+          model: new go.GraphLinksModel(nodes)
+            //[  specify the contents of the Palette
+            // { category: "Start", text: "Start" },
+            // { name: "continous", category: "policy", units: [] },
+            // { name: "parallel", category: "parallel", units: [] },
+            // { name: "merging", category: "merging", units: [] },
+            // { name: "executive", category: "executive", units: [] },
+            // { text: "???", figure: "Diamond" },
+            // { category: "End", text: "End" },
+            // { category: "Comment", text: "Comment" }
+            // ]
+        });
   })
 }
 
