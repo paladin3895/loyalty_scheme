@@ -1,59 +1,90 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Entity;
-use App\Models\Schema;
+use Laravel\Lumen\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
-class CompoundController
+use ReflectionClass;
+
+abstract class CompoundController extends BaseController
 {
-    protected $entity;
+    protected $repository;
 
-    protected $schema;
+    protected $foreignKey;
 
-    public function __construct(
-        Entity $entity,
-        Schema $schema
-    ) {
-        $this->entity = $entity;
-        $this->schema = $schema;
-    }
+    protected $validations = [];
 
-    public function getEntitySchemaCheckpoint($entity_id, $schema_id)
+    protected $endpoints = [];
+
+    protected $allowMethods = [];
+
+    public function listEndpoint($id, $endpoint)
     {
-        $entity = $this->entity->find($entity_id);
-        if (!$entity) throw new \Exception('entity not exists');
-
-        $checkpoint = $entity->checkpoints()->where('schema_id', $schema_id)->first();
-        if (!$checkpoint) throw new \Exception('no checkpoint for this schema');
-        return $this->success(['checkpoint' => $checkpoint->toArray()]);
+        $records = $this->resolveEndpoint($endpoint)->where($foreignKey, $id)->get();
+        return $this->success([$endpoint => $records]);
     }
 
-    public function applyEntitySchema($entity_id, $schema_id, \Liquid\Schema $liquid_schema)
+    public function showEndpoint($id, $endpoint, $endpoint_id)
     {
-        $entity = $this->entity->find($entity_id);
-        if (!$entity) throw new \Exception('entity not exists');
-        $entity = $entity->toArray();
-
-        $schema = $this->schema->find($schema_id);
-        if (!$schema) throw new \Exception('schema not exists');
-
-        $registry = $liquid_schema->build($schema->toArray());
-        $registry->process($entity['attributes']);
-
-        return $this->success(['entity' => $this->repository->find($entity_id)->toArray()]);
+        $record = $this->resolveEndpoint($endpoint)->where($foreignKey, $id)->where('id', $endpoint_id)->first();
+        if (!$record)
+            throw new \Exception('endpoint not exists');
+        return $this->success([$endpoint => $record];
     }
 
-    public function getEntityPrivileges($entity_id)
+    public function createEndpoint($id, $endpoint, Request $request)
     {
-        $entity = $this->entity->find($entity_id);
-        if (!$entity) throw new \Exception('entity not exists');
-
-        $privileges = $entity->privileges()->get();
-
-        return $this->success(['privileges' => $privileges->toArray()]);
+        $data = $request->input($endpoint);
+        if (!$data)
+            throw new \Exception('missing data for endpoint');
+        $data = $this->validate($data);
+        $data[$this->foreignKey] = $id;
+        $record = $this->resolveEndpoint($endpoint)->create($data);
+        if (!$record)
+            throw new \Exception('cannot create endpoint');
+        return $this->success([$endpoint => $record]);
     }
 
-    public function success(array $data)
+    public function updateEndpoint($id, $endpoint, $endpoint_id, Request $request)
+    {
+        $data = $request->input($endpoint);
+        if (!$data)
+            throw new \Exception('missing data for endpoint');
+        $record = $this->resolveEndpoint($endpoint)->where('id', $endpoint_id)->first();
+        if (!$record)
+            throw new \Exception('endpoint not exists');
+        if (!$record->update($data))
+            throw new \Exception('cannot update endpoint');
+        return $this->success([$endpoint => $record]);
+    }
+
+    public function deleteEndpoint($id, $endpoint, $endpoint_id)
+    {
+        $record = $this->resolveEndpoint($endpoint)->where('id', $endpoint_id)->first();
+        if (!$record)
+            throw new \Exception('endpoint not exists');
+        if (!$record->delete())
+            throw new \Exception('cannot delete endpoint');
+        return $this->success([$endpoint => $record]);
+    }
+
+    protected function resolveEndpoint($endpoint)
+    {
+        if (!array_key_exists($endpoint, $this->endpoints))
+            throw new \Exception('invalid endpoint');
+        $class = new ReflectionClass($this->endpoints[$endpoint]);
+        if (!$class->isInstantiable())
+            throw new \Exception('cannot create object with endpoint');
+        return $class->newInstance();
+    }
+
+    protected function validate(array $data)
+    {
+        return true;
+    }
+
+    protected function success(array $data)
     {
         $results = [];
         $results['status'] = 1;

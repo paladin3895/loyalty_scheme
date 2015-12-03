@@ -6,7 +6,7 @@ use Liquid\Schema;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class EntityController extends ApiController
+class EntityController extends SingularController
 {
     protected $endpoint = 'entity';
 

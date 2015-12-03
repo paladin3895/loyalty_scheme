@@ -50,18 +50,57 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
     $api->delete('/privilege/{id:[0-9]+}', ['as' => 'privilege_delete', 'uses' => 'PrivilegeController@delete']);
     $api->match('head', '/privilege', ['as' => 'privilege_extract', 'uses' => 'PrivilegeController@extract']);
 
-    $api->get('/entity/{entity_id:[0-9]+}/schema/{schema_id:[0-9]+}', [
-        'as' => 'entity_get_schema_checkpoint',
-        'uses' => 'CompoundController@getEntitySchemaCheckpoint'
-    ]);
+    $api->group(['prefix' => '/entity/{id:[0-9]+}'], function ($app) {
+        $api->get('/{endpoint:[a-z]+}', [
+            'as' => 'entity_list_endpoint',
+            'uses' => 'EntityCompoundController@listEndpoint'
+        ]);
 
-    $api->post('/entity/{entity_id:[0-9]+}/schema/{schema_id:[0-9]+}', [
-        'as' => 'entity_apply_schema',
-        'uses' => 'CompoundController@applyEntitySchema'
-    ]);
+        $api->post('/{endpoint:[a-z]+}', [
+            'as' => 'entity_create_endpoint',
+            'uses' => 'EntityCompoundController@createEndpoint'
+        ]);
 
-    $api->get('/entity/{entity_id:[0-9]+}/privileges', [
-        'as' => 'entity_get_privileges',
-        'uses' => 'CompoundController@getEntityPrivileges'
-    ]);
+        $api->get('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'entity_get_endpoint',
+            'uses' => 'EntityCompoundController@getEndpoint'
+        ]);
+
+        $api->put('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'entity_update_endpoint',
+            'uses' => 'EntityCompoundController@updateEndpoint'
+        ]);
+
+        $api->delete('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'entity_delete_endpoint',
+            'uses' => 'EntityCompoundController@deleteEndpoint'
+        ]);
+    });
+
+    $api->group(['prefix' => '/schema/{id:[0-9]+}'], function ($app) {
+        $api->get('/{endpoint:[a-z]+}', [
+            'as' => 'schema_list_endpoint',
+            'uses' => 'SchemaCompoundController@listEndpoint'
+        ]);
+
+        $api->post('/{endpoint:[a-z]+}', [
+            'as' => 'schema_create_endpoint',
+            'uses' => 'SchemaCompoundController@createEndpoint'
+        ]);
+
+        $api->get('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'schema_get_endpoint',
+            'uses' => 'SchemaCompoundController@getEndpoint'
+        ]);
+
+        $api->put('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'schema_update_endpoint',
+            'uses' => 'SchemaCompoundController@updateEndpoint'
+        ]);
+
+        $api->delete('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'schema_delete_endpoint',
+            'uses' => 'SchemaCompoundController@deleteEndpoint'
+        ]);
+    });
 });

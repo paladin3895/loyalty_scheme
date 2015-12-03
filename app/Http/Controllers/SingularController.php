@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Entity;
 
-abstract class ApiController extends BaseController
+abstract class SingularController extends BaseController
 {
     protected $endpoint;
 
