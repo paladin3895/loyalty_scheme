@@ -50,7 +50,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
     $api->delete('/privilege/{id:[0-9]+}', ['as' => 'privilege_delete', 'uses' => 'PrivilegeController@delete']);
     $api->match('head', '/privilege', ['as' => 'privilege_extract', 'uses' => 'PrivilegeController@extract']);
 
-    $api->group(['prefix' => '/entity/{id:[0-9]+}'], function ($app) {
+    $api->group(['prefix' => '/entity/{id:[0-9]+}'], function ($api) {
         $api->get('/{endpoint:[a-z]+}', [
             'as' => 'entity_list_endpoint',
             'uses' => 'EntityCompoundController@listEndpoint'
@@ -77,7 +77,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         ]);
     });
 
-    $api->group(['prefix' => '/schema/{id:[0-9]+}'], function ($app) {
+    $api->group(['prefix' => '/schema/{id:[0-9]+}'], function ($api) {
         $api->get('/{endpoint:[a-z]+}', [
             'as' => 'schema_list_endpoint',
             'uses' => 'SchemaCompoundController@listEndpoint'

@@ -5,41 +5,34 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-use ReflectionClass;
-
 abstract class CompoundController extends BaseController
 {
     protected $repository;
 
-    protected $foreignKey;
-
-    protected $validations = [];
-
     protected $endpoints = [];
-
-    protected $allowMethods = [];
 
     public function listEndpoint($id, $endpoint)
     {
-        $records = $this->resolveEndpoint($endpoint)->where($foreignKey, $id)->get();
+        $this->checkEndpoint($endpoint, __FUNCTION__);
+        $records = $this->resolveEndpoint($endpoint)->get();
         return $this->success([$endpoint => $records]);
     }
 
     public function showEndpoint($id, $endpoint, $endpoint_id)
     {
-        $record = $this->resolveEndpoint($endpoint)->where($foreignKey, $id)->where('id', $endpoint_id)->first();
+        $this->checkEndpoint($endpoint, __FUNCTION__);
+        $record = $this->resolveEndpoint($endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
-        return $this->success([$endpoint => $record];
+        return $this->success([$endpoint => $record]);
     }
 
     public function createEndpoint($id, $endpoint, Request $request)
     {
+        $this->checkEndpoint($endpoint, __FUNCTION__);
         $data = $request->input($endpoint);
         if (!$data)
             throw new \Exception('missing data for endpoint');
-        $data = $this->validate($data);
-        $data[$this->foreignKey] = $id;
         $record = $this->resolveEndpoint($endpoint)->create($data);
         if (!$record)
             throw new \Exception('cannot create endpoint');
@@ -48,6 +41,7 @@ abstract class CompoundController extends BaseController
 
     public function updateEndpoint($id, $endpoint, $endpoint_id, Request $request)
     {
+        $this->checkEndpoint($endpoint, __FUNCTION__);
         $data = $request->input($endpoint);
         if (!$data)
             throw new \Exception('missing data for endpoint');
@@ -61,6 +55,7 @@ abstract class CompoundController extends BaseController
 
     public function deleteEndpoint($id, $endpoint, $endpoint_id)
     {
+        $this->checkEndpoint($endpoint, __FUNCTION__);
         $record = $this->resolveEndpoint($endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
@@ -71,17 +66,20 @@ abstract class CompoundController extends BaseController
 
     protected function resolveEndpoint($endpoint)
     {
-        if (!array_key_exists($endpoint, $this->endpoints))
-            throw new \Exception('invalid endpoint');
-        $class = new ReflectionClass($this->endpoints[$endpoint]);
-        if (!$class->isInstantiable())
-            throw new \Exception('cannot create object with endpoint');
-        return $class->newInstance();
+        if (!is_callable([$this->repository, "{$endpoint}s"]))
+            throw new \Exception('endpoint is not valid');
+        return call_user_func([$this->repository, "{$endpoint}s"]);
     }
 
-    protected function validate(array $data)
+    protected function checkEndpoint($endpoint, $method)
     {
-        return true;
+        if (!array_key_exists($endpoint, $this->endpoints))
+            throw new \Exception('invalid endpoint');
+        if (!preg_match('#^([a-z]+)Endpoint$#', $method, $matches))
+            throw new \Exception('invalid method');
+        $method = $matches[1];
+        if (!in_array($method, $this->endpoints[$endpoint]))
+            throw new \Exception('the method in this endpoint is not allowed');
     }
 
     protected function success(array $data)

@@ -26,4 +26,9 @@ class Privilege extends BaseModel
     protected $casts = [
         'context' => 'object'
     ];
+
+    public function entities()
+    {
+        return $this->belongToMany('App\Models\Entity', 'entity_privilege', 'entity_id', 'privilege_id');
+    }
 }
