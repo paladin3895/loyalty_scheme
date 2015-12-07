@@ -14,14 +14,14 @@ abstract class CompoundController extends BaseController
     public function listEndpoint($id, $endpoint)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
-        $records = $this->resolveEndpoint($endpoint)->get();
+        $records = $this->resolveEndpoint($id, $endpoint)->get();
         return $this->success([$endpoint => $records]);
     }
 
     public function showEndpoint($id, $endpoint, $endpoint_id)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
-        $record = $this->resolveEndpoint($endpoint)->where('id', $endpoint_id)->first();
+        $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
         return $this->success([$endpoint => $record]);
@@ -33,7 +33,7 @@ abstract class CompoundController extends BaseController
         $data = $request->input($endpoint);
         if (!$data)
             throw new \Exception('missing data for endpoint');
-        $record = $this->resolveEndpoint($endpoint)->create($data);
+        $record = $this->resolveEndpoint($id, $endpoint)->create($data);
         if (!$record)
             throw new \Exception('cannot create endpoint');
         return $this->success([$endpoint => $record]);
@@ -45,7 +45,7 @@ abstract class CompoundController extends BaseController
         $data = $request->input($endpoint);
         if (!$data)
             throw new \Exception('missing data for endpoint');
-        $record = $this->resolveEndpoint($endpoint)->where('id', $endpoint_id)->first();
+        $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
         if (!$record->update($data))
@@ -56,7 +56,7 @@ abstract class CompoundController extends BaseController
     public function deleteEndpoint($id, $endpoint, $endpoint_id)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
-        $record = $this->resolveEndpoint($endpoint)->where('id', $endpoint_id)->first();
+        $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
         if (!$record->delete())
@@ -64,11 +64,14 @@ abstract class CompoundController extends BaseController
         return $this->success([$endpoint => $record]);
     }
 
-    protected function resolveEndpoint($endpoint)
+    protected function resolveEndpoint($id, $endpoint)
     {
-        if (!is_callable([$this->repository, "{$endpoint}s"]))
+        $record = $this->repository->where('id', $id)->first();
+        if (!$record)
+            throw new \Exception('parent endpoint not exists');
+        if (!is_callable([$record, "{$endpoint}s"]))
             throw new \Exception('endpoint is not valid');
-        return call_user_func([$this->repository, "{$endpoint}s"]);
+        return call_user_func([$record, "{$endpoint}s"]);
     }
 
     protected function checkEndpoint($endpoint, $method)
