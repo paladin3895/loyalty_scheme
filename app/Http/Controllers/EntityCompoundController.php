@@ -8,7 +8,7 @@ class EntityCompoundController extends CompoundController
     protected $repository;
 
     protected $endpoints = [
-        'privilege' => ['list', 'show', 'delete'],
+        'privilege' => ['list', 'show', 'update', 'edit', 'delete'],
         'checkpoint' => ['list', 'show', 'delete']
     ];
 

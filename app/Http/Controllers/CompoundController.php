@@ -48,6 +48,27 @@ abstract class CompoundController extends BaseController
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
+        foreach ($data as $key => $value) {
+            $record->$key = $value;
+        }
+        if (!$record->update($data))
+            throw new \Exception('cannot update endpoint');
+        return $this->success([$endpoint => $record]);
+    }
+
+    public function editEndpoint($id, $endpoint, $endpoint_id, Request $request)
+    {
+        $this->checkEndpoint($endpoint, __FUNCTION__);
+        $data = $request->input($endpoint);
+        if (!$data)
+            throw new \Exception('missing data for endpoint');
+        $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
+        if (!$record)
+            throw new \Exception('endpoint not exists');
+        $record->clearDynamicFields();
+        foreach ($data as $key => $value) {
+            $record->$key = $value;
+        }
         if (!$record->update($data))
             throw new \Exception('cannot update endpoint');
         return $this->success([$endpoint => $record]);

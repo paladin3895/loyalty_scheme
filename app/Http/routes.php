@@ -62,13 +62,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         ]);
 
         $api->get('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
-            'as' => 'entity_get_endpoint',
-            'uses' => 'EntityCompoundController@getEndpoint'
+            'as' => 'entity_show_endpoint',
+            'uses' => 'EntityCompoundController@showEndpoint'
+        ]);
+
+        $api->patch('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'entity_update_endpoint',
+            'uses' => 'EntityCompoundController@updateEndpoint'
         ]);
 
         $api->put('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
-            'as' => 'entity_update_endpoint',
-            'uses' => 'EntityCompoundController@updateEndpoint'
+            'as' => 'entity_edit_endpoint',
+            'uses' => 'EntityCompoundController@editEndpoint'
         ]);
 
         $api->delete('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
@@ -89,13 +94,18 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         ]);
 
         $api->get('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
-            'as' => 'schema_get_endpoint',
-            'uses' => 'SchemaCompoundController@getEndpoint'
+            'as' => 'schema_show_endpoint',
+            'uses' => 'SchemaCompoundController@showEndpoint'
+        ]);
+
+        $api->patch('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'schema_update_endpoint',
+            'uses' => 'SchemaCompoundController@updateEndpoint'
         ]);
 
         $api->put('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
-            'as' => 'schema_update_endpoint',
-            'uses' => 'SchemaCompoundController@updateEndpoint'
+            'as' => 'schema_edit_endpoint',
+            'uses' => 'SchemaCompoundController@editEndpoint'
         ]);
 
         $api->delete('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
