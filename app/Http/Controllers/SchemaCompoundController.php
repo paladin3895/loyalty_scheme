@@ -8,8 +8,8 @@ class SchemaCompoundController extends CompoundController
     protected $repository;
 
     protected $endpoints = [
-        'node' => ['list', 'show', 'create', 'update', 'delete'],
-        'link' => ['list', 'show', 'create', 'update', 'delete'],
+        'node' => ['list', 'show', 'create', 'replace', 'update', 'delete'],
+        'link' => ['list', 'show', 'create', 'replace', 'update', 'delete'],
     ];
 
     public function __construct(Schema $schema)

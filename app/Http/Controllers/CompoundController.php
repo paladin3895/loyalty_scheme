@@ -56,7 +56,7 @@ abstract class CompoundController extends BaseController
         return $this->success([$endpoint => $record]);
     }
 
-    public function editEndpoint($id, $endpoint, $endpoint_id, Request $request)
+    public function replaceEndpoint($id, $endpoint, $endpoint_id, Request $request)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $data = $request->input($endpoint);

@@ -61,7 +61,7 @@ abstract class SingularController extends BaseController
         return $this->success($record->toArray());
     }
 
-    public function edit($id, Request $request)
+    public function replace($id, Request $request)
     {
         if (!$request->has($this->endpoint))
             throw new \Exception('no endpoint data');
