@@ -15,25 +15,13 @@ class CreateSchemaNodeTable extends Migration
         Schema::create('node', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('schema_id')->unsigned();
-            $table->integer('policy_id')->unsigned();
-            $table->integer('privilege_id')->unsigned();
-            $table->text('policy_config');
-            $table->text('privilege_context');
+            $table->text('policy');
+            $table->text('reward');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('schema_id')
                   ->references('id')
                   ->on('schema')
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
-            $table->foreign('policy_id')
-                  ->references('id')
-                  ->on('policy')
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
-            $table->foreign('privilege_id')
-                  ->references('id')
-                  ->on('privilege')
                   ->onUpdate('cascade')
                   ->onDelete('cascade');
         });

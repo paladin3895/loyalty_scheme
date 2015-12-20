@@ -30,25 +30,24 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
     $api->put('/schema/{id:[0-9]+}', ['as' => 'schema_replace', 'uses' => 'SchemaController@replace']);
     $api->patch('/schema/{id:[0-9]+}', ['as' => 'schema_update', 'uses' => 'SchemaController@update']);
     $api->delete('/schema/{id:[0-9]+}', ['as' => 'schema_delete', 'uses' => 'SchemaController@delete']);
+    $api->post('/schema/{id:[0-9]+}', ['as' => 'schema_apply', 'uses' => 'SchemaController@apply']);
     // $api->match('head', '/schema', ['as' => 'schema_extract', 'uses' => 'SchemaController@extract']);
 
-    $api->post('/policy', ['as' => 'policy_create', 'uses' => 'PolicyController@create']);
+    // $api->post('/policy', ['as' => 'policy_create', 'uses' => 'PolicyController@create']);
     $api->get('/policy', ['as' => 'policy_index', 'uses' => 'PolicyController@index']);
     $api->get('/policy/{id:[0-9]+}', ['as' => 'policy_show', 'uses' => 'PolicyController@show']);
-    $api->put('/policy/{id:[0-9]+}', ['as' => 'policy_replace', 'uses' => 'PolicyController@replace']);
-    $api->patch('/policy/{id:[0-9]+}', ['as' => 'policy_update', 'uses' => 'PolicyController@update']);
-    $api->delete('/policy/{id:[0-9]+}', ['as' => 'policy_delete', 'uses' => 'PolicyController@delete']);
+    // $api->put('/policy/{id:[0-9]+}', ['as' => 'policy_replace', 'uses' => 'PolicyController@replace']);
+    // $api->patch('/policy/{id:[0-9]+}', ['as' => 'policy_update', 'uses' => 'PolicyController@update']);
+    // $api->delete('/policy/{id:[0-9]+}', ['as' => 'policy_delete', 'uses' => 'PolicyController@delete']);
     // $api->match('head', '/policy', ['as' => 'policy_extract', 'uses' => 'PolicyController@extract']);
-    $api->get('/policy/unit', ['as' => 'policy_units', 'uses' => 'PolicyController@unitComponents']);
-    $api->get('/policy/algorithm', ['as' => 'policy_algorithms', 'uses' => 'PolicyController@algorithmComponents']);
 
-    $api->post('/privilege', ['as' => 'privilege_create', 'uses' => 'PrivilegeController@create']);
-    $api->get('/privilege', ['as' => 'privilege_index', 'uses' => 'PrivilegeController@index']);
-    $api->get('/privilege/{id:[0-9]+}', ['as' => 'privilege_show', 'uses' => 'PrivilegeController@show']);
-    $api->put('/privilege/{id:[0-9]+}', ['as' => 'privilege_replace', 'uses' => 'PrivilegeController@replace']);
-    $api->patch('/privilege/{id:[0-9]+}', ['as' => 'privilege_update', 'uses' => 'PrivilegeController@update']);
-    $api->delete('/privilege/{id:[0-9]+}', ['as' => 'privilege_delete', 'uses' => 'PrivilegeController@delete']);
-    // $api->match('head', '/privilege', ['as' => 'privilege_extract', 'uses' => 'PrivilegeController@extract']);
+    // $api->post('/reward', ['as' => 'reward_create', 'uses' => 'RewardController@create']);
+    $api->get('/reward', ['as' => 'reward_index', 'uses' => 'RewardController@index']);
+    $api->get('/reward/{id:[0-9]+}', ['as' => 'reward_show', 'uses' => 'RewardController@show']);
+    // $api->put('/reward/{id:[0-9]+}', ['as' => 'reward_replace', 'uses' => 'RewardController@replace']);
+    // $api->patch('/reward/{id:[0-9]+}', ['as' => 'reward_update', 'uses' => 'RewardController@update']);
+    // $api->delete('/reward/{id:[0-9]+}', ['as' => 'reward_delete', 'uses' => 'RewardController@delete']);
+    // $api->match('head', '/reward', ['as' => 'reward_extract', 'uses' => 'PrivilegeController@extract']);
 
     $api->group(['prefix' => '/entity/{id:[0-9]+}'], function ($api) {
         $api->get('/{endpoint:[a-z]+}', [
@@ -91,6 +90,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         $api->post('/{endpoint:[a-z]+}', [
             'as' => 'schema_create_endpoint',
             'uses' => 'SchemaCompoundController@createEndpoint'
+        ]);
+
+        $api->post('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+            'as' => 'schema_apply_endpoint',
+            'uses' => 'SchemaCompoundController@applyEndpoint',
         ]);
 
         $api->get('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [

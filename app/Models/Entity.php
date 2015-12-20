@@ -31,9 +31,4 @@ class Entity extends BaseModel
     {
         return $this->hasMany('App\Models\Checkpoint', 'entity_id', 'id');
     }
-
-    public function privileges()
-    {
-        return $this->belongsToMany('App\Models\Privilege', 'entity_privilege', 'entity_id', 'privilege_id');
-    }
 }

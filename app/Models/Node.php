@@ -16,25 +16,15 @@ class Node extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['policy_id', 'privilege_id', 'policy_config', 'privilege_context'];
+    protected $fillable = ['policy', 'reward'];
 
     protected $casts = [
-        'policy_config' => 'array',
-        'privilege_context' => 'array'
+        'policy' => 'array',
+        'reward' => 'array'
     ];
 
     public function schema()
     {
         return $this->belongsTo('App\Models\Schema', 'schema_id', 'id');
-    }
-
-    public function policy()
-    {
-        return $this->hasOne('App\Models\Policy', 'policy_id', 'id');
-    }
-
-    public function privilege()
-    {
-        return $this->hasOne('App\Models\Privilege', 'privilege_id', 'id');
     }
 }
