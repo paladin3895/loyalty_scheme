@@ -6,10 +6,10 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class PrivilegeController extends BaseController
+class RewardController extends BaseController
 {
     public function index()
     {
-        return (\Liquid\Builders\RewardBuilder::getFormats());
+        return (\Liquid\Builders\PolicyBuilder::getRewardFormats());
     }
 }

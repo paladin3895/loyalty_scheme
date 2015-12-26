@@ -10,6 +10,6 @@ class PolicyController extends BaseController
 {
     public function index()
     {
-        return (\Liquid\Builders\PolicyBuilder::getFormats());
+        return (\Liquid\Builders\PolicyBuilder::getPolicyFormats());
     }
 }

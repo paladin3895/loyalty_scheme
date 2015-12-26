@@ -90,9 +90,9 @@ abstract class CompoundController extends BaseController
         $record = $this->repository->where('id', $id)->first();
         if (!$record)
             throw new \Exception('parent endpoint not exists');
-        if (!is_callable([$record, "{$endpoint}s"]))
+        if (!is_callable([$record, "{$endpoint}"]))
             throw new \Exception('endpoint is not valid');
-        return call_user_func([$record, "{$endpoint}s"]);
+        return call_user_func([$record, "{$endpoint}"]);
     }
 
     protected function checkEndpoint($endpoint, $method)

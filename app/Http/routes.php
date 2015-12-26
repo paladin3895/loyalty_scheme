@@ -117,4 +117,9 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
             'uses' => 'SchemaCompoundController@deleteEndpoint'
         ]);
     });
+
+    $api->get('test', [
+        'as' => 'test',
+        'uses' => 'TestController@test'
+    ]);
 });

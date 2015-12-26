@@ -12,6 +12,8 @@ abstract class SingularController extends BaseController
 
     protected $repository;
 
+    protected $relations = [];
+
     public function __construct() {
         $this->repository = new $this->repository;
     }
@@ -35,6 +37,9 @@ abstract class SingularController extends BaseController
     public function show($id)
     {
         $record = $this->repository->find($id);
+        foreach ($this->relations as $relation) {
+            $record->{$relation};
+        }
         if (!$record) throw new \Exception('endpoint not found');
         return $this->success($record->toArray());
     }
@@ -103,7 +108,7 @@ abstract class SingularController extends BaseController
     {
         return [
             'status' => 1,
-            "$this->endpoint" => $data
+            "{$this->endpoint}" => $data
         ];
     }
 }

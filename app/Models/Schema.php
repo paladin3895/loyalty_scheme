@@ -19,12 +19,12 @@ class Schema extends BaseModel
      */
     protected $fillable = ['name', 'description'];
 
-    public function nodes()
+    public function node()
     {
         return $this->hasMany('App\Models\Node', 'schema_id', 'id');
     }
 
-    public function links()
+    public function link()
     {
         return $this->hasMany('App\Models\Link', 'schema_id', 'id');
     }
