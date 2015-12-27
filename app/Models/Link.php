@@ -23,13 +23,13 @@ class Link extends BaseModel
         return $this->belongsTo('App\Models\Schema', 'schema_id', 'id');
     }
 
-    public function getNodeFromAttribute()
-    {
-        return Node::find($this->attributes['node_from']);
-    }
-
-    public function getNodeToAttribute()
-    {
-        return Node::find($this->attributes['node_to']);
-    }
+    // public function getNodeFromAttribute()
+    // {
+    //     return Node::find($this->attributes['node_from']);
+    // }
+    //
+    // public function getNodeToAttribute()
+    // {
+    //     return Node::find($this->attributes['node_to']);
+    // }
 }
