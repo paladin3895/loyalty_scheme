@@ -48,6 +48,7 @@ abstract class CompoundController extends BaseController
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
+        $data = array_replace_recursive($record->toArray(), $data);
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }

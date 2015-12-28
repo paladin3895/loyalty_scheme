@@ -20,7 +20,6 @@ class SchemaController extends SingularController
         if (!$schema) throw new \Exception('endpoint not found');
 
         $registry = $manager->build($schema->toArray());
-        dd($registry);
         $result = $registry->process($request->input('data'));
         return $this->success($result);
     }

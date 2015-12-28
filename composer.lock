@@ -1302,12 +1302,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
-                "reference": "b269ca2a46b22dcdb9210dfab39661b951c0856f"
+                "reference": "b359c1706a4eb9627c89835a622bd0a8c069773f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/session/zipball/b269ca2a46b22dcdb9210dfab39661b951c0856f",
-                "reference": "b269ca2a46b22dcdb9210dfab39661b951c0856f",
+                "url": "https://api.github.com/repos/illuminate/session/zipball/b359c1706a4eb9627c89835a622bd0a8c069773f",
+                "reference": "b359c1706a4eb9627c89835a622bd0a8c069773f",
                 "shasum": ""
             },
             "require": {
@@ -1344,7 +1344,7 @@
             ],
             "description": "The Illuminate Session package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-03 22:21:16"
+            "time": "2015-12-26 15:27:27"
         },
         {
             "name": "illuminate/support",
@@ -1352,12 +1352,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "76a0e7628701df1a56a1d143b0ea8fa4e1d0e9a6"
+                "reference": "b5cf74ee997d9ee62ecc383d1d80b2b6367579fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/76a0e7628701df1a56a1d143b0ea8fa4e1d0e9a6",
-                "reference": "76a0e7628701df1a56a1d143b0ea8fa4e1d0e9a6",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/b5cf74ee997d9ee62ecc383d1d80b2b6367579fc",
+                "reference": "b5cf74ee997d9ee62ecc383d1d80b2b6367579fc",
                 "shasum": ""
             },
             "require": {
@@ -1398,7 +1398,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-03 15:05:51"
+            "time": "2015-12-27 05:46:24"
         },
         {
             "name": "illuminate/translation",
@@ -2174,12 +2174,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "d371ecb85254a8dff7f6d843bf49d1197e7d533e"
+                "reference": "83e51a0e8940ed5e85788ba6bfa022634aa07869"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/d371ecb85254a8dff7f6d843bf49d1197e7d533e",
-                "reference": "d371ecb85254a8dff7f6d843bf49d1197e7d533e",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/83e51a0e8940ed5e85788ba6bfa022634aa07869",
+                "reference": "83e51a0e8940ed5e85788ba6bfa022634aa07869",
                 "shasum": ""
             },
             "require": {
@@ -2223,7 +2223,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-27 05:45:55"
+            "time": "2015-12-26 13:37:56"
         },
         {
             "name": "symfony/dom-crawler",
@@ -2499,12 +2499,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "786eb40b0178a545f1d894a7b81738c308b8d9ed"
+                "reference": "354df2dbb086f34eb1623749dc0f16821d405ce8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/786eb40b0178a545f1d894a7b81738c308b8d9ed",
-                "reference": "786eb40b0178a545f1d894a7b81738c308b8d9ed",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/354df2dbb086f34eb1623749dc0f16821d405ce8",
+                "reference": "354df2dbb086f34eb1623749dc0f16821d405ce8",
                 "shasum": ""
             },
             "require": {
@@ -2573,7 +2573,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2015-12-18 15:35:58"
+            "time": "2015-12-26 15:49:24"
         },
         {
             "name": "symfony/process",
