@@ -16,6 +16,12 @@ $app->get('/', ['as' => 'liquid', 'uses' => 'LiquidController@index']);
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
+    $api->get('/access_token', ['as' => 'token_detail', 'uses' => 'OAuthController@detail']);
+    $api->post('/access_token', ['as' => 'token_authorize', 'uses' => 'OAuthController@authorize']);
+    $api->put('/access_token', ['as' => 'token_refresh', 'uses' => 'OAuthController@refresh']);
+    $api->patch('/access_token', ['as' => 'token_update', 'uses' => 'OAuthController@refresh']);
+    $api->delete('/access_token', ['as' => 'token_destroy', 'uses' => 'OAuthController@destroy']);
+
     $api->post('/entity', ['as' => 'entity_create', 'uses' => 'EntityController@create']);
     $api->get('/entity', ['as' => 'entity_index', 'uses' => 'EntityController@index']);
     $api->get('/entity/{id:[0-9]+}', ['as' => 'entity_show', 'uses' => 'EntityController@show']);
