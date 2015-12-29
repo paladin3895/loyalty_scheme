@@ -44,6 +44,10 @@ class CreateSchemaLinkTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('link', function (Blueprint $table) {
+            $table->dropForeign('link_node_from_foreign');
+            $table->dropForeign('link_node_to_foreign');
+        });
+        Schema::dropIfExists('link');
     }
 }

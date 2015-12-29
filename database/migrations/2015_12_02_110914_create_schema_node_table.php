@@ -34,6 +34,9 @@ class CreateSchemaNodeTable extends Migration
      */
     public function down()
     {
+        Schema::table('node', function (Blueprint $table) {
+            $table->dropForeign('node_schema_id_foreign');
+        });
         Schema::dropIfExists('node');
     }
 }

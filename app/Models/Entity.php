@@ -19,12 +19,13 @@ class Entity extends BaseModel
      */
     protected $fillable = ['attributes'];
 
-    protected $staticFields = ['id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
+    protected $staticFields = ['id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT, 'properties'];
 
     protected $dynamicField = 'attributes';
 
     protected $casts = [
-        'attributes' => 'object'
+        'attributes' => 'object',
+        'properties' => 'array',
     ];
 
     public function checkpoint()

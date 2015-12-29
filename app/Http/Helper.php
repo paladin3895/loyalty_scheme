@@ -2,6 +2,8 @@
 namespace App\Http;
 
 use App\Models\Schema;
+use App\Models\Entity;
+use App\Models\Checkpoint;
 
 class Helper
 {
@@ -22,5 +24,13 @@ class Helper
         }
         $registry->initialize();
         return $registry;
+    }
+
+    public static function prepareEntityRecord(Entity $entity, Checkpoint $checkpoint)
+    {
+        $data = $entity->toArray();
+        $data = array_merge((array)$data['properties'], (array)$data['attributes']);
+        $record = new \Liquid\Records\Record((array)$data, (array)$checkpoint->state);
+        return $record;
     }
 }

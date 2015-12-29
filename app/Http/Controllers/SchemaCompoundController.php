@@ -29,21 +29,34 @@ class SchemaCompoundController extends CompoundController
 
         $entity = $entity->where('id', $endpoint_id)->first();
         if (!$entity) throw new \Exception('endpoint not exists');
-        $data = $entity->toArray()['attributes'];
+        
         $checkpoint = $entity->checkpoint()->where('schema_id', $id)->firstOrNew([
             'schema_id' => $id
         ]);
-        $record = new Record((array)$data, (array)$checkpoint->state);
+
+        $record = Helper::prepareEntityRecord($entity, $checkpoint);
         $registry = Helper::buildSchema($schema);
         $registry->process($record);
-        $checkpoint->state = Record::$history;
         $results = array_column(Record::$history, 'result');
+
+        // apply results to entity properties
+        $properties = (array)$entity->properties;
         foreach ($results as $result) {
             foreach ($result as $key => $value) {
-                $entity->{$key} += $value;
+                if (!isset($properties[$key])) $properties[$key] = null;
+                if (is_numeric($value)) {
+                    $properties[$key] += $value;
+                } elseif (is_array($value)) {
+                    $properties[$key] = array_merge((array)$properties[$key], $value);
+                }
             }
         }
+
+        $entity->properties = $properties;
         $entity->save();
+
+        // save record history to checkpoint
+        $checkpoint->state = Record::$history;
         $checkpoint->save();
         return $this->success([$endpoint => $entity]);
     }

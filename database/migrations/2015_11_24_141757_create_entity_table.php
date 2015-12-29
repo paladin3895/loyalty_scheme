@@ -14,7 +14,8 @@ class CreateEntityTable extends Migration
     {
         Schema::create('entity', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('attributes');
+            $table->text('attributes')->nullable();
+            $table->text('properties')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

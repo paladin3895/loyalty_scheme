@@ -39,6 +39,10 @@ class CreateCheckpointTable extends Migration
      */
     public function down()
     {
+        Schema::table('checkpoint', function (Blueprint $table) {
+            $table->dropForeign('checkpoint_schema_id_foreign');
+            $table->dropForeign('checkpoint_entity_id_foreign');
+        });
         Schema::dropIfExists('checkpoint');
     }
 }
