@@ -27,7 +27,7 @@ class Entity extends BaseModel
         'attributes' => 'object'
     ];
 
-    public function checkpoints()
+    public function checkpoint()
     {
         return $this->hasMany('App\Models\Checkpoint', 'entity_id', 'id');
     }

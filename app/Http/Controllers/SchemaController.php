@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Liquid\Schema as SchemaManager;
+use App\Http\Helper;
+use Liquid\Records\Record;
 
 class SchemaController extends SingularController
 {
@@ -14,13 +15,17 @@ class SchemaController extends SingularController
 
     protected $relations = ['node', 'link'];
 
-    public function apply($id, Request $request, SchemaManager $manager)
+    public function apply($id, Request $request)
     {
         $schema = $this->repository->find($id);
         if (!$schema) throw new \Exception('endpoint not found');
 
-        $registry = $manager->build($schema->toArray());
-        $result = $registry->process($request->input('data'));
-        return $this->success($result);
+        $registry = Helper::buildSchema($schema);
+        $record = new Record(
+            $request->input('data') ? : [],
+            $request->input('checkpoint') ? : []
+        );
+        $registry->process($record);
+        return $this->success(Record::$history);
     }
 }
