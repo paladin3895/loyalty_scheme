@@ -6,14 +6,19 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Helper;
 use Liquid\Records\Record;
+use App\Models\Schema;
+use App\Formatters\SchemaFormatter;
 
 class SchemaController extends SingularController
 {
     protected $endpoint = 'schema';
 
-    protected $repository = 'App\Models\Schema';
-
     protected $relations = ['node', 'link'];
+
+    public function __construct(Schema $repository, SchemaFormatter $formatter)
+    {
+        parent::__construct($repository, $formatter);
+    }
 
     public function apply($id, Request $request)
     {

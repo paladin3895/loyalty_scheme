@@ -9,18 +9,13 @@ use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 class OAuthController extends BaseController
 {
-    public function detail(Request $request)
-    {
-
-    }
-
     public function authorize(Request $request)
     {
         return Authorizer::issueAccessToken();
     }
 
-    public function refresh(Request $request)
+    public function verify($username, $password)
     {
-
+        return 1;
     }
 }

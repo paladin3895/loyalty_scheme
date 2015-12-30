@@ -2,26 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Laravel\Lumen\Routing\Controller as BaseController;
+use App\Http\Controllers\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-abstract class SingularController extends BaseController
+abstract class SingularController extends BaseApiController
 {
     protected $endpoint;
 
-    protected $repository;
-
-    protected $relations = [];
-
-    public function __construct() {
-        $this->repository = new $this->repository;
+    public function __construct($repository, $formatter) {
+        $this->repository = $repository;
+        $this->formatter = $formatter;
     }
 
     public function index(Request $request)
     {
         $records = $this->repository->get();
-        return $this->success($records->toArray());
+        return $this->response->collection($records, $this->formatter);
     }
 
     public function extract(Request $request)
@@ -37,11 +34,8 @@ abstract class SingularController extends BaseController
     public function show($id)
     {
         $record = $this->repository->find($id);
-        foreach ($this->relations as $relation) {
-            $record->{$relation};
-        }
         if (!$record) throw new \Exception('endpoint not found');
-        return $this->success($record->toArray());
+        return $this->response->item($record, $this->formatter);
     }
 
     public function delete($id)
@@ -50,7 +44,7 @@ abstract class SingularController extends BaseController
         if (!$record) throw new \Exception('endpoint not found');
         if (!$record->delete())
             throw new \Exception('cannot delete endpoint');
-        return $this->success($record->toArray());
+        return $this->response->item($record, $this->formatter);
     }
 
     public function create(Request $request)
@@ -63,7 +57,7 @@ abstract class SingularController extends BaseController
             $record->$key = $value;
         }
         if (!$record->save()) throw new \Exception('cannot create endpoint');
-        return $this->success($record->toArray());
+        return $this->response->item($record, $this->formatter);
     }
 
     public function replace($id, Request $request)
@@ -79,7 +73,7 @@ abstract class SingularController extends BaseController
         }
         if (!$record->update($data))
             throw new \Exception('cannot update endpoint');
-        return $this->success($record->toArray());
+        return $this->response->item($record, $this->formatter);
     }
 
     public function update($id, Request $request)
@@ -101,14 +95,6 @@ abstract class SingularController extends BaseController
         }
         if (!$record->update($data))
             throw new \Exception('cannot update endpoint');
-        return $this->success($record->toArray());
-    }
-
-    protected function success(array $data)
-    {
-        return [
-            'status' => 1,
-            "{$this->endpoint}" => $data
-        ];
+        return $this->response->item($record, $this->formatter);
     }
 }

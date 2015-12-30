@@ -33,4 +33,17 @@ class Helper
         $record = new \Liquid\Records\Record((array)$data, (array)$checkpoint->state);
         return $record;
     }
+
+    public static function plural($endpoint)
+    {
+        switch ($endpoint) {
+            case 'entity': return 'entities';
+            case 'schema': return 'schemas';
+            case 'policy': return 'policies';
+            case 'reward': return 'rewards';
+            case 'node'  : return 'nodes';
+            case 'link'  : return 'links';
+            default      : return "{$endpoint}s";
+        }
+    }
 }

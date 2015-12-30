@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
+use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class PolicyController extends BaseController
+class BaseApiController extends BaseController
 {
-    public function index()
-    {
-        return (\Liquid\Builders\PolicyBuilder::getPolicyFormats());
-    }
+    use Helpers;
 }

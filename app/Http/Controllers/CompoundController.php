@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use Laravel\Lumen\Routing\Controller as BaseController;
+use App\Http\Controllers\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-abstract class CompoundController extends BaseController
+abstract class CompoundController extends BaseApiController
 {
     protected $repository;
 
@@ -15,7 +15,7 @@ abstract class CompoundController extends BaseController
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $records = $this->resolveEndpoint($id, $endpoint)->get();
-        return $this->success([$endpoint => $records]);
+        return $records;
     }
 
     public function showEndpoint($id, $endpoint, $endpoint_id)
@@ -24,7 +24,7 @@ abstract class CompoundController extends BaseController
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw new \Exception('endpoint not exists');
-        return $this->success([$endpoint => $record]);
+        return $record;
     }
 
     public function createEndpoint($id, $endpoint, Request $request)
@@ -36,7 +36,7 @@ abstract class CompoundController extends BaseController
         $record = $this->resolveEndpoint($id, $endpoint)->create($data);
         if (!$record)
             throw new \Exception('cannot create endpoint');
-        return $this->success([$endpoint => $record]);
+        return $record;
     }
 
     public function updateEndpoint($id, $endpoint, $endpoint_id, Request $request)
@@ -54,7 +54,7 @@ abstract class CompoundController extends BaseController
         }
         if (!$record->update($data))
             throw new \Exception('cannot update endpoint');
-        return $this->success([$endpoint => $record]);
+        return $record;
     }
 
     public function replaceEndpoint($id, $endpoint, $endpoint_id, Request $request)
@@ -72,7 +72,7 @@ abstract class CompoundController extends BaseController
         }
         if (!$record->update($data))
             throw new \Exception('cannot update endpoint');
-        return $this->success([$endpoint => $record]);
+        return $record;
     }
 
     public function deleteEndpoint($id, $endpoint, $endpoint_id)
@@ -83,7 +83,7 @@ abstract class CompoundController extends BaseController
             throw new \Exception('endpoint not exists');
         if (!$record->delete())
             throw new \Exception('cannot delete endpoint');
-        return $this->success([$endpoint => $record]);
+        return $record;
     }
 
     protected function resolveEndpoint($id, $endpoint)
