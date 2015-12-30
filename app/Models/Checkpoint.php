@@ -10,7 +10,7 @@ class Checkpoint extends BaseModel
      *
      * @var string
      */
-    protected $table = 'checkpoint';
+    protected $table = 'checkpoints';
 
     /**
      * The attributes that are mass assignable.

@@ -13,8 +13,6 @@ class SchemaController extends SingularController
 {
     protected $endpoint = 'schema';
 
-    protected $relations = ['node', 'link'];
-
     public function __construct(Schema $repository, SchemaFormatter $formatter)
     {
         parent::__construct($repository, $formatter);

@@ -10,7 +10,7 @@ class Schema extends BaseModel
      *
      * @var string
      */
-    protected $table = 'schema';
+    protected $table = 'schemas';
 
     /**
      * The attributes that are mass assignable.
@@ -19,12 +19,12 @@ class Schema extends BaseModel
      */
     protected $fillable = ['name', 'description'];
 
-    public function node()
+    public function nodes()
     {
         return $this->hasMany('App\Models\Node', 'schema_id', 'id');
     }
 
-    public function link()
+    public function links()
     {
         return $this->hasMany('App\Models\Link', 'schema_id', 'id');
     }

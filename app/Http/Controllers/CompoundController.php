@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Helper;
 
 abstract class CompoundController extends BaseApiController
 {
@@ -91,13 +92,14 @@ abstract class CompoundController extends BaseApiController
         $record = $this->repository->where('id', $id)->first();
         if (!$record)
             throw new \Exception('parent endpoint not exists');
-        if (!is_callable([$record, "{$endpoint}"]))
+        if (!is_callable([$record, Helper::plural($endpoint)]))
             throw new \Exception('endpoint is not valid');
-        return call_user_func([$record, "{$endpoint}"]);
+        return call_user_func([$record, Helper::plural($endpoint)]);
     }
 
     protected function checkEndpoint($endpoint, $method)
     {
+        $endpoint = Helper::singular($endpoint);
         if (!array_key_exists($endpoint, $this->endpoints))
             throw new \Exception('invalid endpoint');
         if (!preg_match('#^([a-z]+)Endpoint$#', $method, $matches))
@@ -105,15 +107,5 @@ abstract class CompoundController extends BaseApiController
         $method = $matches[1];
         if (!in_array($method, $this->endpoints[$endpoint]))
             throw new \Exception('the method in this endpoint is not allowed');
-    }
-
-    protected function success(array $data)
-    {
-        $results = [];
-        $results['status'] = 1;
-        foreach ($data as $key => $value) {
-            $results[$key] = $value;
-        }
-        return $results;
     }
 }

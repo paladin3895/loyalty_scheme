@@ -10,7 +10,7 @@ class Entity extends BaseModel
      *
      * @var string
      */
-    protected $table = 'entity';
+    protected $table = 'entities';
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +28,7 @@ class Entity extends BaseModel
         'properties' => 'array',
     ];
 
-    public function checkpoint()
+    public function checkpoints()
     {
         return $this->hasMany('App\Models\Checkpoint', 'entity_id', 'id');
     }

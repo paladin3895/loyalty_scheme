@@ -9,18 +9,18 @@ class Node extends BaseModel
      *
      * @var string
      */
-    protected $table = 'node';
+    protected $table = 'nodes';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['policy', 'reward'];
+    protected $fillable = ['policies', 'rewards'];
 
     protected $casts = [
-        'policy' => 'array',
-        'reward' => 'array'
+        'policies' => 'array',
+        'rewards' => 'array'
     ];
 
     public function schema()

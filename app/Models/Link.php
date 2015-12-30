@@ -9,7 +9,7 @@ class Link extends BaseModel
      *
      * @var string
      */
-    protected $table = 'link';
+    protected $table = 'links';
 
     /**
      * The attributes that are mass assignable.
