@@ -808,12 +808,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "bc9353a87e435e6bcb694e02120588c3aedd8cdb"
+                "reference": "5c23c45c3a9cddd2791188e80dde38abe258a5c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/bc9353a87e435e6bcb694e02120588c3aedd8cdb",
-                "reference": "bc9353a87e435e6bcb694e02120588c3aedd8cdb",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/5c23c45c3a9cddd2791188e80dde38abe258a5c6",
+                "reference": "5c23c45c3a9cddd2791188e80dde38abe258a5c6",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2015-12-28 18:31:05"
+            "time": "2015-12-29 14:58:45"
         },
         {
             "name": "illuminate/encryption",
@@ -1451,12 +1451,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "d3d73f754abba7288d83200e8dbe35034cbac82b"
+                "reference": "ee1b536deb53e92e29ef75d6ec6b65aa1b5894b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/d3d73f754abba7288d83200e8dbe35034cbac82b",
-                "reference": "d3d73f754abba7288d83200e8dbe35034cbac82b",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/ee1b536deb53e92e29ef75d6ec6b65aa1b5894b2",
+                "reference": "ee1b536deb53e92e29ef75d6ec6b65aa1b5894b2",
                 "shasum": ""
             },
             "require": {
@@ -1493,7 +1493,7 @@
             ],
             "description": "The Illuminate Validation package.",
             "homepage": "http://laravel.com",
-            "time": "2015-11-06 14:46:16"
+            "time": "2015-12-09 15:24:53"
         },
         {
             "name": "illuminate/view",
@@ -2762,12 +2762,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "d257e3eae6e9745992e001565829c84bab9b53cc"
+                "reference": "dd71d2f01b13ae03c2f8c3a66ad1aea739c009e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/d257e3eae6e9745992e001565829c84bab9b53cc",
-                "reference": "d257e3eae6e9745992e001565829c84bab9b53cc",
+                "url": "https://api.github.com/repos/symfony/process/zipball/dd71d2f01b13ae03c2f8c3a66ad1aea739c009e0",
+                "reference": "dd71d2f01b13ae03c2f8c3a66ad1aea739c009e0",
                 "shasum": ""
             },
             "require": {
@@ -2803,7 +2803,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2015-12-28 13:11:03"
+            "time": "2015-12-30 10:27:24"
         },
         {
             "name": "symfony/routing",
@@ -2811,12 +2811,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "6f47acd8668e52c5597276d9e0fa9993c5bf1b75"
+                "reference": "f054c7a93bc5ae70735779fe974499cbd621ef38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/6f47acd8668e52c5597276d9e0fa9993c5bf1b75",
-                "reference": "6f47acd8668e52c5597276d9e0fa9993c5bf1b75",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/f054c7a93bc5ae70735779fe974499cbd621ef38",
+                "reference": "f054c7a93bc5ae70735779fe974499cbd621ef38",
                 "shasum": ""
             },
             "require": {
@@ -2876,7 +2876,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2015-12-28 13:11:03"
+            "time": "2015-12-30 10:27:24"
         },
         {
             "name": "symfony/translation",
