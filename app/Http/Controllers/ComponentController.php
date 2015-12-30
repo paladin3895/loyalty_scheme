@@ -8,12 +8,12 @@ use Illuminate\Http\Response;
 
 class ComponentController extends BaseApiController
 {
-    public function getPolicy()
+    public function getPolicies()
     {
         return (\Liquid\Builders\PolicyBuilder::getPolicyFormats());
     }
 
-    public function getReward()
+    public function getRewards()
     {
         return (\Liquid\Builders\PolicyBuilder::getRewardFormats());
     }
