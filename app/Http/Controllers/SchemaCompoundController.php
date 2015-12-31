@@ -34,7 +34,7 @@ class SchemaCompoundController extends CompoundController
         if (!$entity)
             throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$id} not exists");
 
-        $checkpoint = $entity->checkpoint()->where('schema_id', $id)->firstOrNew([
+        $checkpoint = $entity->checkpoints()->where('schema_id', $id)->firstOrNew([
             'schema_id' => $id
         ]);
 
@@ -62,6 +62,6 @@ class SchemaCompoundController extends CompoundController
         // save record history to checkpoint
         $checkpoint->state = Record::$history;
         $checkpoint->save();
-        return $this->success([$endpoint => $entity]);
+        return $this->response->item($checkpoint, new \App\Formatters\ModelFormatter);
     }
 }

@@ -15,7 +15,7 @@ class ExceptionResolver
             case 'not found':
                 return new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException($message);
             case 'method not allowed':
-                return new \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException($message);
+                return new \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException([], $message);
             case 'not acceptable':
                 return new \Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException($message);
             case 'conflict':
