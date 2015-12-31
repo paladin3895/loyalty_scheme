@@ -11,8 +11,8 @@ class EntityCompoundController extends CompoundController
         'checkpoint' => ['list', 'show', 'delete']
     ];
 
-    public function __construct(Entity $entity)
+    public function __construct(Entity $repository, ModelFormatter $formatter)
     {
-        $this->repository = $entity;
+        parent::__construct($repository, $formatter);
     }
 }

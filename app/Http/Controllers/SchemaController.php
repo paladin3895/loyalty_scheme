@@ -8,6 +8,7 @@ use App\Http\Helper;
 use Liquid\Records\Record;
 use App\Models\Schema;
 use App\Formatters\SchemaFormatter;
+use App\Exceptions\ExceptionResolver;
 
 class SchemaController extends SingularController
 {
@@ -21,8 +22,8 @@ class SchemaController extends SingularController
     public function apply($id, Request $request)
     {
         $schema = $this->repository->find($id);
-        if (!$schema) throw new \Exception('endpoint not found');
-
+        if (!$schema)
+            throw ExceptionResolver::resolve('not found', "schema with id {$id} not exists");
         $registry = Helper::buildSchema($schema);
         $record = new Record(
             $request->input('data') ? : [],

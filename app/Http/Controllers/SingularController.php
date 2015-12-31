@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Exceptions\ExceptionResolver;
 
 abstract class SingularController extends BaseApiController
 {
@@ -26,7 +27,7 @@ abstract class SingularController extends BaseApiController
         $results['count'] = $this->repository->count();
         $response = new Response();
         foreach ($results as $key => $value) {
-            $response->header("Data-{$this->endpoint}-{$key}", $value);
+            $response->header("Data-{$key}", $value);
         }
         return $response;
     }
@@ -34,55 +35,60 @@ abstract class SingularController extends BaseApiController
     public function show($id)
     {
         $record = $this->repository->find($id);
-        if (!$record) throw new \Exception('endpoint not found');
+        if (!$record)
+            throw ExceptionResolver::resolve('not found', "{$this->endpoint} not found");
         return $this->response->item($record, $this->formatter);
     }
 
     public function delete($id)
     {
         $record = $this->repository->find($id);
-        if (!$record) throw new \Exception('endpoint not found');
+        if (!$record)
+            throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
         if (!$record->delete())
-            throw new \Exception('cannot delete endpoint');
+            throw ExceptionResolver::resolve('resource', "cannot delete {$this->endpoint} with id {$id}");
         return $this->response->item($record, $this->formatter);
     }
 
     public function create(Request $request)
     {
         if (!$request->has($this->endpoint))
-            throw new \Exception('no endpoint data');
+            throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
         $data = $request->input($this->endpoint);
         $record = $this->repository->newInstance();
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
-        if (!$record->save()) throw new \Exception('cannot create endpoint');
+        if (!$record->save())
+            throw ExceptionResolver::resolve('resource', "cannot create new {$this->endpoint}");
         return $this->response->item($record, $this->formatter);
     }
 
     public function replace($id, Request $request)
     {
         if (!$request->has($this->endpoint))
-            throw new \Exception('no endpoint data');
+            throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
         $data = $request->input($this->endpoint);
         $record = $this->repository->find($id);
-        if (!$record) throw new \Exception('endpoint not found');
+        if (!$record)
+            throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
         $record->clearDynamicFields();
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
         if (!$record->update($data))
-            throw new \Exception('cannot update endpoint');
+            throw ExceptionResolver::resolve('resource', "cannot replace {$this->endpoint} with id {$id}");
         return $this->response->item($record, $this->formatter);
     }
 
     public function update($id, Request $request)
     {
         if (!$request->has($this->endpoint))
-            throw new \Exception('no endpoint data');
+            throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
         $data = $request->input($this->endpoint);
         $record = $this->repository->find($id);
-        if (!$record) throw new \Exception('endpoint not found');
+        if (!$record)
+            throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
         foreach ($data as $key => $value) {
             if (preg_match('#^([\+\-])([0-9]+)$#', $value, $matches)) {
                 switch($matches[1]) {
@@ -94,7 +100,7 @@ abstract class SingularController extends BaseApiController
             }
         }
         if (!$record->update($data))
-            throw new \Exception('cannot update endpoint');
+            throw ExceptionResolver::resolve('resource', "cannot update {$this->endpoint} with id {$id}");
         return $this->response->item($record, $this->formatter);
     }
 }

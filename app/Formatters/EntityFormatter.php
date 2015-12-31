@@ -14,7 +14,7 @@ class EntityFormatter extends TransformerAbstract
     protected $availableIncludes = [
         'checkpoints'
     ];
-    
+
     public function transform(Entity $entity)
     {
         return $entity->toArray();

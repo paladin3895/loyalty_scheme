@@ -22,11 +22,11 @@ class SchemaFormatter extends TransformerAbstract
 
     protected function includeNodes(Schema $schema)
     {
-        return $this->collection($schema->node()->get(), new NodeFormatter);
+        return $this->collection($schema->nodes()->get(), new ModelFormatter);
     }
 
     protected function includeLinks(Schema $schema)
     {
-        return $this->collection($schema->link()->get(), new LinkFormatter);
+        return $this->collection($schema->links()->get(), new ModelFormatter);
     }
 }

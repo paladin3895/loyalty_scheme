@@ -5,6 +5,8 @@ use App\Models\Schema;
 use App\Models\Entity;
 use App\Http\Helper;
 use Liquid\Records\Record;
+use App\Exceptions\ExceptionResolver;
+use App\Formatters\ModelFormatter;
 
 class SchemaCompoundController extends CompoundController
 {
@@ -16,20 +18,22 @@ class SchemaCompoundController extends CompoundController
         'entity' => ['apply'],
     ];
 
-    public function __construct(Schema $schema)
+    public function __construct(Schema $repository, ModelFormatter $formatter)
     {
-        $this->repository = $schema;
+        parent::__construct($repository, $formatter);
     }
 
     public function applyEndpoint($id, $endpoint, $endpoint_id, Entity $entity)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $schema = $this->repository->where('id', $id)->first();
-        if (!$schema) throw new \Exception('schema not exists');
+        if (!$schema)
+            throw ExceptionResolver::resolve('not found', "schema with id {$id} not exists");
 
         $entity = $entity->where('id', $endpoint_id)->first();
-        if (!$entity) throw new \Exception('endpoint not exists');
-        
+        if (!$entity)
+            throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$id} not exists");
+
         $checkpoint = $entity->checkpoint()->where('schema_id', $id)->firstOrNew([
             'schema_id' => $id
         ]);

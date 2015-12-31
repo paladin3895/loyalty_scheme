@@ -11,13 +11,13 @@ class Helper
     {
         $registry = new \Liquid\Registry();
         $nodes = [];
-        foreach ($schema->node as $node) {
+        foreach ($schema->nodes as $node) {
             $policy = (new \Liquid\Builders\PolicyBuilder)->make($node->toArray());
             $nodes[$node->id] = new \Liquid\Nodes\PolicyNode($node->id);
             $nodes[$node->id]->bind($policy);
             $nodes[$node->id]->register($registry);
         }
-        foreach ($schema->link as $link) {
+        foreach ($schema->links as $link) {
             if (isset($nodes[$link->node_from]) && isset($nodes[$link->node_to])) {
                 $nodes[$link->node_from]->forward($nodes[$link->node_to]);
             }

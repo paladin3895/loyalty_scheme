@@ -5,18 +5,27 @@ use App\Http\Controllers\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Helper;
+use App\Exceptions\ExceptionResolver;
 
 abstract class CompoundController extends BaseApiController
 {
     protected $repository;
 
+    protected $formatter;
+
     protected $endpoints = [];
+
+    public function __construct($repository, $formatter)
+    {
+        $this->repository = $repository;
+        $this->formatter = $formatter;
+    }
 
     public function listEndpoint($id, $endpoint)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $records = $this->resolveEndpoint($id, $endpoint)->get();
-        return $records;
+        return $this->collection($records, $this->formatter);
     }
 
     public function showEndpoint($id, $endpoint, $endpoint_id)
@@ -24,8 +33,8 @@ abstract class CompoundController extends BaseApiController
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
-            throw new \Exception('endpoint not exists');
-        return $record;
+            throw ExceptionResolver::resolve('not found', "{$endpoint} not found");
+        return $this->item($record, $this->formatter);
     }
 
     public function createEndpoint($id, $endpoint, Request $request)
@@ -33,11 +42,11 @@ abstract class CompoundController extends BaseApiController
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $data = $request->input($endpoint);
         if (!$data)
-            throw new \Exception('missing data for endpoint');
+            throw ExceptionResolver::resolve('bad request', "please provide data for {$endpoint}");
         $record = $this->resolveEndpoint($id, $endpoint)->create($data);
         if (!$record)
-            throw new \Exception('cannot create endpoint');
-        return $record;
+            throw ExceptionResolver::resolve('resource', "cannot create new {$endpoint}");
+        return $this->item($record, $this->formatter);
     }
 
     public function updateEndpoint($id, $endpoint, $endpoint_id, Request $request)
@@ -45,17 +54,17 @@ abstract class CompoundController extends BaseApiController
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $data = $request->input($endpoint);
         if (!$data)
-            throw new \Exception('missing data for endpoint');
+            throw ExceptionResolver::resolve('bad request', "please provide data for {$endpoint}");
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
-            throw new \Exception('endpoint not exists');
+            throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$endpoint_id} not exists");
         $data = array_replace_recursive($record->toArray(), $data);
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
         if (!$record->update($data))
-            throw new \Exception('cannot update endpoint');
-        return $record;
+            throw ExceptionResolver::resolve('resource', "cannot update {$endpoint} with id {$endpoint_id}");
+        return $this->item($record, $this->formatter);
     }
 
     public function replaceEndpoint($id, $endpoint, $endpoint_id, Request $request)
@@ -63,17 +72,17 @@ abstract class CompoundController extends BaseApiController
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $data = $request->input($endpoint);
         if (!$data)
-            throw new \Exception('missing data for endpoint');
+            throw ExceptionResolver::resolve('bad request', "please provide data for {$endpoint}");
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
-            throw new \Exception('endpoint not exists');
+            throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$endpoint_id} not exists");
         $record->clearDynamicFields();
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
         if (!$record->update($data))
-            throw new \Exception('cannot update endpoint');
-        return $record;
+            throw ExceptionResolver::resolve('resource', "cannot replace {$endpoint} with id {$endpoint_id}");
+        return $this->item($record, $this->formatter);
     }
 
     public function deleteEndpoint($id, $endpoint, $endpoint_id)
@@ -81,19 +90,19 @@ abstract class CompoundController extends BaseApiController
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
-            throw new \Exception('endpoint not exists');
+            throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$endpoint_id} not exists");
         if (!$record->delete())
-            throw new \Exception('cannot delete endpoint');
-        return $record;
+            throw ExceptionResolver::resolve('resource', "cannot delete {$endpoint} with id {$endpoint_id}");
+        return $this->item($record, $this->formatter);
     }
 
     protected function resolveEndpoint($id, $endpoint)
     {
         $record = $this->repository->where('id', $id)->first();
         if (!$record)
-            throw new \Exception('parent endpoint not exists');
+            throw ExceptionResolver::resolve('not found', "parent endpoint not found");
         if (!is_callable([$record, Helper::plural($endpoint)]))
-            throw new \Exception('endpoint is not valid');
+            throw ExceptionResolver::resolve('not found', "cannot access nested endpoint {$endpoint}");
         return call_user_func([$record, Helper::plural($endpoint)]);
     }
 
@@ -101,11 +110,11 @@ abstract class CompoundController extends BaseApiController
     {
         $endpoint = Helper::singular($endpoint);
         if (!array_key_exists($endpoint, $this->endpoints))
-            throw new \Exception('invalid endpoint');
+            throw ExceptionResolver::resolve('not found', "endpoint {$endpoint} not found");
         if (!preg_match('#^([a-z]+)Endpoint$#', $method, $matches))
-            throw new \Exception('invalid method');
+            throw ExceptionResolver::resolve('method not allowed', "invalid method");
         $method = $matches[1];
         if (!in_array($method, $this->endpoints[$endpoint]))
-            throw new \Exception('the method in this endpoint is not allowed');
+            throw ExceptionResolver::resolve('method not allowed', "method {$method} is not allowed in this endpoint");
     }
 }

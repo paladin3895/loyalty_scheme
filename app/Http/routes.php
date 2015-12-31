@@ -121,9 +121,5 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
             ]);
         });
 
-        $api->get('test', [
-            'as' => 'test',
-            'uses' => 'TestController@test'
-        ]);
     });
 });
