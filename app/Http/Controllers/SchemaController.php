@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Helper;
+use App\Http\Helpers;
 use Liquid\Records\Record;
 use App\Models\Schema;
 use App\Formatters\SchemaFormatter;
@@ -24,7 +24,8 @@ class SchemaController extends SingularController
         $schema = $this->repository->find($id);
         if (!$schema)
             throw ExceptionResolver::resolve('not found', "schema with id {$id} not exists");
-        $registry = Helper::buildSchema($schema);
+        $registry = Helpers::buildSchema($schema);
+
         $record = new Record(
             $request->input('data') ? : [],
             $request->input('checkpoint') ? : []

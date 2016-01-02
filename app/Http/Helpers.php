@@ -9,19 +9,10 @@ class Helper
 {
     public static function buildSchema(Schema $schema)
     {
-        $registry = new \Liquid\Registry();
-        $nodes = [];
-        foreach ($schema->nodes as $node) {
-            $policy = (new \Liquid\Builders\PolicyBuilder)->make($node->toArray());
-            $nodes[$node->id] = new \Liquid\Nodes\PolicyNode($node->id);
-            $nodes[$node->id]->bind($policy);
-            $nodes[$node->id]->register($registry);
-        }
-        foreach ($schema->links as $link) {
-            if (isset($nodes[$link->node_from]) && isset($nodes[$link->node_to])) {
-                $nodes[$link->node_from]->forward($nodes[$link->node_to]);
-            }
-        }
+        $registry = (new \Liquid\Schema(config('liquid')))->build(
+            $schema->nodes()->toArray(),
+            $schema->links()->toArray()
+        );
         $registry->initialize();
         return $registry;
     }

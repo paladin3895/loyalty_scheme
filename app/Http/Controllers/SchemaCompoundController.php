@@ -3,13 +3,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Schema;
 use App\Models\Entity;
-use App\Http\Helper;
+use App\Http\Helpers;
 use Liquid\Records\Record;
 use App\Exceptions\ExceptionResolver;
 use App\Formatters\ModelFormatter;
+use Liquid\Records\Traits\MergeTrait;
 
 class SchemaCompoundController extends CompoundController
 {
+    use MergeTrait;
+
     protected $repository;
 
     protected $endpoints = [
@@ -38,22 +41,15 @@ class SchemaCompoundController extends CompoundController
             'schema_id' => $id
         ]);
 
-        $record = Helper::prepareEntityRecord($entity, $checkpoint);
-        $registry = Helper::buildSchema($schema);
+        $record = Helpers::prepareEntityRecord($entity, $checkpoint);
+        $registry = Helpers::buildSchema($schema);
         $registry->process($record);
         $results = array_column(Record::$history, 'result');
 
         // apply results to entity properties
         $properties = (array)$entity->properties;
         foreach ($results as $result) {
-            foreach ($result as $key => $value) {
-                if (!isset($properties[$key])) $properties[$key] = null;
-                if (is_numeric($value)) {
-                    $properties[$key] += $value;
-                } elseif (is_array($value)) {
-                    $properties[$key] = array_merge((array)$properties[$key], $value);
-                }
-            }
+            $this->_conditionedMerge($properties, $result);
         }
 
         $entity->properties = $properties;

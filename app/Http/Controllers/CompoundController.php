@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Helper;
 use App\Exceptions\ExceptionResolver;
+use App\Http\Helpers;
 
 abstract class CompoundController extends BaseApiController
 {
@@ -101,14 +101,14 @@ abstract class CompoundController extends BaseApiController
         $record = $this->repository->where('id', $id)->first();
         if (!$record)
             throw ExceptionResolver::resolve('not found', "parent endpoint not found");
-        if (!is_callable([$record, Helper::plural($endpoint)]))
+        if (!is_callable([$record, Helpers::plural($endpoint)]))
             throw ExceptionResolver::resolve('not found', "cannot access nested endpoint {$endpoint}");
-        return call_user_func([$record, Helper::plural($endpoint)]);
+        return call_user_func([$record, Helpers::plural($endpoint)]);
     }
 
     protected function checkEndpoint($endpoint, $method)
     {
-        $endpoint = Helper::singular($endpoint);
+        $endpoint = Helpers::singular($endpoint);
         if (!array_key_exists($endpoint, $this->endpoints))
             throw ExceptionResolver::resolve('not found', "endpoint {$endpoint} not found");
         if (!preg_match('#^([a-z]+)Endpoint$#', $method, $matches))
