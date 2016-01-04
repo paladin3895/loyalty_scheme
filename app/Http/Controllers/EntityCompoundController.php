@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entity;
+use App\Formatters\ModelFormatter;
 
 class EntityCompoundController extends CompoundController
 {

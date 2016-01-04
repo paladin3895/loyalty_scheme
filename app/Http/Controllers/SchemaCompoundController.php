@@ -49,7 +49,7 @@ class SchemaCompoundController extends CompoundController
         // apply results to entity properties
         $properties = (array)$entity->properties;
         foreach ($results as $result) {
-            $this->_conditionedMerge($properties, $result);
+            $properties = $this->_conditionedMerge($properties, $result);
         }
 
         $entity->properties = $properties;

@@ -5,13 +5,13 @@ use App\Models\Schema;
 use App\Models\Entity;
 use App\Models\Checkpoint;
 
-class Helper
+class Helpers
 {
     public static function buildSchema(Schema $schema)
     {
         $registry = (new \Liquid\Schema(config('liquid')))->build(
-            $schema->nodes()->toArray(),
-            $schema->links()->toArray()
+            $schema->nodes()->get()->toArray(),
+            $schema->links()->get()->toArray()
         );
         $registry->initialize();
         return $registry;

@@ -31,6 +31,9 @@ class SchemaController extends SingularController
             $request->input('checkpoint') ? : []
         );
         $registry->process($record);
-        return $this->success(Record::$history);
+        return $this->response->array([
+            'status' => 1,
+            'data' => Record::$history,
+        ]);
     }
 }

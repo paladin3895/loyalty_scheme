@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
                 'error_code' => $exception->getStatusCode(),
             ], $exception->getStatusCode());
         });
+        $this->app->configure('liquid');
     }
 
     public function boot()

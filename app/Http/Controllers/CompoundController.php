@@ -40,9 +40,9 @@ abstract class CompoundController extends BaseApiController
     public function createEndpoint($id, $endpoint, Request $request)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
-        $data = $request->input($endpoint);
+        $data = $request->input(Helpers::singular($endpoint));
         if (!$data)
-            throw ExceptionResolver::resolve('bad request', "please provide data for {$endpoint}");
+            throw ExceptionResolver::resolve('bad request', "please provide data for " . Helpers::singular($endpoint));
         $record = $this->resolveEndpoint($id, $endpoint)->create($data);
         if (!$record)
             throw ExceptionResolver::resolve('resource', "cannot create new {$endpoint}");
@@ -52,9 +52,9 @@ abstract class CompoundController extends BaseApiController
     public function updateEndpoint($id, $endpoint, $endpoint_id, Request $request)
     {
         $this->checkEndpoint($endpoint, __FUNCTION__);
-        $data = $request->input($endpoint);
+        $data = $request->input(Helpers::singular($endpoint));
         if (!$data)
-            throw ExceptionResolver::resolve('bad request', "please provide data for {$endpoint}");
+            throw ExceptionResolver::resolve('bad request', "please provide data for " . Helpers::singular($endpoint));
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$endpoint_id} not exists");
@@ -72,7 +72,7 @@ abstract class CompoundController extends BaseApiController
         $this->checkEndpoint($endpoint, __FUNCTION__);
         $data = $request->input($endpoint);
         if (!$data)
-            throw ExceptionResolver::resolve('bad request', "please provide data for {$endpoint}");
+            throw ExceptionResolver::resolve('bad request', "please provide data for " . Helpers::singular($endpoint));
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$endpoint_id} not exists");
