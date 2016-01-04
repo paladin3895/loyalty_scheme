@@ -76,7 +76,6 @@ abstract class CompoundController extends BaseApiController
         $record = $this->resolveEndpoint($id, $endpoint)->where('id', $endpoint_id)->first();
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$endpoint} with id {$endpoint_id} not exists");
-        $record->clearDynamicFields();
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
