@@ -17,6 +17,7 @@ class CreateSchemaLinksTable extends Migration
             $table->integer('schema_id')->unsigned();
             $table->integer('node_from')->unsigned();
             $table->integer('node_to')->unsigned();
+            $table->text('config');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('schema_id')

@@ -1,10 +1,9 @@
 <?php
 namespace App\Formatters;
 
-use League\Fractal\TransformerAbstract;
 use App\Models\Schema;
 
-class SchemaFormatter extends TransformerAbstract
+class SchemaFormatter extends ModelFormatter
 {
     /**
      * List of resources possible to include
@@ -15,18 +14,13 @@ class SchemaFormatter extends TransformerAbstract
         'nodes', 'links'
     ];
 
-    public function transform(Schema $schema)
-    {
-        return $schema->toArray();
-    }
-
     protected function includeNodes(Schema $schema)
     {
-        return $this->collection($schema->nodes()->get(), new ModelFormatter);
+        return $this->collection($schema->nodes()->get(), new NodeFormatter);
     }
 
     protected function includeLinks(Schema $schema)
     {
-        return $this->collection($schema->links()->get(), new ModelFormatter);
+        return $this->collection($schema->links()->get(), new LinkFormatter);
     }
 }

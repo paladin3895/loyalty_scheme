@@ -16,9 +16,20 @@ class SchemaCompoundController extends CompoundController
     protected $repository;
 
     protected $endpoints = [
-        'node' => ['list', 'show', 'create', 'replace', 'update', 'delete'],
-        'link' => ['list', 'show', 'create', 'replace', 'update', 'delete'],
-        'entity' => ['apply'],
+        'node' => [
+            'methods' => [
+                'index', 'show', 'create', 'replace', 'update', 'delete'
+            ],
+            'controller' => 'App\Http\Controllers\NodeController',
+            'formatter' => 'App\Formatters\NodeFormatter',
+        ],
+        'link' => [
+            'methods' => [
+                'index', 'show', 'create', 'replace', 'update', 'delete'
+            ],
+            'controller' => 'App\Http\Controllers\LinkController',
+            'formatter' => 'App\Formatters\LinkFormatter',
+        ],
     ];
 
     public function __construct(Schema $repository, ModelFormatter $formatter)
@@ -26,9 +37,12 @@ class SchemaCompoundController extends CompoundController
         parent::__construct($repository, $formatter);
     }
 
+    /*
+     * This is special method to apply schema in an entity
+     *
+     */
     public function applyEndpoint($id, $endpoint, $endpoint_id, Entity $entity)
     {
-        $this->checkEndpoint($endpoint, __FUNCTION__);
         $schema = $this->repository->where('id', $id)->first();
         if (!$schema)
             throw ExceptionResolver::resolve('not found', "schema with id {$id} not exists");

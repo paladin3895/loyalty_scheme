@@ -72,11 +72,11 @@ abstract class SingularController extends BaseApiController
         $record = $this->repository->find($id);
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
-        $record->clearDynamicFields();
+        $record->clear();
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
-        if (!$record->update($data))
+        if (!$record->save())
             throw ExceptionResolver::resolve('resource', "cannot replace {$this->endpoint} with id {$id}");
         return $this->response->item($record, $this->formatter);
     }
@@ -95,11 +95,13 @@ abstract class SingularController extends BaseApiController
                     case '+': $record->$key += $matches[2]; break;
                     case '-': $record->$key -= $matches[2]; break;
                 }
+            } elseif ($value === '') {
+                $record->$key = null;
             } else {
                 $record->$key = $value;
             }
         }
-        if (!$record->update($data))
+        if (!$record->save())
             throw ExceptionResolver::resolve('resource', "cannot update {$this->endpoint} with id {$id}");
         return $this->response->item($record, $this->formatter);
     }

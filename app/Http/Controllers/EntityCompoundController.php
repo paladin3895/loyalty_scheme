@@ -9,11 +9,15 @@ class EntityCompoundController extends CompoundController
     protected $repository;
 
     protected $endpoints = [
-        'checkpoint' => ['list', 'show', 'delete']
+        'checkpoint' => [
+            'methods' => ['index', 'show', 'delete'],
+            'controller' => 'App\Http\Controllers\CheckpointController',
+            'formatter' => 'App\Formatters\CheckpointFormatter',
+        ]
     ];
 
-    public function __construct(Entity $repository, ModelFormatter $formatter)
+    public function __construct(Entity $repository)
     {
-        parent::__construct($repository, $formatter);
+        parent::__construct($repository);
     }
 }

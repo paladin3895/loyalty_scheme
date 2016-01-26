@@ -55,7 +55,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         $api->group(['prefix' => '/entity/{id:[0-9]+}'], function ($api) {
             $api->get('/{endpoint:[a-z]+}', [
                 'as' => 'entity_list_endpoint',
-                'uses' => 'EntityCompoundController@listEndpoint'
+                'uses' => 'EntityCompoundController@indexEndpoint'
             ]);
 
             $api->post('/{endpoint:[a-z]+}', [
@@ -87,7 +87,7 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         $api->group(['prefix' => '/schema/{id:[0-9]+}'], function ($api) {
             $api->get('/{endpoint:[a-z]+}', [
                 'as' => 'schema_list_endpoint',
-                'uses' => 'SchemaCompoundController@listEndpoint'
+                'uses' => 'SchemaCompoundController@indexEndpoint'
             ]);
 
             $api->post('/{endpoint:[a-z]+}', [

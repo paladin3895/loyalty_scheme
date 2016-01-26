@@ -17,6 +17,7 @@ class CreateSchemaNodesTable extends Migration
             $table->integer('schema_id')->unsigned();
             $table->text('policies');
             $table->text('rewards');
+            $table->text('config');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('schema_id')

@@ -33,4 +33,12 @@ abstract class BaseModel extends Model
     {
         parent::boot();
     }
+
+    public function clear()
+    {
+        foreach ($this->fillable as $key) {
+            $this->attributes[$key] = null;
+        }
+        return $this;
+    }
 }

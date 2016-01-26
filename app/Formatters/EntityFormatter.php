@@ -1,10 +1,10 @@
 <?php
 namespace App\Formatters;
 
-use League\Fractal\TransformerAbstract;
+use App\Formatters\ModelFormatter;
 use App\Models\Entity;
 
-class EntityFormatter extends TransformerAbstract
+class EntityFormatter extends ModelFormatter
 {
     /**
      * List of resources possible to include
@@ -15,8 +15,8 @@ class EntityFormatter extends TransformerAbstract
         'checkpoints'
     ];
 
-    public function transform(Entity $entity)
+    public function includeCheckpoints(Entity $entity)
     {
-        return $entity->toArray();
+        return $this->collection($entity->checkpoints()->get(), new ModelFormatter);
     }
 }
