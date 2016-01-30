@@ -24,4 +24,12 @@ class ComponentController extends BaseApiController
             'data' => \Liquid\Builders\PolicyBuilder::getRewardFormats()
         ]);
     }
+
+    public function getProcessors()
+    {
+        return $this->response->array([
+            'status' => 1,
+            'data' => \Liquid\Builders\PolicyBuilder::getProcessorFormats()
+        ]);
+    }
 }

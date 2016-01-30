@@ -36,21 +36,11 @@ $api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
         $api->post('/schema/{id:[0-9]+}', ['as' => 'schema_apply', 'uses' => 'SchemaController@apply']);
         // $api->match('head', '/schema', ['as' => 'schema_extract', 'uses' => 'SchemaController@extract']);
 
-        // $api->post('/policy', ['as' => 'policy_create', 'uses' => 'PolicyController@create']);
         $api->get('/policies', ['as' => 'policy_index', 'uses' => 'ComponentController@getPolicies']);
-        // $api->get('/policy/{id:[0-9]+}', ['as' => 'policy_show', 'uses' => 'PolicyController@show']);
-        // $api->put('/policy/{id:[0-9]+}', ['as' => 'policy_replace', 'uses' => 'PolicyController@replace']);
-        // $api->patch('/policy/{id:[0-9]+}', ['as' => 'policy_update', 'uses' => 'PolicyController@update']);
-        // $api->delete('/policy/{id:[0-9]+}', ['as' => 'policy_delete', 'uses' => 'PolicyController@delete']);
-        // $api->match('head', '/policy', ['as' => 'policy_extract', 'uses' => 'PolicyController@extract']);
 
-        // $api->post('/reward', ['as' => 'reward_create', 'uses' => 'RewardController@create']);
         $api->get('/rewards', ['as' => 'reward_index', 'uses' => 'ComponentController@getRewards']);
-        // $api->get('/reward/{id:[0-9]+}', ['as' => 'reward_show', 'uses' => 'RewardController@show']);
-        // $api->put('/reward/{id:[0-9]+}', ['as' => 'reward_replace', 'uses' => 'RewardController@replace']);
-        // $api->patch('/reward/{id:[0-9]+}', ['as' => 'reward_update', 'uses' => 'RewardController@update']);
-        // $api->delete('/reward/{id:[0-9]+}', ['as' => 'reward_delete', 'uses' => 'RewardController@delete']);
-        // $api->match('head', '/reward', ['as' => 'reward_extract', 'uses' => 'PrivilegeController@extract']);
+
+        $api->get('/processors', ['as' => 'processor_index', 'uses' => 'ComponentController@getProcessors']);
 
         $api->group(['prefix' => '/entity/{id:[0-9]+}'], function ($api) {
             $api->get('/{endpoint:[a-z]+}', [
