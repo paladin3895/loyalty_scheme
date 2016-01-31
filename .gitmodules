@@ -1,0 +1,4 @@
+[submodule "libraries/liquid"]
+	path = libraries/liquid
+	url = git@bitbucket.org:duydatyds/liquid.git
+	branch = liquid_policy
