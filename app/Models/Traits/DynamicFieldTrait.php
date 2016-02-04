@@ -20,7 +20,7 @@ trait DynamicFieldTrait
         if (!in_array($key, $this->staticFields)) {
             $dynamicField = isset($this->attributes[$this->dynamicField]) ?
                 $this->attributes[$this->dynamicField] : '{}';
-            if (!isset($this->bucket)) $this->bucket = json_decode($dynamicField);
+            if (!isset($this->bucket)) $this->bucket = (object)json_decode($dynamicField);
             $this->bucket->$key = $value;
             $this->attributes[$this->dynamicField] = json_encode($this->bucket);
         } else {

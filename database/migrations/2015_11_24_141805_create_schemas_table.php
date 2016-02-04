@@ -14,8 +14,7 @@ class CreateSchemasTable extends Migration
     {
         Schema::create('schemas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->text('description');
+            $table->text('attributes');
             $table->timestamps();
             $table->softDeletes();
         });

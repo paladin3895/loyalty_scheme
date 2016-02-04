@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Schema extends BaseModel
 {
-
+    use Traits\DynamicFieldTrait;
     /**
      * The database table used by the model.
      *
@@ -17,7 +17,15 @@ class Schema extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['name', 'description'];
+     protected $fillable = ['attributes'];
+
+     protected $staticFields = ['id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
+
+     protected $dynamicField = 'attributes';
+
+     protected $casts = [
+         'attributes' => 'object',
+     ];
 
     public function nodes()
     {
