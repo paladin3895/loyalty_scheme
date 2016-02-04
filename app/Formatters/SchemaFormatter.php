@@ -2,6 +2,7 @@
 namespace App\Formatters;
 
 use App\Models\Schema;
+use App\Models\BaseModel;
 
 class SchemaFormatter extends ModelFormatter
 {
@@ -13,6 +14,16 @@ class SchemaFormatter extends ModelFormatter
     protected $availableIncludes = [
         'nodes', 'links'
     ];
+
+    public function transform(BaseModel $model)
+    {
+        $model = $model->toArray();
+        $response['id'] = $model['id'];
+        foreach ($model['attributes'] as $key => $value) {
+          $response[$key] = $value;
+        }
+        return $response;
+    }
 
     protected function includeNodes(Schema $schema)
     {
