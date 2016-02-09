@@ -379,6 +379,12 @@ var SchemaDiagram = React.createClass({
       visible: nextProps.currentMode ? true : false,
       schemaNodes: nextProps.schemaNodes,
       schemaLinks: nextProps.schemaLinks,
+      currentNode: {
+        id: null,
+        config: {},
+        policies: [],
+        rewards: [],
+      },
     });
   },
   saveSchemaDiagram: function() {
@@ -570,54 +576,32 @@ var SchemaDiagramForm = React.createClass({
   render: function() {
     return (
       <div className="col-xs-6 left">
-        <NodeConfig
-          nodeComponents={this.props.nodeComponents}
-          nodeConfig={this.state.nodeConfig}
-        />
+
         <ul className="nav nav-tabs" role="tablist" style={{marginBottom: "15px"}}>
-          <li role="presentation" className="active"><a href="#policy-tab" aria-controls="policy-tab" role="tab" data-toggle="tab">Policy</a></li>
+          <li role="presentation" className="active"><a href="#config-tab" aria-controls="config-tab" role="tab" data-toggle="tab">Config</a></li>
+          <li role="presentation"><a href="#policy-tab" aria-controls="policy-tab" role="tab" data-toggle="tab">Policy</a></li>
           <li role="presentation"><a href="#reward-tab" aria-controls="reward-tab" role="tab" data-toggle="tab">Reward</a></li>
         </ul>
 
-        <div id="myTabContent" className="tab-content">
-          <div role="tabpanel" className="tab-pane fade in active" id="policy-tab" aria-labelledby="policy-tab">
-            <form className="form-horizontal">
-              <div className="form-group">
-                <label htmlFor="policy" className="col-sm-2 control-label">Policy</label>
-                <div className="col-sm-7">
-                  <select className="form-control" id="policy" placeholder="Policy">
-                  {Object.keys(this.props.policyComponents).map(function(type) {
-                    return (
-                      <option key={type} >{type}</option>
-                    );
-                  }, this)}
-                  </select>
-                </div>
-                <div className="col-sm-2">
-                  <button type="button" className="btn btn-default yellow"> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
-                </div>
 
-              </div>
-              <div className="col-sm-12 form-group right">
-                <div className="panel-group">
-                 {Object.keys(this.props.policies).map(function(id) {
-                   var policy = this.props.policies[id];
-                   return (
-                     <PolicyRecord
-                       key={id}
-                       recordId={id}
-                       recordData={this.props.policies[id]}
-                     />
-                   )
-                  }, this)
-                 }
-               </div>
-              </div>
-            </form>
-            <div className="col-sm-offset-1 col-sm-2"></div>
+        <div id="myTabContent" className="tab-content">
+          <div role="tabpanel" className="tab-pane fade in active" id="config-tab" aria-labelledby="config-tab">
+            <NodeConfig
+              nodeComponents={this.props.nodeComponents}
+              nodeConfig={this.state.nodeConfig}
+            />
+          </div>
+          <div role="tabpanel" className="tab-pane fade" id="policy-tab" aria-labelledby="policy-tab">
+            <NodeUnitComponents
+              unitComponents={this.props.policyComponents}
+              units={this.state.policies}
+            />
           </div>
           <div role="tabpanel" className="tab-pane fade" id="reward-tab" aria-labelledby="reward-tab">
-
+            <NodeUnitComponents
+              unitComponents={this.props.rewardComponents}
+              units={this.state.rewards}
+            />
           </div>
         </div>
       </div>
@@ -628,24 +612,36 @@ var SchemaDiagramForm = React.createClass({
 var NodeConfig = React.createClass({
   getInitialState: function() {
     return {
-      selectedNodeComponent: {},
-      nodeConfig: {}
+      nodeComponents: {},
+      selectedConfig: {},
     };
   },
   componentDidMount: function() {
+    var components = this.props.nodeComponents;
+    components['NodeConfig'] = {};
     this.setState({
-      nodeConfig: this.props.nodeConfig
+      nodeComponents: components,
     });
   },
   componentWillReceiveProps: function(nextProps) {
+    var components = this.props.nodeComponents;
+    components['NodeConfig'] = nextProps.nodeConfig;
     this.setState({
-      nodeConfig: nextProps.nodeConfig
+      nodeComponents: components,
+      selectedConfig: nextProps.nodeConfig ? nextProps.nodeConfig : {},
     });
   },
   selectNodeComponent: function(e) {
     this.setState({
-      selectedNodeComponent: this.props.nodeComponents[e.target.value]
+      selectedConfig: this.state.nodeComponents[e.target.value]
     });
+  },
+  handleKeyValueChange: function(e) {
+    var config = this.state.selectedConfig;
+    config[e.target.dataset.key] = e.target.value;
+    this.setState({
+      selectedConfig: config
+    })
   },
   render: function() {
     return (
@@ -655,39 +651,98 @@ var NodeConfig = React.createClass({
             <label htmlFor="policy" className="col-sm-2 control-label">Node</label>
             <div className="col-sm-9">
               <select className="form-control" id="policy" placeholder="Policy" onChange={this.selectNodeComponent}>
-                {Object.keys(this.state.nodeConfig).length == 0 ?
-                  <option selected disabled>Select a node type</option> :
-                  <option selected>Node config</option>}
-                {Object.keys(this.props.nodeComponents).map(function(type) {
-                  return (
-                    <option key={type}>{type}</option>
-                  );
+                {Object.keys(this.state.nodeComponents).map(function(type) {
+                  var component = this.state.nodeComponents[type];
+                  if (type == 'NodeConfig') {
+                    if (component == null) {
+                      return (
+                        <option key={type} selected disabled value={type}>Select a node type</option>
+                      );
+                    } else {
+                      return (
+                        <option key={type} selected value={type}>{type}</option>
+                      );
+                    }
+                  } else {
+                    return (
+                      <option key={type} value={type}>{type}</option>
+                    );
+                  }
                 }, this)}
               </select>
             </div>
 
           </div>
 
-          {Object.keys(this.state.selectedNodeComponent).map(function(key) {
-            var component = this.state.selectedNodeComponent;
-            var config = (component.class === this.state.nodeConfig.class) ? this.state.nodeConfig : {};
+          {Object.keys(this.state.selectedConfig).map(function(key) {
             return (
               <div key={"config_" + key} className="form-group">
                 <div className="col-sm-offset-2 col-sm-3">
                   <label className="form-control">{key}</label>
                 </div>
                 <div className="col-sm-6">
-                  {
-                    (key == 'class') ?
-                    <input type="text" className="form-control" value={component[key]} readOnly/> :
-                    <input type="text" className="form-control" value={config[key]} placeholder={component[key]}/>
-                  }
+                  <input type="text" data-key={key} className="form-control" value={this.state.selectedConfig[key]} readOnly={key == 'class' ? true : false} onChange={this.handleKeyValueChange}/>
                 </div>
               </div>
             );
           }, this)}
         </form>
       </div>
+    );
+  }
+});
+
+var NodeUnitComponents = React.createClass({
+  getInitialState: function() {
+    return {
+      units: {}
+    }
+  },
+  componentDidMount: function() {
+    this.setState({
+      units: this.props.units
+    })
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      units: nextProps.units
+    })
+  },
+  render: function() {
+    return (
+      <form className="form-horizontal">
+        <div className="form-group">
+          <label htmlFor="policy" className="col-sm-2 control-label">Units</label>
+          <div className="col-sm-7">
+            <select className="form-control" id="policy" placeholder="Policy">
+            {Object.keys(this.props.unitComponents).map(function(type) {
+              return (
+                <option key={type} >{type}</option>
+              );
+            }, this)}
+            </select>
+          </div>
+          <div className="col-sm-2">
+            <button type="button" className="btn btn-default yellow"> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
+          </div>
+
+        </div>
+        <div className="col-sm-12 form-group right">
+          <div className="panel-group">
+           {Object.keys(this.props.units).map(function(id) {
+             var units = this.props.units[id];
+             return (
+               <UnitRecord
+                 key={id}
+                 recordId={id}
+                 recordData={this.props.units[id]}
+               />
+             )
+            }, this)
+           }
+         </div>
+        </div>
+      </form>
     );
   }
 });
@@ -710,7 +765,7 @@ var NodeRecord = React.createClass({
   }
 });
 
-var PolicyRecord = React.createClass({
+var UnitRecord = React.createClass({
   getInitialState: function() {
     return {
       recordData: {}
