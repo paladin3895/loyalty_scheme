@@ -464,7 +464,14 @@ var SchemaDiagram = React.createClass({
     }, this);
   },
   prepareNewNode: function() {
-
+    this.setState({
+      currentNode: {
+        id: null,
+        config: {},
+        policies: [],
+        rewards: [],
+      },
+    })
   },
   createNode: function(data) {
 
@@ -536,10 +543,8 @@ var SchemaDiagram = React.createClass({
         </Modal.Body>
         <Modal.Footer>
           <div className="form-group">
-            <div className="col-sm-6">
+            <div className="col-sm-12">
               <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewInstance}> <i className="fa fa-copy">&nbsp; New</i></button>
-            </div>
-            <div className="col-sm-6">
               <button type="button" className="btn btn-warning" onClick={this.saveSchemaDiagram}> <i className="fa fa-floppy-o">&nbsp; Save</i></button>
               <button type="button" className="btn btn-danger" onClick={this.prepareNewInstance}> <i className="fa fa-trash">&nbsp; Delete</i></button>
               <button type="button" className="btn btn-default" onClick={this.hideModal}>Cancel</button>
@@ -695,7 +700,8 @@ var NodeConfig = React.createClass({
 var NodeUnitComponents = React.createClass({
   getInitialState: function() {
     return {
-      units: {}
+      units: {},
+      selectedUnit: {},
     }
   },
   componentDidMount: function() {
@@ -708,22 +714,45 @@ var NodeUnitComponents = React.createClass({
       units: nextProps.units
     })
   },
+  selectUnit: function(e) {
+    var unit = this.props.unitComponents[e.target.value];
+    this.setState({
+      selectedUnit: unit
+    })
+  },
+  addUnit: function() {
+    var units = this.state.units;
+    if (Object.keys(this.state.selectedUnit).length > 0) {
+      units['unit_' + Date.now().toString()] = this.state.selectedUnit;
+      this.setState({
+        units: units
+      })
+    }
+  },
+  removeUnit: function(id) {
+    var units = this.state.units;
+    delete units[id];
+    this.setState({
+      units: units
+    })
+  },
   render: function() {
     return (
       <form className="form-horizontal">
         <div className="form-group">
           <label htmlFor="policy" className="col-sm-2 control-label">Units</label>
           <div className="col-sm-7">
-            <select className="form-control" id="policy" placeholder="Policy">
+            <select className="form-control" id="policy" placeholder="Policy" onChange={this.selectUnit}>
+              <option selected disabled>Select a unit component</option>
             {Object.keys(this.props.unitComponents).map(function(type) {
               return (
-                <option key={type} >{type}</option>
+                <option key={type} value={type}>{type}</option>
               );
             }, this)}
             </select>
           </div>
           <div className="col-sm-2">
-            <button type="button" className="btn btn-default yellow"> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
+            <button type="button" className="btn btn-default yellow" onClick={this.addUnit}> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
           </div>
 
         </div>
@@ -736,10 +765,10 @@ var NodeUnitComponents = React.createClass({
                  key={id}
                  recordId={id}
                  recordData={this.props.units[id]}
+                 removeUnit={this.removeUnit}
                />
              )
-            }, this)
-           }
+            }, this)}
          </div>
         </div>
       </form>
@@ -759,7 +788,10 @@ var NodeRecord = React.createClass({
       <tr>
           <td>{this.props.nodeId}</td>
           <td>{this.props.nodeConfig.class}</td>
-          <td><i className="fa fa-pencil" onClick={this.showNode}></i> <i className="fa fa-trash" onClick={this.deleteNode}></i></td>
+          <td>
+            <button type="button" className="btn btn-info" onClick={this.showNode}><i className="fa fa-file-text-o"></i></button>
+            <button type="button" className="btn btn-danger" onClick={this.deleteNode}><i className="fa fa-trash"></i></button>
+          </td>
       </tr>
     );
   }
@@ -788,11 +820,15 @@ var UnitRecord = React.createClass({
       recordData: recordData
     })
   },
+  removeUnit: function() {
+    this.props.removeUnit(this.props.recordId);
+  },
   render: function() {
     return (<div className="panel panel-default">
       <div className="panel-heading">
         <h4 className="panel-title">
           <a data-toggle="collapse" href={"#policy_" + this.props.recordId}>{this.state.recordData.class}</a>
+          <span className="label label-danger hover pull-right" data-id={this.props.recordId} onClick={this.removeUnit}><i className="fa fa-trash"></i></span>
         </h4>
       </div>
       <div id={"policy_" + this.props.recordId} className="panel-collapse collapse">
