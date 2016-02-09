@@ -121,8 +121,6 @@ var SchemaManager = React.createClass({
           formMode={this.state.formMode}
           createSchema={this.createSchema}
           updateSchemaInfo={this.updateSchemaInfo}
-          // updateSchemaNode={this.updateSchemaNode}
-          // updateSchemaLink={this.updateSchemaLink}
         />
       </div>
     );
@@ -144,7 +142,7 @@ var SchemaList = React.createClass({
     return (
       <div className="col-sm-offset-2 col-sm-8">
         <table className="table table-hover table-bordered table-striped">
-          <thead>
+          <thead className="thead-inverse">
             <tr>
               <th>Name</th>
               <th>User link</th>
@@ -176,11 +174,10 @@ var SchemaList = React.createClass({
 
 var SchemaRecord = React.createClass({
   showSchemaInfo: function() {
-    console.log(this.props);
     this.props.showSchema(this.props.schemaId, 'info');
   },
-  showSchemaDetail: function() {
-    this.props.showSchema(this.props.schemaId, 'detail');
+  showSchemaDiagram: function() {
+    this.props.showSchema(this.props.schemaId, 'diagram');
   },
   deleteSchema: function() {
     var confirm = window.confirm('Are you sure?');
@@ -196,7 +193,7 @@ var SchemaRecord = React.createClass({
         <td>{this.props.schemaDescription}</td>
         <td>
           <button type="button" className="btn btn-info" onClick={this.showSchemaInfo}><i className="fa fa-file-text-o"></i></button>
-          <button type="button" className="btn btn-primary" onClick={this.showSchemaDetail}><i className="fa fa-usb"></i></button>
+          <button type="button" className="btn btn-primary" onClick={this.showSchemaDiagram}><i className="fa fa-usb"></i></button>
           <button type="button" className="btn btn-danger" onClick={this.deleteSchema}><i className="fa fa-trash"></i></button>
         </td>
       </tr>
@@ -226,11 +223,16 @@ var SchemaForm = React.createClass({
       schemaName: nextProps.schemaData.name,
       schemaLink: nextProps.schemaData.link,
       schemaDescription: nextProps.schemaData.description,
+      schemaNodes: nextProps.schemaData.nodes ? nextProps.schemaData.nodes.data : [],
+      schemaLinks: nextProps.schemaData.links ? nextProps.schemaData.links.data : [],
       mode: nextProps.formMode,
     });
   },
   updateSchemaInfo: function(data, id) {
     this.props.updateSchemaInfo(data, id);
+  },
+  updateSchemaDiagram: function(nodes, links, id) {
+    this.props.updateSchemaDiagram(nodes, links, id);
   },
   createSchema: function(data) {
     this.props.createSchema(data);
@@ -247,7 +249,15 @@ var SchemaForm = React.createClass({
           createSchema={this.createSchema}
           currentMode={this.state.mode == 'info' ? true : false}
         />
-        <SchemaDetail/>
+        <SchemaDiagram
+          schemaId={this.state.schemaId}
+          schemaName={this.state.schemaName}
+          schemaDescription={this.state.schemaDescription}
+          schemaNodes={this.state.schemaNodes}
+          schemaLinks={this.state.schemaLinks}
+          updateSchemaDiagram={this.updateSchemaDiagram}
+          currentMode={this.state.mode == 'diagram' ? true : false}
+        />
       </div>
     );
   }
@@ -342,172 +352,415 @@ var SchemaInfo = React.createClass({
   }
 });
 
-var SchemaDetail = React.createClass({
+var SchemaDiagram = React.createClass({
+  getInitialState: function() {
+    return {
+      schemaNodes: [],
+      schemaLinks: [],
+      currentNode: {
+        id: null,
+        config: {},
+        policies: [],
+        rewards: [],
+      },
+      visible: false,
+      nodeComponents: {},
+      policyComponents: {},
+      rewardComponents: {},
+    };
+  },
+  componentDidMount: function() {
+    this.listNodeComponents();
+    this.listPolicyComponents();
+    this.listRewardComponents();
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      visible: nextProps.currentMode ? true : false,
+      schemaNodes: nextProps.schemaNodes,
+      schemaLinks: nextProps.schemaLinks,
+    });
+  },
+  saveSchemaDiagram: function() {
+
+  },
+  listNodeComponents: function() {
+    $.ajax({
+      url: 'http://liquid.dev/processors',
+      method: 'GET',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
+        this.setState({
+          nodeComponents: res.data,
+        });
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  },
+  listPolicyComponents: function() {
+    $.ajax({
+      url: 'http://liquid.dev/policies',
+      method: 'GET',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
+        this.setState({
+          policyComponents: res.data,
+        });
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  },
+  listRewardComponents: function() {
+    $.ajax({
+      url: 'http://liquid.dev/rewards',
+      method: 'GET',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
+        this.setState({
+          rewardComponents: res.data,
+        });
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  },
+  listNodes: function() {
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/nodes',
+      method: 'GET',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
+        this.setState({
+          schemaNodes: res.data,
+        });
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  },
+  showNode: function(id) {
+    this.state.schemaNodes.forEach(function(node) {
+      if (id === node.id) {
+        this.setState({
+          currentNode: node
+        });
+      }
+    }, this);
+  },
+  prepareNewNode: function() {
+
+  },
+  createNode: function(data) {
+
+  },
+  updateNode: function(data, id) {
+
+  },
+  deleteNode: function(id) {
+
+  },
+  listLinks: function() {
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/links',
+      method: 'GET',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
+        this.setState({
+          schemaLinks: res.data,
+        });
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  },
+  hideModal: function() {
+    this.setState({visible: false});
+  },
   render: function() {
     return (
-      <div className="modal fade bs-example-modal-lg" tabIndex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="schema-details">
-        <div className="modal-dialog modal-lg" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 className="modal-title" id="myModalLabel">Modal title</h4>
+      <Modal tabIndex="-1" show={this.state.visible} onHide={this.hideModal} bsSize="large" aria-labelledby="contained-modal-title-lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body style={{padding: "0px"}}>
+          <div className="col-xs-6 left">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Class</th>
+                    <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.schemaNodes.map(function(node) {
+                  return (
+                    <NodeRecord
+                      key={node.id}
+                      nodeId={node.id}
+                      nodeConfig={node.config}
+                      showNode={this.showNode}
+                      deleteNode={this.deleteNode}
+                    />
+                  )
+                }, this)}
+              </tbody>
+            </table>
+          </div>
+          <SchemaDiagramForm
+            nodeComponents={this.state.nodeComponents}
+            policyComponents={this.state.policyComponents}
+            rewardComponents={this.state.rewardComponents}
+            nodeConfig={this.state.currentNode.config}
+            policies={this.state.currentNode.policies}
+            rewards={this.state.currentNode.rewards}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="form-group">
+            <div className="col-sm-6">
+              <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewInstance}> <i className="fa fa-copy">&nbsp; New</i></button>
             </div>
-            <div className="modal-body">
-              <div className="col-xs-6 left">
-                <div className="form-group">
-                  <label className="col-sm-4 control-label"><a href="#">Back Schema list</a></label>
+            <div className="col-sm-6">
+              <button type="button" className="btn btn-warning" onClick={this.saveSchemaDiagram}> <i className="fa fa-floppy-o">&nbsp; Save</i></button>
+              <button type="button" className="btn btn-danger" onClick={this.prepareNewInstance}> <i className="fa fa-trash">&nbsp; Delete</i></button>
+              <button type="button" className="btn btn-default" onClick={this.hideModal}>Cancel</button>
+            </div>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+});
+
+var SchemaDiagramForm = React.createClass({
+  getInitialState: function() {
+    return {
+      policies: [],
+      rewards: [],
+      nodeConfig: {},
+    };
+  },
+  componentDidMount: function() {
+    this.setState({
+      policies: this.props.policies,
+      rewards: this.props.rewards,
+      nodeConfig: this.props.NodeConfig,
+    })
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      policies: nextProps.policies,
+      rewards: nextProps.rewards,
+      nodeConfig: nextProps.nodeConfig
+    });
+  },
+  render: function() {
+    return (
+      <div className="col-xs-6 left">
+        <NodeConfig
+          nodeComponents={this.props.nodeComponents}
+          nodeConfig={this.state.nodeConfig}
+        />
+        <ul className="nav nav-tabs" role="tablist" style={{marginBottom: "15px"}}>
+          <li role="presentation" className="active"><a href="#policy-tab" aria-controls="policy-tab" role="tab" data-toggle="tab">Policy</a></li>
+          <li role="presentation"><a href="#reward-tab" aria-controls="reward-tab" role="tab" data-toggle="tab">Reward</a></li>
+        </ul>
+
+        <div id="myTabContent" className="tab-content">
+          <div role="tabpanel" className="tab-pane fade in active" id="policy-tab" aria-labelledby="policy-tab">
+            <form className="form-horizontal">
+              <div className="form-group">
+                <label htmlFor="policy" className="col-sm-2 control-label">Policy</label>
+                <div className="col-sm-7">
+                  <select className="form-control" id="policy" placeholder="Policy">
+                  {Object.keys(this.props.policyComponents).map(function(type) {
+                    return (
+                      <option key={type} >{type}</option>
+                    );
+                  }, this)}
+                  </select>
+                </div>
+                <div className="col-sm-2">
+                  <button type="button" className="btn btn-default yellow"> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
                 </div>
 
               </div>
-
-              <div className="col-xs-6 left">
-                <ul className="nav nav-tabs" role="tablist">
-                  <li role="presentation" className="active"><a href="#policy-tab" aria-controls="policy-tab" role="tab" data-toggle="tab">Policy</a></li>
-                  <li role="presentation"><a href="#reward-tab" aria-controls="reward-tab" role="tab" data-toggle="tab">Reward</a></li>
-                </ul>
-
-                <div id="myTabContent" className="tab-content">
-                  <div role="tabpanel" className="tab-pane fade in active" id="policy-tab" aria-labelledby="policy-tab">
-                    <form className="form-horizontal">
-                      <div className="form-group">
-                        <label htmlFor="category" className="col-sm-2 control-label">Category</label>
-                        <div className="col-sm-9">
-                          <select className="form-control" id="category" placeholder="Category">
-                            <option>Select</option>
-                          </select>
-                        </div>
-
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="policy" className="col-sm-2 control-label">Policy</label>
-                        <div className="col-sm-9">
-                          <select className="form-control" id="policy" placeholder="Policy">
-                            <option>Select</option>
-                          </select>
-                        </div>
-
-                      </div>
-                      <div className="form-group">
-                        <div className="col-sm-2 control-label">
-
-                        </div>
-                        <div className="col-sm-4">
-                          <input type="text" className="form-control" id="key_1" placeholder="Key"/>
-                        </div>
-                        <div className="col-sm-4">
-                          <input type="text" className="form-control" id="value_1" placeholder="Value"/>
-                        </div>
-                        <div className="col-sm-1">
-                          <i className="fa fa-plus-circle fa-2"></i>
-                        </div>
-                      </div>
-
-                      <div className="form-group right">
-                        <div className="col-sm-offset-7 col-sm-6">
-                          <button type="button" className="btn btn-default yellow"> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
-                          <div className="button-distance"></div>
-                          <button type="button" className="btn btn-default">Reset</button>
-                        </div>
-                      </div>
-
-                    </form>
-
-                    <div className="col-sm-offset-1 col-sm-2"></div>
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Level</th>
-                          <th>Policy </th>
-                          <th>Key/Value</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Level 1</td>
-                          <td>Login in <b>5</b> consecutive days </td>
-                          <td>n=5</td>
-                          <td><i className="fa fa-pencil"></i> <i className="fa fa-trash"></i></td>
-                        </tr>
-                      </tbody>
-                    </table>
-
-                  </div>
-
-                  <div role="tabpanel" className="tab-pane fade" id="reward-tab" aria-labelledby="reward-tab">
-                    <form className="form-horizontal">
-                      <div className="form-group">
-                        <label htmlFor="category-rule" className="col-sm-2 control-label">Category</label>
-                        <div className="col-sm-9">
-                          <select className="form-control" id="category-rule" placeholder="Category">
-                            <option>Select</option>
-                          </select>
-                        </div>
-
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="policy-rule" className="col-sm-2 control-label">Reward</label>
-                        <div className="col-sm-9">
-                          <select className="form-control" id="policy-rule" placeholder="Policy">
-                            <option>Select</option>
-                          </select>
-                        </div>
-
-                      </div>
-                      <div className="form-group">
-                        <div className="col-sm-2 control-label">
-
-                        </div>
-                        <div className="col-sm-4">
-                          <input type="text" className="form-control" id="key" placeholder="Key"/>
-                        </div>
-                        <div className="col-sm-4">
-                          <input type="text" className="form-control" id="value" placeholder="Value"/>
-                        </div>
-                        <div className="col-sm-1">
-                          <i className="fa fa-plus-circle fa-2"></i>
-                        </div>
-
-                      </div>
-
-                      <div className="form-group right">
-                        <div className="col-sm-offset-7 col-sm-6">
-                          <button type="button" className="btn btn-default yellow"> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
-                          <div className="button-distance"></div>
-                          <button type="button" className="btn btn-default">Reset</button>
-                        </div>
-
-                      </div>
-                    </form>
-
-                    <div className="col-sm-offset-1 col-sm-2"></div>
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Level</th>
-                          <th>Reward</th>
-                          <th>Key/Value</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Level 1</td>
-                          <td>Login in <b>5</b> consecutive days</td>
-                          <td>n=5</td>
-                          <td><i className="fa fa-pencil"></i> <i className="fa fa-trash"></i></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                </div>
+              <div className="col-sm-12 form-group right">
+                <div className="panel-group">
+                 {Object.keys(this.props.policies).map(function(id) {
+                   var policy = this.props.policies[id];
+                   return (
+                     <PolicyRecord
+                       key={id}
+                       recordId={id}
+                       recordData={this.props.policies[id]}
+                     />
+                   )
+                  }, this)
+                 }
+               </div>
               </div>
-            </div>
+            </form>
+            <div className="col-sm-offset-1 col-sm-2"></div>
+          </div>
+          <div role="tabpanel" className="tab-pane fade" id="reward-tab" aria-labelledby="reward-tab">
+
           </div>
         </div>
       </div>
     );
+  }
+});
+
+var NodeConfig = React.createClass({
+  getInitialState: function() {
+    return {
+      selectedNodeComponent: {},
+      nodeConfig: {}
+    };
+  },
+  componentDidMount: function() {
+    this.setState({
+      nodeConfig: this.props.nodeConfig
+    });
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      nodeConfig: nextProps.nodeConfig
+    });
+  },
+  selectNodeComponent: function(e) {
+    this.setState({
+      selectedNodeComponent: this.props.nodeComponents[e.target.value]
+    });
+  },
+  render: function() {
+    return (
+      <div>
+        <form className="form-horizontal">
+          <div className="form-group">
+            <label htmlFor="policy" className="col-sm-2 control-label">Node</label>
+            <div className="col-sm-9">
+              <select className="form-control" id="policy" placeholder="Policy" onChange={this.selectNodeComponent}>
+                {Object.keys(this.state.nodeConfig).length == 0 ?
+                  <option selected disabled>Select a node type</option> :
+                  <option selected>Node config</option>}
+                {Object.keys(this.props.nodeComponents).map(function(type) {
+                  return (
+                    <option key={type}>{type}</option>
+                  );
+                }, this)}
+              </select>
+            </div>
+
+          </div>
+
+          {Object.keys(this.state.selectedNodeComponent).map(function(key) {
+            var component = this.state.selectedNodeComponent;
+            var config = (component.class === this.state.nodeConfig.class) ? this.state.nodeConfig : {};
+            return (
+              <div key={"config_" + key} className="form-group">
+                <div className="col-sm-offset-2 col-sm-3">
+                  <label className="form-control">{key}</label>
+                </div>
+                <div className="col-sm-6">
+                  {
+                    (key == 'class') ?
+                    <input type="text" className="form-control" value={component[key]} readOnly/> :
+                    <input type="text" className="form-control" value={config[key]} placeholder={component[key]}/>
+                  }
+                </div>
+              </div>
+            );
+          }, this)}
+        </form>
+      </div>
+    );
+  }
+});
+
+var NodeRecord = React.createClass({
+  showNode: function() {
+    this.props.showNode(this.props.nodeId);
+  },
+  deleteNode: function() {
+    this.props.deleteNode(this.props.nodeId);
+  },
+  render: function() {
+    return (
+      <tr>
+          <td>{this.props.nodeId}</td>
+          <td>{this.props.nodeConfig.class}</td>
+          <td><i className="fa fa-pencil" onClick={this.showNode}></i> <i className="fa fa-trash" onClick={this.deleteNode}></i></td>
+      </tr>
+    );
+  }
+});
+
+var PolicyRecord = React.createClass({
+  getInitialState: function() {
+    return {
+      recordData: {}
+    };
+  },
+  componentDidMount: function() {
+    this.setState({
+      recordData: this.props.recordData
+    });
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      recordData: nextProps.recordData
+    });
+  },
+  handleKeyValueChange: function(e) {
+    var recordData = this.state.recordData;
+    recordData[e.target.dataset.key] = e.target.value;
+    this.setState({
+      recordData: recordData
+    })
+  },
+  render: function() {
+    return (<div className="panel panel-default">
+      <div className="panel-heading">
+        <h4 className="panel-title">
+          <a data-toggle="collapse" href={"#policy_" + this.props.recordId}>{this.state.recordData.class}</a>
+        </h4>
+      </div>
+      <div id={"policy_" + this.props.recordId} className="panel-collapse collapse">
+        <div className="panel-body">
+        {
+          Object.keys(this.state.recordData).map(function(key) {
+            if (key == 'class') return;
+            var data = this.state.recordData;
+            return(
+              <div key={this.props.recordId + "_" + key} className="row">
+                <div className="col-sm-3">
+                <label className="form-control">{key}</label>
+                </div>
+                <div className="col-sm-9">
+                <input type="text" className="form-control" placeholder="Value" data-key={key} value={data[key]} onChange={this.handleKeyValueChange}/>
+                </div>
+              </div>
+            );
+          }, this)
+        }
+        </div>
+      </div>
+    </div>);
   }
 });
 
