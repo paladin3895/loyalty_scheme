@@ -474,10 +474,14 @@ var SchemaDiagram = React.createClass({
     })
   },
   createNode: function(data) {
-
+    console.log('node has been created');
+    console.log(data);
+    // @TODO implement logic for createNode
   },
   updateNode: function(data, id) {
-
+    console.log('node ' + id + ' has been updated');
+    console.log(data);
+    // @TODO implement logic for updateNode
   },
   deleteNode: function(id) {
 
@@ -536,19 +540,17 @@ var SchemaDiagram = React.createClass({
             nodeComponents={this.state.nodeComponents}
             policyComponents={this.state.policyComponents}
             rewardComponents={this.state.rewardComponents}
+            nodeId={this.state.currentNode.id}
             nodeConfig={this.state.currentNode.config}
             policies={this.state.currentNode.policies}
             rewards={this.state.currentNode.rewards}
+            updateNode={this.updateNode}
+            createNode={this.createNode}
           />
         </Modal.Body>
         <Modal.Footer>
-          <div className="form-group">
-            <div className="col-sm-12">
-              <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewInstance}> <i className="fa fa-copy">&nbsp; New</i></button>
-              <button type="button" className="btn btn-warning" onClick={this.saveSchemaDiagram}> <i className="fa fa-floppy-o">&nbsp; Save</i></button>
-              <button type="button" className="btn btn-danger" onClick={this.prepareNewInstance}> <i className="fa fa-trash">&nbsp; Delete</i></button>
-              <button type="button" className="btn btn-default" onClick={this.hideModal}>Cancel</button>
-            </div>
+          <div className="col-sm-12">
+            <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewNode}> <i className="fa fa-copy">&nbsp; New</i></button>
           </div>
         </Modal.Footer>
       </Modal>
@@ -578,6 +580,21 @@ var SchemaDiagramForm = React.createClass({
       nodeConfig: nextProps.nodeConfig
     });
   },
+  saveNode: function() {
+    var data = {
+      config: this.refs.nodeConfigTab.state.selectedConfig,
+      policies: this.refs.policiesTab.state.units,
+      rewards: this.refs.rewardsTab.state.units,
+    };
+    if (this.props.nodeId == null) {
+      this.props.createNode(data);
+    } else {
+      this.props.updateNode(data, this.props.nodeId);
+    }
+  },
+  deleteNode: function() {
+    this.props.deleteNode(this.props.nodeId);
+  },
   render: function() {
     return (
       <div className="col-xs-6 left">
@@ -592,22 +609,31 @@ var SchemaDiagramForm = React.createClass({
         <div id="myTabContent" className="tab-content">
           <div role="tabpanel" className="tab-pane fade in active" id="config-tab" aria-labelledby="config-tab">
             <NodeConfig
+              ref="nodeConfigTab"
               nodeComponents={this.props.nodeComponents}
               nodeConfig={this.state.nodeConfig}
             />
           </div>
           <div role="tabpanel" className="tab-pane fade" id="policy-tab" aria-labelledby="policy-tab">
             <NodeUnitComponents
+              ref="policiesTab"
               unitComponents={this.props.policyComponents}
               units={this.state.policies}
             />
           </div>
           <div role="tabpanel" className="tab-pane fade" id="reward-tab" aria-labelledby="reward-tab">
             <NodeUnitComponents
+              ref="rewardsTab"
               unitComponents={this.props.rewardComponents}
               units={this.state.rewards}
             />
           </div>
+        </div>
+
+        <div className="form-group">
+          <button type="button" className="btn btn-default pull-right" onClick={this.hideModal}>Cancel</button>
+          <button type="button" className="btn btn-danger pull-right" onClick={this.deleteNode}> <i className="fa fa-trash">&nbsp; Delete</i></button>
+          <button type="button" className="btn btn-warning pull-right" onClick={this.saveNode}> <i className="fa fa-floppy-o">&nbsp; Save</i></button>
         </div>
       </div>
     );
@@ -659,7 +685,7 @@ var NodeConfig = React.createClass({
                 {Object.keys(this.state.nodeComponents).map(function(type) {
                   var component = this.state.nodeComponents[type];
                   if (type == 'NodeConfig') {
-                    if (component == null) {
+                    if ((component == null) || (Object.keys(component).length == 0)) {
                       return (
                         <option key={type} selected disabled value={type}>Select a node type</option>
                       );
