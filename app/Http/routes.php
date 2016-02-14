@@ -12,6 +12,7 @@
 */
 
 $app->get('/', ['as' => 'liquid', 'uses' => 'LiquidController@index']);
+$app->get('/diagram', ['as' => 'liquid_diagram', 'uses' => 'LiquidController@diagram']);
 
 $api = app('Dingo\Api\Routing\Router');
 

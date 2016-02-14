@@ -63,14 +63,15 @@ abstract class CompoundController extends BaseApiController
                     ->delete($endpoint_id);
     }
 
-    protected function resolveRepository($id, $endpoint)
+    protected function resolveRelation($id, $endpoint)
     {
         $record = $this->repository->where('id', $id)->first();
         if (!$record)
             throw ExceptionResolver::resolve('not found', "parent endpoint not found");
         if (!is_callable([$record, Helpers::plural($endpoint)]))
             throw ExceptionResolver::resolve('not found', "cannot access nested endpoint {$endpoint}");
-        return call_user_func([$record, Helpers::plural($endpoint)])->getRelated();
+        $relation = call_user_func([$record, Helpers::plural($endpoint)]);
+        return $relation;
     }
 
     protected function resolveFormatter($endpoint)
@@ -89,9 +90,11 @@ abstract class CompoundController extends BaseApiController
             throw ExceptionResolver::resolve('not found', "endpoint {$endpoint} not found");
         $ref = new \ReflectionClass($this->endpoints[$endpoint]['controller']);
         if ($ref->isInstantiable() && $ref->isSubclassOf('App\Http\Controllers\SingularController')) {
+            $relation = $this->resolveRelation($id, $endpoint);
             return $ref->newInstance(
-                $this->resolveRepository($id,$endpoint),
-                $this->resolveFormatter($endpoint)
+                $relation->getRelated(),
+                $this->resolveFormatter($endpoint),
+                $relation
             );
         } else {
             throw ExceptionResolver::resolve('error', "misconfig for nested endpoint {$endpoint}");
