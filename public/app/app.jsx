@@ -357,11 +357,12 @@ var SchemaDiagram = React.createClass({
     return {
       schemaNodes: [],
       schemaLinks: [],
+      diagram: null,
       currentNode: {
         id: null,
         config: {},
-        policies: [],
-        rewards: [],
+        policies: {},
+        rewards: {},
       },
       visible: false,
       nodeComponents: {},
@@ -382,8 +383,8 @@ var SchemaDiagram = React.createClass({
       currentNode: {
         id: null,
         config: {},
-        policies: [],
-        rewards: [],
+        policies: {},
+        rewards: {},
       },
     });
   },
@@ -468,23 +469,60 @@ var SchemaDiagram = React.createClass({
       currentNode: {
         id: null,
         config: {},
-        policies: [],
-        rewards: [],
+        policies: {},
+        rewards: {},
       },
     })
   },
   createNode: function(data) {
-    console.log('node has been created');
-    console.log(data);
-    // @TODO implement logic for createNode
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/nodes',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        node: data
+      },
+      cache: false,
+      success: function(res) {
+        console.log(res.data);
+        this.listNodes();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
   },
   updateNode: function(data, id) {
-    console.log('node ' + id + ' has been updated');
-    console.log(data);
-    // @TODO implement logic for updateNode
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/node/' + id,
+      method: 'PATCH',
+      dataType: 'json',
+      data: {
+        node: data
+      },
+      cache: false,
+      success: function(res) {
+        console.log(res.data);
+        this.listNodes();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
   },
   deleteNode: function(id) {
-
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/node/' + id,
+      method: 'DELETE',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
+        this.listNodes();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
   },
   listLinks: function() {
     $.ajax({
@@ -502,6 +540,18 @@ var SchemaDiagram = React.createClass({
       }.bind(this)
     });
   },
+  createLink: function(data) {
+    console.log(data);
+    // @TODO implement logic
+  },
+  updateLink: function(data, id) {
+    console.log(id, data);
+    // @TODO implement logic
+  },
+  deleteLink: function(id) {
+    console.log(id);
+    // @TODO implement logic
+  },
   hideModal: function() {
     this.setState({visible: false});
   },
@@ -512,29 +562,14 @@ var SchemaDiagram = React.createClass({
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{padding: "0px"}}>
+          <div className="col-xs-12" id="diagram"></div>
           <div className="col-xs-6 left">
-            <table className="table table-hover">
-              <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Class</th>
-                    <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.schemaNodes.map(function(node) {
-                  return (
-                    <NodeRecord
-                      key={node.id}
-                      nodeId={node.id}
-                      nodeConfig={node.config}
-                      showNode={this.showNode}
-                      deleteNode={this.deleteNode}
-                    />
-                  )
-                }, this)}
-              </tbody>
-            </table>
+            <NodeTable
+              schemaNodes={this.state.schemaNodes}
+              prepareNewNode={this.prepareNewNode}
+              showNode={this.showNode}
+              deleteNode={this.deleteNode}
+            />
           </div>
           <SchemaDiagramForm
             nodeComponents={this.state.nodeComponents}
@@ -547,11 +582,17 @@ var SchemaDiagram = React.createClass({
             updateNode={this.updateNode}
             createNode={this.createNode}
           />
+          <div className="col-xs-12">
+            <LinkTable
+              schemaNodes={this.state.schemaNodes}
+              schemaLinks={this.state.schemaLinks}
+              createLink={this.createLink}
+              updateLink={this.updateLink}
+              deleteLink={this.deleteLink}
+            />
+          </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="col-sm-12">
-            <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewNode}> <i className="fa fa-copy">&nbsp; New</i></button>
-          </div>
         </Modal.Footer>
       </Modal>
     );
@@ -561,8 +602,8 @@ var SchemaDiagram = React.createClass({
 var SchemaDiagramForm = React.createClass({
   getInitialState: function() {
     return {
-      policies: [],
-      rewards: [],
+      policies: {},
+      rewards: {},
       nodeConfig: {},
     };
   },
@@ -575,9 +616,9 @@ var SchemaDiagramForm = React.createClass({
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({
-      policies: nextProps.policies,
-      rewards: nextProps.rewards,
-      nodeConfig: nextProps.nodeConfig
+      policies: nextProps.policies != null ? nextProps.policies : {},
+      rewards: nextProps.rewards != null ? nextProps.rewards : {},
+      nodeConfig: nextProps.nodeConfig != null ? nextProps.nodeConfig : {}
     });
   },
   saveNode: function() {
@@ -645,26 +686,29 @@ var NodeConfig = React.createClass({
     return {
       nodeComponents: {},
       selectedConfig: {},
+      currentValue: 'default'
     };
   },
   componentDidMount: function() {
     var components = this.props.nodeComponents;
-    components['NodeConfig'] = {};
+    components['default'] = {};
     this.setState({
       nodeComponents: components,
     });
   },
   componentWillReceiveProps: function(nextProps) {
     var components = this.props.nodeComponents;
-    components['NodeConfig'] = nextProps.nodeConfig;
+    components['default'] = nextProps.nodeConfig;
     this.setState({
       nodeComponents: components,
       selectedConfig: nextProps.nodeConfig ? nextProps.nodeConfig : {},
+      currentValue: 'default'
     });
   },
   selectNodeComponent: function(e) {
     this.setState({
-      selectedConfig: this.state.nodeComponents[e.target.value]
+      selectedConfig: this.state.nodeComponents[e.target.value],
+      currentValue: e.target.value
     });
   },
   handleKeyValueChange: function(e) {
@@ -681,17 +725,17 @@ var NodeConfig = React.createClass({
           <div className="form-group">
             <label htmlFor="policy" className="col-sm-2 control-label">Node</label>
             <div className="col-sm-9">
-              <select className="form-control" id="policy" placeholder="Policy" onChange={this.selectNodeComponent}>
+              <select className="form-control" value={this.state.currentValue} onChange={this.selectNodeComponent}>
                 {Object.keys(this.state.nodeComponents).map(function(type) {
                   var component = this.state.nodeComponents[type];
-                  if (type == 'NodeConfig') {
+                  if (type == 'default') {
                     if ((component == null) || (Object.keys(component).length == 0)) {
                       return (
-                        <option key={type} selected disabled value={type}>Select a node type</option>
+                        <option key={type} disabled value='default'>--Select a node type--</option>
                       );
                     } else {
                       return (
-                        <option key={type} selected value={type}>{type}</option>
+                        <option key={type} value='default'>NodeConfig</option>
                       );
                     }
                   } else {
@@ -748,7 +792,7 @@ var NodeUnitComponents = React.createClass({
   },
   addUnit: function() {
     var units = this.state.units;
-    if (Object.keys(this.state.selectedUnit).length > 0) {
+    if ((this.state.selectedUnit != null) && (Object.keys(this.state.selectedUnit).length > 0)) {
       units['unit_' + Date.now().toString()] = this.state.selectedUnit;
       this.setState({
         units: units
@@ -768,8 +812,8 @@ var NodeUnitComponents = React.createClass({
         <div className="form-group">
           <label htmlFor="policy" className="col-sm-2 control-label">Units</label>
           <div className="col-sm-7">
-            <select className="form-control" id="policy" placeholder="Policy" onChange={this.selectUnit}>
-              <option selected disabled>Select a unit component</option>
+            <select className="form-control" onChange={this.selectUnit} defaultValue='default'>
+              <option value='default' disabled>--Select a unit component--</option>
             {Object.keys(this.props.unitComponents).map(function(type) {
               return (
                 <option key={type} value={type}>{type}</option>
@@ -798,6 +842,49 @@ var NodeUnitComponents = React.createClass({
          </div>
         </div>
       </form>
+    );
+  }
+});
+
+var NodeTable = React.createClass({
+  prepareNewNode: function() {
+    this.props.prepareNewNode();
+  },
+  showNode: function(id) {
+    this.props.showNode(id);
+  },
+  deleteNode: function(id) {
+    this.props.deleteNode(id);
+  },
+  render: function() {
+    return (
+      <div className="row">
+        <table className="table table-hover">
+          <thead>
+            <tr>
+                <th>ID</th>
+                <th>Class</th>
+                <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.props.schemaNodes.map(function(node) {
+              return (
+                <NodeRecord
+                  key={node.id}
+                  nodeId={node.id}
+                  nodeConfig={node.config != null ? node.config : {}}
+                  showNode={this.showNode}
+                  deleteNode={this.deleteNode}
+                />
+              )
+            }, this)}
+          </tbody>
+        </table>
+        <div className="col-sm-12">
+          <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewNode}> <i className="fa fa-copy">&nbsp; New Node</i></button>
+        </div>
+      </div>
     );
   }
 });
@@ -878,6 +965,185 @@ var UnitRecord = React.createClass({
         </div>
       </div>
     </div>);
+  }
+});
+
+var LinkTable = React.createClass({
+  getInitialState: function() {
+    return {
+      newLink: {
+        node_from: null,
+        node_to: null,
+      }
+    }
+  },
+  changeNewLinkFrom: function(e) {
+    var link = this.state.newLink;
+    link.node_from = e.target.value;
+    this.setState({
+      newLink: link
+    })
+  },
+  changeNewLinkTo: function(e) {
+    var link = this.state.newLink;
+    link.node_to = e.target.value;
+    this.setState({
+      newLink: link
+    })
+  },
+  createLink: function() {
+    var link = this.state.newLink;
+    if ((link.node_from != null) && (link.node_to != null) && (link.node_from != link.node_to)) {
+      this.props.createLink(link);
+    } else {
+      alert('Please select 2 nodes for link');
+    }
+  },
+  updateLink: function(data, id) {
+    this.props.updateLink(data, id);
+  },
+  deleteLink: function(id) {
+    this.props.deleteLink(id);
+  },
+  render: function() {
+    return (
+      <div className="row">
+        <table className="table table-hover">
+          <thead>
+            <tr>
+                <th>ID</th>
+                <th>Config</th>
+                <th>From Node</th>
+                <th>To Node</th>
+                <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.props.schemaLinks.map(function(link) {
+              return (
+                <LinkRecord
+                  key={link.id}
+                  linkId={link.id}
+                  linkFrom={link.node_from}
+                  linkTo={link.node_to}
+                  linkConfig={link.config != null ? link.config : {}}
+                  schemaNodes={this.props.schemaNodes}
+                  createLink={this.createLink}
+                  updateLink={this.updateLink}
+                  deleteLink={this.deleteLink}
+                />
+              )
+            }, this)}
+            <tr>
+                <td>#</td>
+                <td>###</td>
+                <td>
+                  <select className="form-control" defaultValue='default' onChange={this.changeNewLinkFrom}>
+                    <option value="default" disabled>--Select a node--</option>
+                    {this.props.schemaNodes.map(function(node) {
+                      return (
+                        <option key={"link_from_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                      )
+                    })}
+                  </select>
+                </td>
+                <td>
+                  <select className="form-control" defaultValue='default' onChange={this.changeNewLinkTo}>
+                    <option value="default" disabled>--Select a node--</option>
+                    {this.props.schemaNodes.map(function(node) {
+                      return (
+                        <option key={"link_to_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                      )
+                    })}
+                  </select>
+                </td>
+                <td>
+                  <button type="button" className="btn btn-success" onClick={this.createLink}><i className="fa fa-floppy-o">&nbsp; Create</i></button>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+});
+
+var LinkRecord = React.createClass({
+  getInitialState: function() {
+    return {
+      linkFrom: null,
+      linkTo: null,
+    }
+  },
+  componentDidMount: function() {
+    this.setState({
+      linkFrom: this.props.linkFrom,
+      linkTo: this.props.linkTo
+    })
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      linkFrom: nextProps.linkFrom,
+      linkTo: nextProps.linkTo
+    })
+  },
+  changeLinkFrom: function(e) {
+    this.setState({
+      linkFrom: e.target.value
+    })
+  },
+  changeLinkTo: function(e) {
+    this.setState({
+      linkTo: e.target.value
+    })
+  },
+  saveLink: function() {
+    if (this.props.linkId != null) {
+      this.props.updateLink({
+        node_from: this.state.linkFrom,
+        node_to: this.state.linkTo,
+        config: this.props.linkConfig
+      }, this.props.linkId)
+    } else {
+      this.props.createLink({
+        node_from: this.state.linkFrom,
+        node_to: this.state.linkTo,
+        config: this.props.linkConfig
+      })
+    }
+  },
+  deleteLink: function() {
+    this.props.deleteLink(this.props.linkId);
+  },
+  render: function() {
+    return (
+      <tr>
+          <td>{this.props.linkId}</td>
+          <td>###</td>
+          <td>
+            <select className="form-control" defaultValue={this.props.linkFrom} onChange={this.changeLinkFrom}>
+              {this.props.schemaNodes.map(function(node) {
+                return (
+                  <option key={"link_from_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                )
+              })}
+            </select>
+          </td>
+          <td>
+            <select className="form-control" defaultValue={this.props.linkTo} onChange={this.changeLinkTo}>
+              {this.props.schemaNodes.map(function(node) {
+                return (
+                  <option key={"link_to_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                )
+              })}
+            </select>
+          </td>
+          <td>
+            <button type="button" className="btn btn-warning" onClick={this.saveLink}><i className="fa fa-floppy-o">&nbsp; Save</i></button>
+            <button type="button" className="btn btn-danger" onClick={this.deleteLink}><i className="fa fa-trash">&nbsp; Delete</i></button>
+          </td>
+      </tr>
+    )
   }
 });
 
