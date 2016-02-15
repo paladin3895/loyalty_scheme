@@ -15,6 +15,7 @@ class CreateSchemaNodesTable extends Migration
         Schema::create('nodes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('schema_id')->unsigned();
+            $table->text('attributes');
             $table->text('policies');
             $table->text('rewards');
             $table->text('config');
