@@ -19,7 +19,7 @@ class NodeFormatter extends ModelFormatter
         $model = $model->toArray();
         $response['id'] = $model['id'];
         $response['schema_id'] = $model['schema_id'];
-        foreach ($model['attributes'] as $key => $value) {
+        foreach ((array)$model['attributes'] as $key => $value) {
           $response[$key] = $value;
         }
         $response['config'] = $model['config'];
