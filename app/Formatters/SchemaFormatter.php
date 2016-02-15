@@ -17,6 +17,7 @@ class SchemaFormatter extends ModelFormatter
 
     public function transform(BaseModel $model)
     {
+        $response = [];
         $model = $model->toArray();
         $response['id'] = $model['id'];
         foreach ($model['attributes'] as $key => $value) {
