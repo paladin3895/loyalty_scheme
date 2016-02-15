@@ -360,6 +360,7 @@ var SchemaDiagram = React.createClass({
       diagram: null,
       currentNode: {
         id: null,
+        name: null,
         config: {},
         policies: {},
         rewards: {},
@@ -382,6 +383,7 @@ var SchemaDiagram = React.createClass({
       schemaLinks: nextProps.schemaLinks,
       currentNode: {
         id: null,
+        name: null,
         config: {},
         policies: {},
         rewards: {},
@@ -456,18 +458,26 @@ var SchemaDiagram = React.createClass({
     });
   },
   showNode: function(id) {
-    this.state.schemaNodes.forEach(function(node) {
-      if (id === node.id) {
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/node/' + id,
+      method: 'GET',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
         this.setState({
-          currentNode: node
+          currentNode: res.data
         });
-      }
-    }, this);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
   },
   prepareNewNode: function() {
     this.setState({
       currentNode: {
         id: null,
+        name: null,
         config: {},
         policies: {},
         rewards: {},
@@ -484,8 +494,8 @@ var SchemaDiagram = React.createClass({
       },
       cache: false,
       success: function(res) {
-        console.log(res.data);
         this.listNodes();
+        this.listLinks();
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(status, err.toString());
@@ -502,8 +512,9 @@ var SchemaDiagram = React.createClass({
       },
       cache: false,
       success: function(res) {
-        console.log(res.data);
         this.listNodes();
+        this.listLinks();
+        this.showNode(id);
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(status, err.toString());
@@ -518,6 +529,7 @@ var SchemaDiagram = React.createClass({
       cache: false,
       success: function(res) {
         this.listNodes();
+        this.listLinks();
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(status, err.toString());
@@ -541,16 +553,52 @@ var SchemaDiagram = React.createClass({
     });
   },
   createLink: function(data) {
-    console.log(data);
-    // @TODO implement logic
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/links',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        link: data
+      },
+      cache: false,
+      success: function(res) {
+        this.listLinks();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
   },
   updateLink: function(data, id) {
-    console.log(id, data);
-    // @TODO implement logic
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/link/' + id,
+      method: 'PATCH',
+      dataType: 'json',
+      data: {
+        link: data
+      },
+      cache: false,
+      success: function(res) {
+        this.listLinks();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
   },
   deleteLink: function(id) {
-    console.log(id);
-    // @TODO implement logic
+    $.ajax({
+      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/link/' + id,
+      method: 'DELETE',
+      dataType: 'json',
+      cache: false,
+      success: function(res) {
+        this.listLinks();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
   },
   hideModal: function() {
     this.setState({visible: false});
@@ -576,6 +624,7 @@ var SchemaDiagram = React.createClass({
             policyComponents={this.state.policyComponents}
             rewardComponents={this.state.rewardComponents}
             nodeId={this.state.currentNode.id}
+            nodeName={this.state.currentNode.name}
             nodeConfig={this.state.currentNode.config}
             policies={this.state.currentNode.policies}
             rewards={this.state.currentNode.rewards}
@@ -602,6 +651,7 @@ var SchemaDiagram = React.createClass({
 var SchemaDiagramForm = React.createClass({
   getInitialState: function() {
     return {
+      nodeName: null,
       policies: {},
       rewards: {},
       nodeConfig: {},
@@ -609,20 +659,28 @@ var SchemaDiagramForm = React.createClass({
   },
   componentDidMount: function() {
     this.setState({
+      nodeName: this.props.nodeName,
       policies: this.props.policies,
       rewards: this.props.rewards,
-      nodeConfig: this.props.NodeConfig,
+      nodeConfig: this.props.nodeConfig,
     })
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({
+      nodeName: nextProps.nodeName != null ? nextProps.nodeName : null,
       policies: nextProps.policies != null ? nextProps.policies : {},
       rewards: nextProps.rewards != null ? nextProps.rewards : {},
       nodeConfig: nextProps.nodeConfig != null ? nextProps.nodeConfig : {}
     });
   },
+  handleNameChange: function(e) {
+    this.setState({
+      nodeName: e.target.value
+    })
+  },
   saveNode: function() {
     var data = {
+      name: this.state.nodeName,
       config: this.refs.nodeConfigTab.state.selectedConfig,
       policies: this.refs.policiesTab.state.units,
       rewards: this.refs.rewardsTab.state.units,
@@ -639,6 +697,15 @@ var SchemaDiagramForm = React.createClass({
   render: function() {
     return (
       <div className="col-xs-6 left">
+
+        <form className="form-horizontal">
+          <div className="form-group">
+            <label className="col-sm-2 control-label">Name</label>
+            <div className="col-sm-9">
+              <input type="text" className="form-control" value={this.state.nodeName} onChange={this.handleNameChange} placeholder='Enter node name'/>
+            </div>
+          </div>
+        </form>
 
         <ul className="nav nav-tabs" role="tablist" style={{marginBottom: "15px"}}>
           <li role="presentation" className="active"><a href="#config-tab" aria-controls="config-tab" role="tab" data-toggle="tab">Config</a></li>
@@ -671,10 +738,10 @@ var SchemaDiagramForm = React.createClass({
           </div>
         </div>
 
-        <div className="form-group">
-          <button type="button" className="btn btn-default pull-right" onClick={this.hideModal}>Cancel</button>
-          <button type="button" className="btn btn-danger pull-right" onClick={this.deleteNode}> <i className="fa fa-trash">&nbsp; Delete</i></button>
-          <button type="button" className="btn btn-warning pull-right" onClick={this.saveNode}> <i className="fa fa-floppy-o">&nbsp; Save</i></button>
+        <div className="col-xs-12 form-group">
+          <button type="button" className="btn btn-default pull-right" onClick={this.hideModal}><i className="fa fa-close"></i></button>
+          <button type="button" className="btn btn-danger pull-right" onClick={this.deleteNode}><i className="fa fa-trash"></i></button>
+          <button type="button" className="btn btn-warning pull-right" onClick={this.saveNode}><i className="fa fa-floppy-o"></i></button>
         </div>
       </div>
     );
@@ -863,7 +930,7 @@ var NodeTable = React.createClass({
           <thead>
             <tr>
                 <th>ID</th>
-                <th>Class</th>
+                <th>Name</th>
                 <th>Action</th>
             </tr>
           </thead>
@@ -873,7 +940,7 @@ var NodeTable = React.createClass({
                 <NodeRecord
                   key={node.id}
                   nodeId={node.id}
-                  nodeConfig={node.config != null ? node.config : {}}
+                  nodeName={node.name != null ? node.name : ''}
                   showNode={this.showNode}
                   deleteNode={this.deleteNode}
                 />
@@ -882,7 +949,7 @@ var NodeTable = React.createClass({
           </tbody>
         </table>
         <div className="col-sm-12">
-          <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewNode}> <i className="fa fa-copy">&nbsp; New Node</i></button>
+          <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewNode}> <i className="fa fa-dot-circle-o">&nbsp; New</i></button>
         </div>
       </div>
     );
@@ -900,7 +967,7 @@ var NodeRecord = React.createClass({
     return (
       <tr>
           <td>{this.props.nodeId}</td>
-          <td>{this.props.nodeConfig.class}</td>
+          <td>{this.props.nodeName}</td>
           <td>
             <button type="button" className="btn btn-info" onClick={this.showNode}><i className="fa fa-file-text-o"></i></button>
             <button type="button" className="btn btn-danger" onClick={this.deleteNode}><i className="fa fa-trash"></i></button>
@@ -996,7 +1063,7 @@ var LinkTable = React.createClass({
     if ((link.node_from != null) && (link.node_to != null) && (link.node_from != link.node_to)) {
       this.props.createLink(link);
     } else {
-      alert('Please select 2 nodes for link');
+      alert('invalid nodes to link');
     }
   },
   updateLink: function(data, id) {
@@ -1042,7 +1109,7 @@ var LinkTable = React.createClass({
                     <option value="default" disabled>--Select a node--</option>
                     {this.props.schemaNodes.map(function(node) {
                       return (
-                        <option key={"link_from_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                        <option key={"link_from_node_" + node.id} value={node.id}>{node.name + ' (#' + node.id + ')'}</option>
                       )
                     })}
                   </select>
@@ -1052,13 +1119,13 @@ var LinkTable = React.createClass({
                     <option value="default" disabled>--Select a node--</option>
                     {this.props.schemaNodes.map(function(node) {
                       return (
-                        <option key={"link_to_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                        <option key={"link_to_node_" + node.id} value={node.id}>{node.name + ' (#' + node.id + ')'}</option>
                       )
                     })}
                   </select>
                 </td>
                 <td>
-                  <button type="button" className="btn btn-success" onClick={this.createLink}><i className="fa fa-floppy-o">&nbsp; Create</i></button>
+                  <button type="button" className="btn btn-success pull-right" onClick={this.createLink}><i className="fa fa-arrows-h">&nbsp; New</i></button>
                 </td>
             </tr>
           </tbody>
@@ -1124,7 +1191,7 @@ var LinkRecord = React.createClass({
             <select className="form-control" defaultValue={this.props.linkFrom} onChange={this.changeLinkFrom}>
               {this.props.schemaNodes.map(function(node) {
                 return (
-                  <option key={"link_from_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                  <option key={"link_from_node_" + node.id} value={node.id}>{node.name + ' (#' + node.id + ')'}</option>
                 )
               })}
             </select>
@@ -1133,14 +1200,14 @@ var LinkRecord = React.createClass({
             <select className="form-control" defaultValue={this.props.linkTo} onChange={this.changeLinkTo}>
               {this.props.schemaNodes.map(function(node) {
                 return (
-                  <option key={"link_to_node_" + node.id} value={node.id}>{node.id + " - " + node.config.class}</option>
+                  <option key={"link_to_node_" + node.id} value={node.id}>{node.name + ' (#' + node.id + ')'}</option>
                 )
               })}
             </select>
           </td>
           <td>
-            <button type="button" className="btn btn-warning" onClick={this.saveLink}><i className="fa fa-floppy-o">&nbsp; Save</i></button>
-            <button type="button" className="btn btn-danger" onClick={this.deleteLink}><i className="fa fa-trash">&nbsp; Delete</i></button>
+            <button type="button" className="btn btn-danger pull-right" onClick={this.deleteLink}><i className="fa fa-trash"></i></button>
+            <button type="button" className="btn btn-warning pull-right" onClick={this.saveLink}><i className="fa fa-floppy-o"></i></button>
           </td>
       </tr>
     )

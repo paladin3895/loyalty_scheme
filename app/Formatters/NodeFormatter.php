@@ -22,9 +22,9 @@ class NodeFormatter extends ModelFormatter
         foreach ((array)$model['attributes'] as $key => $value) {
           $response[$key] = $value;
         }
-        $response['config'] = $model['config'];
-        $response['policies'] = $model['policies'];
-        $response['rewards'] = $model['rewards'];
+        $response['config'] = isset($model['config']) ? $model['config'] : null;
+        $response['policies'] = isset($model['policies']) ? $model['policies'] : null;
+        $response['rewards'] = isset($model['rewards']) ? $model['rewards'] : null;
         return $response;
     }
 }
