@@ -179,6 +179,9 @@ var SchemaRecord = React.createClass({
   showSchemaDiagram: function() {
     this.props.showSchema(this.props.schemaId, 'diagram');
   },
+  showTestingPanel: function() {
+    this.props.showSchema(this.props.schemaId, 'testing');
+  },
   deleteSchema: function() {
     var confirm = window.confirm('Are you sure?');
     if (confirm) {
@@ -194,6 +197,7 @@ var SchemaRecord = React.createClass({
         <td>
           <button type="button" className="btn btn-info" onClick={this.showSchemaInfo}><i className="fa fa-file-text-o"></i></button>
           <button type="button" className="btn btn-primary" onClick={this.showSchemaDiagram}><i className="fa fa-usb"></i></button>
+          <button type="button" className="btn btn-warning" onClick={this.showTestingPanel}><i className="fa fa-paper-plane-o"></i></button>
           <button type="button" className="btn btn-danger" onClick={this.deleteSchema}><i className="fa fa-trash"></i></button>
         </td>
       </tr>
@@ -257,6 +261,12 @@ var SchemaForm = React.createClass({
           schemaLinks={this.state.schemaLinks}
           updateSchemaDiagram={this.updateSchemaDiagram}
           currentMode={this.state.mode == 'diagram' ? true : false}
+        />
+        <TestingPanel
+          schemaId={this.state.schemaId}
+          schemaName={this.state.schemaName}
+          schemaNodes={this.state.schemaNodes}
+          currentMode={this.state.mode == 'testing' ? true : false}
         />
       </div>
     );
@@ -739,7 +749,6 @@ var SchemaDiagramForm = React.createClass({
         </div>
 
         <div className="col-xs-12 form-group">
-          <button type="button" className="btn btn-default pull-right" onClick={this.hideModal}><i className="fa fa-close"></i></button>
           <button type="button" className="btn btn-danger pull-right" onClick={this.deleteNode}><i className="fa fa-trash"></i></button>
           <button type="button" className="btn btn-warning pull-right" onClick={this.saveNode}><i className="fa fa-floppy-o"></i></button>
         </div>
@@ -925,8 +934,8 @@ var NodeTable = React.createClass({
   },
   render: function() {
     return (
-      <div className="row">
-        <table className="table table-hover">
+      <div>
+        <table className="table table-hover table-bordered">
           <thead>
             <tr>
                 <th>ID</th>
@@ -1074,8 +1083,8 @@ var LinkTable = React.createClass({
   },
   render: function() {
     return (
-      <div className="row">
-        <table className="table table-hover">
+      <div>
+        <table className="table table-hover table-bordered">
           <thead>
             <tr>
                 <th>ID</th>
@@ -1213,6 +1222,137 @@ var LinkRecord = React.createClass({
     )
   }
 });
+
+var TestingPanel = React.createClass({
+  getInitialState: function() {
+    return {
+      visible: false
+    };
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      visible: nextProps.currentMode
+    });
+  },
+  selectNode: function() {
+
+  },
+  submitTest: function() {
+
+  },
+  hideModal: function() {
+    this.setState({
+      visible: false
+    })
+  },
+  render: function() {
+    return (
+      <Modal show={this.state.visible} onHide={this.hideModal} bsSize="large">
+        <Modal.Header closeButton>
+          <Modal.Title>Testing Panel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="row">
+            <div className="col-sm-6">
+              <form className="form-horizontal">
+                <div className="well">
+                  <label>Data</label>
+                  <textarea className="form-control" rows="5" placeholder="json data for testing"/>
+                </div>
+              </form>
+            </div>
+            <div className="col-sm-6">
+              <CheckpointForm/>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="form-group">
+            <div className="col-sm-12">
+              <button type="button" className="btn btn-default pull-right" onClick={this.hideModal}>Cancel</button>
+              <button type="button" className="btn btn-primary pull-right" onClick={this.submitTest}> <i className="fa fa-paper-plane-o">&nbsp; Submit</i></button>
+            </div>
+          </div>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+})
+
+var CheckpointForm = React.createClass({
+  render: function() {
+    return (
+      <form className="form-horizontal">
+        <div className="form-group">
+          <label htmlFor="policy" className="col-sm-2 control-label">Checkpoint</label>
+          <div className="col-sm-7">
+            <select className="form-control" onChange={this.selectNode} defaultValue='default'>
+              <option value='default' disabled>--Select a node to create checkpoint--</option>
+            </select>
+          </div>
+          <div className="col-sm-2">
+            <button type="button" className="btn btn-default yellow" onClick={this.addCheckpoint}> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
+          </div>
+        </div>
+        <div className="col-sm-12 form-group right">
+          <CheckpointRecord/>
+        </div>
+      </form>
+    )
+  }
+})
+
+var CheckpointRecord = React.createClass({
+  render: function() {
+    return (
+      <div className="panel-group">
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h4 className="panel-title">
+              <a data-toggle="collapse" href="#node_id">Checkpoint</a>
+              <span className="label label-danger hover pull-right" onClick={this.removeNode}><i className="fa fa-trash"></i></span>
+            </h4>
+          </div>
+          <div id="node_id" className="panel-collapse collapse">
+            <div className="panel-body">
+              <div key="key_1" className="row">
+                <div className="col-sm-6">
+                <label className="form-control">Node has been passed?</label>
+                </div>
+                <div className="col-sm-6">
+                  <div className="btn-group" data-toggle="buttons">
+                    <label className="btn btn-default active">
+                      <input type="radio" name="options" value="Yes"/>
+                      Yes
+                    </label>
+                    <label className="btn btn-default">
+                      <input type="radio" name="options" value="No"/>
+                      No
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-xs-6 left">
+                  <div className="well">
+                    <label>Last Memory</label>
+                    <textarea className="form-control" placeholder="json data for memory"/>
+                  </div>
+                </div>
+                <div className="col-xs-6 right">
+                  <div className="well">
+                    <label>Last Result</label>
+                    <textarea className="form-control" placeholder="json data for result"/>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+     </div>
+    )
+  }
+})
 
 ReactDOM.render(
   <SchemaManager/>,
