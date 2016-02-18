@@ -28,12 +28,12 @@ class SchemaController extends SingularController
 
         $record = new Record(
             $request->input('data') ? : [],
-            $request->input('checkpoint') ? : []
+            $request->input('checkpoints') ? : []
         );
         $registry->process($record);
         return $this->response->array([
             'status' => 1,
-            'data' => Record::$history,
+            'data' => json_decode(json_encode(Record::$history, JSON_FORCE_OBJECT)),
         ]);
     }
 }
