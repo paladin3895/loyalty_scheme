@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "85176b0d7496d0f2768c4c648b14a9e5",
-    "content-hash": "984bfb6f01e01a4a1dc8c34b0b80ee51",
+    "hash": "ca33b2c39df6f45dc6868e8fabbdc757",
+    "content-hash": "9240556f11823483c7ec4b5f98309c9d",
     "packages": [
         {
             "name": "danielstjules/stringy",
@@ -73,7 +73,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dingo/api/zipball/b36db17c7294e44e6ce7039952ca8f8d57caab37",
+                "url": "https://api.github.com/repos/dingo/api/zipball/9bf29beb501613d0eee342ac3e962113debddbce",
                 "reference": "b36db17c7294e44e6ce7039952ca8f8d57caab37",
                 "shasum": ""
             },
@@ -535,7 +535,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/cache/zipball/ec77dd11697e16a5964c8314856fe9f689350079",
+                "url": "https://api.github.com/repos/illuminate/cache/zipball/b932101407b43b2dd33a7daaff5d7f5b34c3be22",
                 "reference": "ec77dd11697e16a5964c8314856fe9f689350079",
                 "shasum": ""
             },
@@ -812,7 +812,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/5c23c45c3a9cddd2791188e80dde38abe258a5c6",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/79048fd64c1d000a12ee26239d180b1a1696416e",
                 "reference": "5c23c45c3a9cddd2791188e80dde38abe258a5c6",
                 "shasum": ""
             },
@@ -921,7 +921,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/events/zipball/ab239b681a8c2efd416e6ab71256c91104bea67f",
+                "url": "https://api.github.com/repos/illuminate/events/zipball/b498088237eb9f6be9725e807e8e01d2631777e9",
                 "reference": "ab239b681a8c2efd416e6ab71256c91104bea67f",
                 "shasum": ""
             },
@@ -966,7 +966,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/1767e82edce74450f3d8b57bea5e7d0890ce35cf",
+                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/89b321905f0c149e88a11e3370124dafd39e48de",
                 "reference": "1767e82edce74450f3d8b57bea5e7d0890ce35cf",
                 "shasum": ""
             },
@@ -1194,7 +1194,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/queue/zipball/313ed80be7f43b61243838734bd8d96ecf2a169f",
+                "url": "https://api.github.com/repos/illuminate/queue/zipball/2e9c5f05df13e66ab82a2dcba35410bd0bfc5cda",
                 "reference": "313ed80be7f43b61243838734bd8d96ecf2a169f",
                 "shasum": ""
             },
@@ -1252,7 +1252,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/routing/zipball/9cc4ece480317909ef858a3d0ed0f5244a967b53",
+                "url": "https://api.github.com/repos/illuminate/routing/zipball/2c71887e130dd3edf401b604bc4b475ec93ef4fe",
                 "reference": "9cc4ece480317909ef858a3d0ed0f5244a967b53",
                 "shasum": ""
             },
@@ -1356,7 +1356,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/550256aa1cd7484f394f3d8fa4e6902a6403ff0b",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/ad5d863339e32aedbf5a46fcd16c763fb5c0f1d6",
                 "reference": "550256aa1cd7484f394f3d8fa4e6902a6403ff0b",
                 "shasum": ""
             },
@@ -1505,7 +1505,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/view/zipball/0fc9a0d2a33fccb9ec3a426d193939bcfc1dd989",
+                "url": "https://api.github.com/repos/illuminate/view/zipball/6b9483359650760eb7cec575475d1a9669758acc",
                 "reference": "0fc9a0d2a33fccb9ec3a426d193939bcfc1dd989",
                 "shasum": ""
             },
@@ -1552,7 +1552,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/b32f1efd700240bca568dab5b1e3394e49b398bc",
+                "url": "https://api.github.com/repos/laravel/lumen-framework/zipball/3ef7d50252722d6965fd12edbdd7bdd3b0df1559",
                 "reference": "b32f1efd700240bca568dab5b1e3394e49b398bc",
                 "shasum": ""
             },
@@ -1687,7 +1687,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/fractal/zipball/84cb4d3a96b0f8465caf113690c3470fa11f2b36",
+                "url": "https://api.github.com/repos/thephpleague/fractal/zipball/7c3e00f714419544faf39716b883081f785da4bc",
                 "reference": "84cb4d3a96b0f8465caf113690c3470fa11f2b36",
                 "shasum": ""
             },
@@ -1814,7 +1814,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucadegasperi/oauth2-server-laravel/zipball/eed8a11212ace359637f07a614a40be5f36a35ba",
+                "url": "https://api.github.com/repos/lucadegasperi/oauth2-server-laravel/zipball/c2ff4eab6d40d88768d626fb82c9ea8a9e417672",
                 "reference": "eed8a11212ace359637f07a614a40be5f36a35ba",
                 "shasum": ""
             },
@@ -1881,7 +1881,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/592af02d0c9a7f6c8a345958d8db5d068cf51147",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/79817af0de141a2278e54acd01fb2532a7548516",
                 "reference": "592af02d0c9a7f6c8a345958d8db5d068cf51147",
                 "shasum": ""
             },
@@ -2084,6 +2084,60 @@
             "time": "2015-02-26 15:33:07"
         },
         {
+            "name": "nordsoftware/lumen-cors",
+            "version": "1.3.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nordsoftware/lumen-cors.git",
+                "reference": "4258436a0044a16a58af02728fe041100e743dbe"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nordsoftware/lumen-cors/zipball/4258436a0044a16a58af02728fe041100e743dbe",
+                "reference": "4258436a0044a16a58af02728fe041100e743dbe",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "codeception/codeception": "~2.1@dev",
+                "codeception/specify": "dev-master",
+                "codeception/verify": "dev-master",
+                "laravel/lumen-framework": "~5.1@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nord\\Lumen\\Cors\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoffer Niska",
+                    "email": "christofferniska@gmail.com"
+                }
+            ],
+            "description": "CORS module for the Lumen PHP framework.",
+            "keywords": [
+                "cors",
+                "cross-origin",
+                "headers",
+                "http",
+                "laravel",
+                "lumen",
+                "preflight",
+                "request",
+                "resource",
+                "sharing"
+            ],
+            "time": "2015-05-14 22:28:07"
+        },
+        {
             "name": "paragonie/random_compat",
             "version": "1.1.4",
             "source": {
@@ -2190,7 +2244,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/9e45edca52cc9c954680072c93e621f8b71fab26",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d8e60a5619fff77f9669da8997697443ef1a1d7e",
                 "reference": "9e45edca52cc9c954680072c93e621f8b71fab26",
                 "shasum": ""
             },
@@ -2236,7 +2290,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Respect/Validation/zipball/b8da3a947bb692ccf84cdd01aff8902f37a5dd47",
+                "url": "https://api.github.com/repos/Respect/Validation/zipball/ce3f88586280a27ecd730d542ae0f8a5c135edea",
                 "reference": "b8da3a947bb692ccf84cdd01aff8902f37a5dd47",
                 "shasum": ""
             },
@@ -2300,7 +2354,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/915fd82dad0695885bbbbdc18d6b5a84dc361b13",
+                "url": "https://api.github.com/repos/symfony/console/zipball/e1d91ae8b2c7b80a06e3fcee06deb69b3fa958fb",
                 "reference": "915fd82dad0695885bbbbdc18d6b5a84dc361b13",
                 "shasum": ""
             },
@@ -2359,7 +2413,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/3b3484aed620d380170cda0a79b188c03ca907a1",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/8e255a0c551d443a8159e3da95b5f99997d100fd",
                 "reference": "3b3484aed620d380170cda0a79b188c03ca907a1",
                 "shasum": ""
             },
@@ -2416,7 +2470,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/432c7eb5bd1123073d2d9572b5b931e45782f094",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/d42a1b873d3fcc1119700dc0793c2fc83f3ea138",
                 "reference": "432c7eb5bd1123073d2d9572b5b931e45782f094",
                 "shasum": ""
             },
@@ -2471,7 +2525,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/a5eb815363c0388e83247e7e9853e5dbc14999cc",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/78c468665c9568c3faaa9c416a7134308f2d85c3",
                 "reference": "a5eb815363c0388e83247e7e9853e5dbc14999cc",
                 "shasum": ""
             },
@@ -2531,7 +2585,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/expression-language/zipball/8e660469428200a925ca095ef4693b049fa04268",
+                "url": "https://api.github.com/repos/symfony/expression-language/zipball/f29f741817dddc33144f0767ed928130322d850d",
                 "reference": "8e660469428200a925ca095ef4693b049fa04268",
                 "shasum": ""
             },
@@ -2580,7 +2634,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/937edcbac3f2dd3187c56cf90368867d55dee991",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/67f8de543399fc9a3350d049775b4eb3579a685e",
                 "reference": "937edcbac3f2dd3187c56cf90368867d55dee991",
                 "shasum": ""
             },
@@ -2629,7 +2683,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/ce15f253112f43fe80645061f9b6d438cc76e10b",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/4625e29d7df49ee3ee1b9c413864144114763e0b",
                 "reference": "ce15f253112f43fe80645061f9b6d438cc76e10b",
                 "shasum": ""
             },
@@ -2684,7 +2738,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/498a7194fb6dd4a9f7edb3c9d4f8756431fc9620",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/74fa06c569358e3a839a8022993f00e0c1f15b5f",
                 "reference": "498a7194fb6dd4a9f7edb3c9d4f8756431fc9620",
                 "shasum": ""
             },
@@ -2766,7 +2820,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/dd71d2f01b13ae03c2f8c3a66ad1aea739c009e0",
+                "url": "https://api.github.com/repos/symfony/process/zipball/faa89438017392585abdf7f5a47f3f5f282d93c1",
                 "reference": "dd71d2f01b13ae03c2f8c3a66ad1aea739c009e0",
                 "shasum": ""
             },
@@ -2815,7 +2869,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/f054c7a93bc5ae70735779fe974499cbd621ef38",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/c63128f6dd5095351a87cd7c8801963001e22aff",
                 "reference": "f054c7a93bc5ae70735779fe974499cbd621ef38",
                 "shasum": ""
             },
@@ -2888,7 +2942,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/e7e95debf0465f7886d2994cd808f9382adb423c",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/4c61cf815af17eee4cebf0e4c66f56a2f704cfd8",
                 "reference": "e7e95debf0465f7886d2994cd808f9382adb423c",
                 "shasum": ""
             },
@@ -2951,7 +3005,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/ec3233d755578c56612c13d81d4ef141f8f94e9e",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/e4fdc92abb3dae0d840f4276af701d58ddc9b733",
                 "reference": "ec3233d755578c56612c13d81d4ef141f8f94e9e",
                 "shasum": ""
             },
@@ -3112,7 +3166,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/3037df47eca2e534f62f061415a071f9b5d1a1a4",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/772feacf6849bf0114873e2b869bb500fccfd438",
                 "reference": "3037df47eca2e534f62f061415a071f9b5d1a1a4",
                 "shasum": ""
             },
@@ -3162,7 +3216,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/e55e3e32a870bd4f05425fa4f717b52bd40e5659",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/ce91d434b3dc443a3294c4535747765e84d11094",
                 "reference": "e55e3e32a870bd4f05425fa4f717b52bd40e5659",
                 "shasum": ""
             },
@@ -3464,7 +3518,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ea76b17bced0500a28098626b84eda12dbcf119c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/6e351261f9cd33daf205a131a1ba61c6d33bd483",
                 "reference": "ea76b17bced0500a28098626b84eda12dbcf119c",
                 "shasum": ""
             },
@@ -3876,7 +3930,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/913401df809e99e4f47b27cdd781f4a258d58791",
+                "url": "https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/7ff5b1b3dcc55b8ab8ae61ef99d4730940856ee7",
                 "reference": "913401df809e99e4f47b27cdd781f4a258d58791",
                 "shasum": ""
             },
@@ -3964,7 +4018,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/816bd36756bc86351de54aed8fce14c77b353a30",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/6abf61b4e0f8330ccf891c046273966272ff3f49",
                 "reference": "816bd36756bc86351de54aed8fce14c77b353a30",
                 "shasum": ""
             },

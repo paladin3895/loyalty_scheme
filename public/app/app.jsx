@@ -955,11 +955,13 @@ var NodeTable = React.createClass({
                 />
               )
             }, this)}
+            <tr>
+              <td>#</td>
+              <td>###</td>
+              <td><button type="button" className="btn btn-success pull-left" onClick={this.prepareNewNode}> <i className="fa fa-dot-circle-o">&nbsp; New</i></button></td>
+            </tr>
           </tbody>
         </table>
-        <div className="col-sm-12">
-          <button type="button" className="btn btn-success pull-left" onClick={this.prepareNewNode}> <i className="fa fa-dot-circle-o">&nbsp; New</i></button>
-        </div>
       </div>
     );
   }
@@ -1235,8 +1237,7 @@ var TestingPanel = React.createClass({
       visible: nextProps.currentMode
     });
   },
-  collectCheckpoints: function() {
-    console.log(this.refs.checkpointForm.collectData());
+  collectCheckpoint: function() {
     return this.refs.checkpointForm.collectData();
   },
   collectData: function(data) {
@@ -1249,11 +1250,13 @@ var TestingPanel = React.createClass({
       dataType: 'json',
       data: {
         data: this.collectData(),
-        checkpoints: this.collectCheckpoints()
+        checkpoint: this.collectCheckpoint()
       },
       cache: false,
       success: function(res) {
-        console.log(res.data);
+        this.setState({
+          result: res.data.result
+        })
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(status, err.toString());
@@ -1278,11 +1281,12 @@ var TestingPanel = React.createClass({
                 <div className="well">
                   <TableForm
                     title="Data"
-                    ref="dataForm"
-                  />
+                    ref="dataForm"/>
                 </div>
                 <div className="well">
                   <label>Result</label>
+                  <TableResult
+                    result={this.state.result}/>
                 </div>
               </form>
             </div>
@@ -1310,7 +1314,7 @@ var TestingPanel = React.createClass({
 var CheckpointForm = React.createClass({
   getInitialState: function() {
     return {
-      checkpoints: [],
+      checkpoint: [],
       selectableNodes: {},
     }
   },
@@ -1323,21 +1327,36 @@ var CheckpointForm = React.createClass({
       selectableNodes: selectableNodes
     });
   },
-  addCheckpoint: function() {
-    var selected = this.refs.selectNode.value;
-    var checkpoints = this.state.checkpoints;
+  addCheckpointRecord: function() {
+    var selected = Number(this.refs.selectNode.value);
+    var checkpoint = this.state.checkpoint;
     var selectableNodes = this.state.selectableNodes;
     if (!selectableNodes[selected]) return;
-    checkpoints.push(selected);
+    checkpoint.push(selected);
     delete(selectableNodes[selected]);
     this.setState({
-      checkpoints: checkpoints,
+      checkpoint: checkpoint,
       selectableNodes: selectableNodes
     })
   },
+  removeCheckpointRecord: function(id) {
+    var checkpoint = this.state.checkpoint;
+    var selectableNodes = {};
+    checkpoint.splice(checkpoint.indexOf(id), 1);
+    this.props.schemaNodes.forEach(function(node) {
+      if (checkpoint.indexOf(node.id) == -1) {
+        selectableNodes[node.id] = node;
+      }
+    }, selectableNodes, checkpoint);
+    this.setState({
+      checkpoint: checkpoint,
+      selectableNodes: selectableNodes
+    });
+    this.forceUpdate();
+  },
   collectData: function() {
     var data = {};
-    this.state.checkpoints.forEach(function(id) {
+    this.state.checkpoint.forEach(function(id) {
       data[id] = this.refs[id].collectData();
     }, this, data);
     return data;
@@ -1357,12 +1376,17 @@ var CheckpointForm = React.createClass({
             </select>
           </div>
           <div className="col-sm-2">
-            <button type="button" className="btn btn-default yellow" onClick={this.addCheckpoint}> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
+            <button type="button" className="btn btn-default yellow" onClick={this.addCheckpointRecord}> <i className="fa fa-plus-circle fa-2">&nbsp; Add</i></button>
           </div>
         </div>
         <div className="col-sm-12 form-group right">
-          {this.state.checkpoints.map(function(id) {
-            return <CheckpointRecord ref={id} key={"checkpoint_" + id} id={id} title={"Checkpoint of Node #" + id} />
+          {this.state.checkpoint.map(function(id) {
+            return <CheckpointRecord
+              ref={id}
+              title={"Checkpoint of Node #" + id}
+              id={id}
+              key={"checkpoint_" + id}
+              removeCheckpointRecord={this.removeCheckpointRecord}/>
           }, this)}
         </div>
       </form>
@@ -1376,8 +1400,8 @@ var CheckpointRecord = React.createClass({
       status: true,
     }
   },
-  removeCheckpoint: function() {
-    this.props.removeCheckpoint(this.props.nodeId)
+  removeCheckpointRecord: function() {
+    this.props.removeCheckpointRecord(this.props.id)
   },
   collectData: function() {
     return {
@@ -1404,7 +1428,7 @@ var CheckpointRecord = React.createClass({
           <div className="panel-heading">
             <h4 className="panel-title">
               <a data-toggle="collapse" href={"#checkpoint_" + this.props.id}>{this.props.title}</a>
-              <span className="label label-danger hover pull-right" onClick={this.removeCheckpoint}><i className="fa fa-trash"></i></span>
+              <span className="label label-danger hover pull-right" onClick={this.removeCheckpointRecord}><i className="fa fa-trash"></i></span>
             </h4>
           </div>
           <div id={"checkpoint_" + this.props.id} className="panel-collapse collapse">
@@ -1552,6 +1576,48 @@ var TableForm = React.createClass({
           </tbody>
         </table>
       </div>
+    )
+  }
+})
+
+var TableResult = React.createClass({
+  getDefaultProps: function() {
+    return {
+      result: {}
+    }
+  },
+  render: function() {
+    return (
+      <table className="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Type</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(this.props.result).map(function(key) {
+            var value = this.props.result[key];
+            var type = typeof(value);
+            switch(type) {
+              case 'string': break;
+              case 'number': value = Number(value); break;
+              case 'object':
+                if (Array.isArray(value)) {
+                  value = value.join(',');
+                } break;
+            }
+            return(
+              <tr key={"result_entry_" + key}>
+                <td>{key}</td>
+                <td>{type}</td>
+                <td>{value}</td>
+              </tr>
+            )
+          }, this)}
+        </tbody>
+      </table>
     )
   }
 })

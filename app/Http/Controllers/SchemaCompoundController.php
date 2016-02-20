@@ -70,7 +70,7 @@ class SchemaCompoundController extends CompoundController
         $entity->save();
 
         // save record history to checkpoint
-        $checkpoint->state = Record::$history;
+        $checkpoint->state = Record::$history['checkpoint'];
         $checkpoint->save();
         return $this->response->item($checkpoint, new \App\Formatters\ModelFormatter);
     }
