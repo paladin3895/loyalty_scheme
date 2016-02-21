@@ -9,6 +9,6 @@
 </head>
 <body>
   <div id="container"></div>
-  <script type="text/javascript" src="{{url('static/bundle.js')}}"></script>
+  <script type="text/javascript" src="{{url('assets/bundle.js')}}"></script>
 </body>
 </html>

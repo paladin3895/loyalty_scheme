@@ -4,7 +4,7 @@ module.exports = {
 	entry: "./resources/app/app.jsx",
 	output: {
 		path: __dirname,
-		filename: "public/static/bundle.js"
+		filename: "assets/bundle.js"
 	},
 	module: {
 		loaders: [
@@ -20,14 +20,17 @@ module.exports = {
 				test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
 				loader: "url-loader",
 				query: {
-					name: "public/static/[name].[ext]",
+					name: "assets/[name].[ext]",
 					mimetype: "application/font-woff",
 					limit: 10000
 				}
 			},
 			{
 				test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file-loader?name=public/static/[name].[ext]'
+        loader: 'file-loader',
+				query: {
+					name: "assets/[name].[ext]"
+				}
       }
 		]
 	},

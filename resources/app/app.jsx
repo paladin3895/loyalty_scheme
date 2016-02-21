@@ -16,7 +16,7 @@ var SchemaManager = React.createClass({
   },
   listSchema: function() {
     $.ajax({
-      url: 'http://liquid.dev/schemas',
+      url: this.props.url + '/schemas',
       method: 'GET',
       dataType: 'json',
       cache: false,
@@ -33,7 +33,7 @@ var SchemaManager = React.createClass({
   },
   createSchema: function(data) {
     $.ajax({
-      url: 'http://liquid.dev/schemas',
+      url: this.props.url + '/schemas',
       method: 'POST',
       data: {
         schema: data
@@ -51,7 +51,7 @@ var SchemaManager = React.createClass({
   },
   showSchema: function(id, mode) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + id,
+      url: this.props.url + '/schema/' + id,
       method: 'GET',
       data: {
         include: 'nodes,links'
@@ -71,7 +71,7 @@ var SchemaManager = React.createClass({
   },
   updateSchemaInfo: function(data, id) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + id,
+      url: this.props.url + '/schema/' + id,
       method: 'PATCH',
       data: {
         schema: data
@@ -89,7 +89,7 @@ var SchemaManager = React.createClass({
   },
   deleteSchema: function(id) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + id,
+      url: this.props.url + '/schema/' + id,
       method: 'DELETE',
       dataType: 'json',
       cache: false,
@@ -123,6 +123,7 @@ var SchemaManager = React.createClass({
           prepareNewInstance={this.prepareNewInstance}
         />
         <SchemaForm
+          url={this.props.url}
           schemaData={this.state.currentSchema}
           formMode={this.state.formMode}
           createSchema={this.createSchema}
@@ -258,6 +259,7 @@ var SchemaForm = React.createClass({
           currentMode={this.state.mode == 'info' ? true : false}
         />
         <SchemaDiagram
+          url={this.props.url}
           schemaId={this.state.schemaId}
           schemaName={this.state.schemaName}
           schemaDescription={this.state.schemaDescription}
@@ -267,6 +269,7 @@ var SchemaForm = React.createClass({
           currentMode={this.state.mode == 'diagram' ? true : false}
         />
         <TestingPanel
+          url={this.props.url}
           schemaId={this.state.schemaId}
           schemaName={this.state.schemaName}
           schemaNodes={this.state.schemaNodes}
@@ -323,7 +326,7 @@ var SchemaInfo = React.createClass({
     return (
       <Modal show={this.state.visible} onHide={this.hideModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Modal heading</Modal.Title>
+        <Modal.Title>Schema Information</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <form className="form-horizontal">
@@ -404,12 +407,9 @@ var SchemaDiagram = React.createClass({
       },
     });
   },
-  saveSchemaDiagram: function() {
-
-  },
   listNodeComponents: function() {
     $.ajax({
-      url: 'http://liquid.dev/processors',
+      url: this.props.url + '/processors',
       method: 'GET',
       dataType: 'json',
       cache: false,
@@ -425,7 +425,7 @@ var SchemaDiagram = React.createClass({
   },
   listPolicyComponents: function() {
     $.ajax({
-      url: 'http://liquid.dev/policies',
+      url: this.props.url + '/policies',
       method: 'GET',
       dataType: 'json',
       cache: false,
@@ -441,7 +441,7 @@ var SchemaDiagram = React.createClass({
   },
   listRewardComponents: function() {
     $.ajax({
-      url: 'http://liquid.dev/rewards',
+      url: this.props.url + '/rewards',
       method: 'GET',
       dataType: 'json',
       cache: false,
@@ -457,7 +457,7 @@ var SchemaDiagram = React.createClass({
   },
   listNodes: function() {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/nodes',
+      url: this.props.url + '/schema/' + this.props.schemaId + '/nodes',
       method: 'GET',
       dataType: 'json',
       cache: false,
@@ -473,7 +473,7 @@ var SchemaDiagram = React.createClass({
   },
   showNode: function(id) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/node/' + id,
+      url: this.props.url + '/schema/' + this.props.schemaId + '/node/' + id,
       method: 'GET',
       dataType: 'json',
       cache: false,
@@ -500,7 +500,7 @@ var SchemaDiagram = React.createClass({
   },
   createNode: function(data) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/nodes',
+      url: this.props.url + '/schema/' + this.props.schemaId + '/nodes',
       method: 'POST',
       dataType: 'json',
       data: {
@@ -518,7 +518,7 @@ var SchemaDiagram = React.createClass({
   },
   updateNode: function(data, id) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/node/' + id,
+      url: this.props.url + '/schema/' + this.props.schemaId + '/node/' + id,
       method: 'PATCH',
       dataType: 'json',
       data: {
@@ -537,7 +537,7 @@ var SchemaDiagram = React.createClass({
   },
   deleteNode: function(id) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/node/' + id,
+      url: this.props.url + '/schema/' + this.props.schemaId + '/node/' + id,
       method: 'DELETE',
       dataType: 'json',
       cache: false,
@@ -552,7 +552,7 @@ var SchemaDiagram = React.createClass({
   },
   listLinks: function() {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/links',
+      url: this.props.url + '/schema/' + this.props.schemaId + '/links',
       method: 'GET',
       dataType: 'json',
       cache: false,
@@ -568,7 +568,7 @@ var SchemaDiagram = React.createClass({
   },
   createLink: function(data) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/links',
+      url: this.props.url + '/schema/' + this.props.schemaId + '/links',
       method: 'POST',
       dataType: 'json',
       data: {
@@ -585,7 +585,7 @@ var SchemaDiagram = React.createClass({
   },
   updateLink: function(data, id) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/link/' + id,
+      url: this.props.url + '/schema/' + this.props.schemaId + '/link/' + id,
       method: 'PATCH',
       dataType: 'json',
       data: {
@@ -602,7 +602,7 @@ var SchemaDiagram = React.createClass({
   },
   deleteLink: function(id) {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId + '/link/' + id,
+      url: this.props.url + '/schema/' + this.props.schemaId + '/link/' + id,
       method: 'DELETE',
       dataType: 'json',
       cache: false,
@@ -621,7 +621,7 @@ var SchemaDiagram = React.createClass({
     return (
       <Modal tabIndex="-1" show={this.state.visible} onHide={this.hideModal} bsSize="large" aria-labelledby="contained-modal-title-lg">
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Schema Diagram</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{padding: "0px"}}>
           <div className="col-xs-12" id="diagram"></div>
@@ -1249,7 +1249,7 @@ var TestingPanel = React.createClass({
   },
   submitTest: function() {
     $.ajax({
-      url: 'http://liquid.dev/schema/' + this.props.schemaId,
+      url: this.props.url + '/schema/' + this.props.schemaId,
       method: 'POST',
       dataType: 'json',
       data: {
@@ -1627,6 +1627,6 @@ var TableResult = React.createClass({
 })
 
 ReactDOM.render(
-  <SchemaManager/>,
+  <SchemaManager url="http://liquid.dev/api/v1"/>,
   document.getElementById('container')
 );

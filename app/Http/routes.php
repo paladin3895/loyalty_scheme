@@ -16,7 +16,7 @@ $app->get('/diagram', ['as' => 'liquid_diagram', 'uses' => 'LiquidController@dia
 
 $api = app('Dingo\Api\Routing\Router');
 
-$api->version('v1', ['namespace' => 'App\Http\Controllers'], function ($api) {
+$api->version('v1', ['prefix' => 'api/v1', 'namespace' => 'App\Http\Controllers'], function ($api) {
     $api->post('/oauth', ['as' => 'token_authorize', 'uses' => 'OAuthController@authorize']);
 
     $api->group([], function ($api) {

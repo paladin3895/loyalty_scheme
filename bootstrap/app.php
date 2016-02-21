@@ -44,12 +44,9 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->configure('cors');
-
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 $app->register(\LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class);
 $app->register(\LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class);
-$app->register(\Nord\Lumen\Cors\CorsServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +65,6 @@ $app->middleware([
 //     // Illuminate\Session\Middleware\StartSession::class,
 //     // Illuminate\View\Middleware\ShareErrorsFromSession::class,
 //     // Laravel\Lumen\Http\Middleware\VerifyCsrfToken::class,
-    \Nord\Lumen\Cors\Middleware\CorsMiddleware::class,
     \LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware::class,
 ]);
 
