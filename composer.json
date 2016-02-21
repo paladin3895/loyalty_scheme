@@ -49,8 +49,8 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "mkdir ./assets",
-            "cd ./public && ln -s ../assets assets"
+            "mkdir -p ./assets",
+            "cd ./public && ln -sf ../assets assets"
         ]
     }
 }
