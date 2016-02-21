@@ -10,7 +10,7 @@ class LiquidController extends BaseController
 {
     public function index()
     {
-        return view('layout');
+        return view('liquid');
     }
 
     public function diagram()

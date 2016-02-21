@@ -1,52 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Flowchart</title>
-<meta name="description" content="Interactive flowchart diagram implemented by GoJS in JavaScript for HTML." />
-<!-- Copyright 1998-2015 by Northwoods Software Corporation. -->
-<meta charset="UTF-8">
-<script src="{{ url('js/go-debug.js') }}"></script>
-<script src="{{ url('js/diagram.js') }}"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Liquid-Policy</title>
 </head>
-<body onload="init()">
-<div id="sample">
-  <div style="width:100%; white-space:nowrap;">
-    <span style="display: inline-block; vertical-align: top; padding: 5px; width:10%">
-      <div id="myPalette" style="border: solid 1px gray; height: 300px"></div>
-      <select id="schemaList" style="width: 100%; display: block;"></select>
-      <div id="schemaDetail" style="width: 100%; display: block">
-        <input id="schemaName" type="text" style="width: 100%; display: block;"/>
-        <textarea id="schemaDescription" style="width: 100%; display: block;"></textarea>
-      </div>
-      <button id="createButton" onclick="createSchema()">+</button>
-      <button id="updateButton" onclick="updateSchema()">=</button>
-      <button id="deleteButton" onclick="deleteSchema()">x</button>
-    </span>
-
-    <span style="display: inline-block; vertical-align: top; padding: 5px; width:50%">
-      <div id="myDiagram" style="border: solid 1px gray; height: 600px"></div>
-    </span>
-
-    <span style="display: inline-block; vertical-align: top; padding: 5px; width:36%">
-      <div id="myPanel" style="border: solid 1px gray; height: 600px">
-        <select id="selectClass" style="width: 50%; display: inline-block;">
-          <option disabled selected> -- select an unit -- </option>
-        </select>
-        <button id="createUnit" onclick="createUnit()">Create</button>
-        <textarea id="unitDetail" style="width: 100%; display: block;"></textarea>
-
-        <textarea id="nodeDetail" style="width: 100%; height: 175px; display: block;">[]</textarea>
-        <textarea id="nodeDataArray" style="width: 100%; height: 175px; display: none;">[]</textarea>
-        <textarea id="linkDataArray" style="width: 100%; height: 175px; display: none;">[]</textarea>
-        <!-- <button id="saveDetailButton" onclick="saveDetail()">Save Detail</button> -->
-        <button id="saveButton" onclick="saveDetail()">Save</button>
-        <button id="loadButton" onclick="load()">Load</button><br/>
-        <textarea id="testData" style="width: 60%; height: 175px; display: inline-block;"></textarea>
-        <textarea id="testResult" style="width: 36%; height: 175px; display: inline-block;"></textarea><br/>
-        <button id="test" onclick="test()">Test</button>
-      </div>
-    </span>
-  </div>
-</div>
+<body>
+  <div id="container"></div>
+  <script type="text/javascript" src="{{url('static/bundle.js')}}"></script>
 </body>
 </html>

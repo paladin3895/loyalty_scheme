@@ -2,7 +2,3 @@
 	path = libraries/liquid
 	url = git@bitbucket.org:duydatyds/liquid.git
 	branch = liquid_policy
-[submodule "libraries/react-boilerplate"]
-	path = libraries/react-boilerplate
-	url = git@bitbucket.org:duydatyds/react-boilerplate.git
-	branch = master
