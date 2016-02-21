@@ -1,3 +1,15 @@
+## Deployment
+
+Step 1: copy environment configuration file .env.example to .env
+Step 2: edit file .env >> APP_KEY with any 32 char key (eg: 18c41a74f98aa27163ae7ffb346d3d5b)
+Step 3: edit file .env DB_* fields to match server database configuration
+Step 4: edit file .env >> API_DOMAIN to match server domain
+Step 5: locate to project root directory and run "composer install"
+Step 6: migrate database using command "php artisan migrate"
+Step 7: the project is ready to run
+  - access policy management app with url according to API_DOMAIN
+  - access API with url API_DOMAIN/api/v1/[endpoint]
+
 ## Lumen PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
