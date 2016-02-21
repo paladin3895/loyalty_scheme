@@ -53,7 +53,7 @@
             "cd ./public && ln -sf ../assets assets",
             "git submodule foreach git pull origin master",
             "npm install",
-            "webpack"
+            "node ./node_modules/.bin/webpack"
         ]
     }
 }
