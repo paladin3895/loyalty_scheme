@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class Schema extends BaseModel
+use App\Models\Interfaces\BelongsToClient;
+
+class Schema extends BaseModel implements BelongsToClient
 {
     use Traits\DynamicFieldTrait;
     /**
@@ -19,7 +21,7 @@ class Schema extends BaseModel
      */
      protected $fillable = ['attributes'];
 
-     protected $staticFields = ['id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
+     protected $staticFields = ['id', 'client_id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
 
      protected $dynamicField = 'attributes';
 
@@ -35,5 +37,15 @@ class Schema extends BaseModel
     public function links()
     {
         return $this->hasMany('App\Models\Link', 'schema_id', 'id');
+    }
+
+    public function setClientIdAttribute($id)
+    {
+        $this->attributes['client_id'] = (string)$id;
+    }
+
+    public function getClientIdAttribute()
+    {
+        return (string)$this->attributes['client_id'];
     }
 }

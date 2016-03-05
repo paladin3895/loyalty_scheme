@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
-class Entity extends BaseModel
+use App\Models\Interfaces\BelongsToClient;
+
+class Entity extends BaseModel implements BelongsToClient
 {
     use Traits\DynamicFieldTrait;
     /**
@@ -19,7 +21,7 @@ class Entity extends BaseModel
      */
     protected $fillable = ['attributes'];
 
-    protected $staticFields = ['id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
+    protected $staticFields = ['id', 'client_id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
 
     protected $dynamicField = 'attributes';
 
@@ -31,5 +33,15 @@ class Entity extends BaseModel
     public function checkpoints()
     {
         return $this->hasMany('App\Models\Checkpoint', 'entity_id', 'id');
+    }
+
+    public function setClientIdAttribute($id)
+    {
+        $this->attributes['client_id'] = (string)$id;
+    }
+
+    public function getClientIdAttribute()
+    {
+        return (string)$this->attributes['client_id'];
     }
 }

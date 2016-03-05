@@ -21,22 +21,57 @@ class OAuth2Seeder extends Seeder
         ]);
 
         \DB::table('oauth_scopes')->insert([
-            'id' => 'read',
-            'description' => 'this scope grants the read permission',
+            'id' => 'read.entity',
+            'description' => 'this scope grants the permission to read entity',
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);
 
         \DB::table('oauth_scopes')->insert([
-            'id' => 'write',
-            'description' => 'this scope grants the edit permission',
+            'id' => 'edit.entity',
+            'description' => 'this scope grants the permission to edit entity',
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);
 
         \DB::table('oauth_scopes')->insert([
-            'id' => 'execute',
-            'description' => 'this scope grants the execute permission',
+            'id' => 'read.schema',
+            'description' => 'this scope grants the permission to read schema',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
+            'id' => 'edit.schema',
+            'description' => 'this scope grants the permission to edit schema',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
+            'id' => 'execute.schema',
+            'description' => 'this scope grants the permission to execute schema',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
+            'id' => 'read.action',
+            'description' => 'this scope grants the permission to read action',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
+            'id' => 'edit.action',
+            'description' => 'this scope grants the permission to edit action',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
+            'id' => 'execute.action',
+            'description' => 'this scope grants the permission to execute action',
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);

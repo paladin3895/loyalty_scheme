@@ -19,6 +19,10 @@ abstract class CompoundController extends BaseApiController
     public function __construct(BaseModel $repository)
     {
         $this->repository = $repository;
+
+        $this->middleware('oauth');
+
+        $this->scopes('execute', ['only' => ['applyEndpoint']]);
     }
 
     public function indexEndpoint($id, $endpoint, Request $request)

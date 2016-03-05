@@ -17,13 +17,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app['Dingo\Api\Exception\Handler']->register(function (\Symfony\Component\HttpKernel\Exception\HttpException $exception) {
-            return new Response([
-                'status' => 0,
-                'error_message' => $exception->getMessage(),
-                'error_code' => $exception->getStatusCode(),
-            ], $exception->getStatusCode());
-        });
+        $this->app['Dingo\Api\Exception\Handler']->setErrorFormat([
+            'error' => [
+                'message' => ':message',
+                'errors' => ':errors',
+                'code' => ':code',
+                'status_code' => ':status_code',
+                'debug' => ':debug'
+            ]
+        ]);
         $this->app->configure('liquid');
     }
 

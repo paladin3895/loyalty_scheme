@@ -14,9 +14,17 @@ class CreateSchemasTable extends Migration
     {
         Schema::create('schemas', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('client_id', 40);
+
             $table->text('attributes');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('client_id')
+                  ->references('id')
+                  ->on('oauth_clients')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 

@@ -18,4 +18,9 @@ class OAuthController extends BaseController
     {
         // @TODO implement logic for verify user authorization
     }
+
+    public function info(Request $request)
+    {
+        // @TODO implement logic to get client info with endpoint /me
+    }
 }

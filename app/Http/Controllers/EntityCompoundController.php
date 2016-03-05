@@ -19,5 +19,10 @@ class EntityCompoundController extends CompoundController
     public function __construct(Entity $repository)
     {
         parent::__construct($repository);
+
+        $this->middleware('oauth');
+
+        $this->scopes('read.entity', ['only' => ['index', 'extract', 'show']]);
+        $this->scopes('edit.entity', ['only' => ['create', 'update', 'delete']]);
     }
 }

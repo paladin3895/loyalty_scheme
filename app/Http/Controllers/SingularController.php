@@ -6,6 +6,9 @@ use App\Http\Controllers\BaseApiController;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Exceptions\ExceptionResolver;
+
+use App\Models\BaseModel;
+use App\Models\Interfaces\BelongsToClient;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -104,12 +107,17 @@ abstract class SingularController extends BaseApiController
             $record = $this->repository->getRelated();
             $record->{$this->repository->getPlainForeignKey()} = $this->relation->getParentKey();
         } else {
-            throw ExceptionResolver::resolve('conflict', "cannot create {$this->endpoint} in via this relation");
+            throw ExceptionResolver::resolve('conflict', "cannot create {$this->endpoint} via this relation");
         }
 
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
+
+        if ($record instanceof BelongsToClient) {
+            $record->setClientIdAttribute($this->auth->user());
+        }
+
         if (!$record->save())
             throw ExceptionResolver::resolve('resource', "cannot create new {$this->endpoint}");
         return $this->response->item($record, $this->formatter);
