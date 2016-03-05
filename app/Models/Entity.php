@@ -19,7 +19,7 @@ class Entity extends BaseModel
      */
     protected $fillable = ['attributes'];
 
-    protected $staticFields = ['id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT, 'properties'];
+    protected $staticFields = ['id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
 
     protected $dynamicField = 'attributes';
 

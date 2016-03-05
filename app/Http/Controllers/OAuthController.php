@@ -16,6 +16,6 @@ class OAuthController extends BaseController
 
     public function verify($username, $password)
     {
-        return 1;
+        // @TODO implement logic for verify user authorization
     }
 }

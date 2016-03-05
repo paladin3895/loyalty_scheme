@@ -19,7 +19,8 @@ class Node extends BaseModel
      */
     protected $fillable = ['policies', 'rewards', 'config', 'attributes'];
 
-    protected $staticFields = ['id', 'schema_id', 'config', 'policies', 'rewards', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT,];
+    protected $staticFields = ['id', 'schema_id', 'config', 'policies', 'rewards',
+        self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT,];
 
     protected $dynamicField = 'attributes';
 

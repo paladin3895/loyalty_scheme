@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Exceptions\ExceptionResolver;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 abstract class SingularController extends BaseApiController
 {
@@ -23,8 +25,40 @@ abstract class SingularController extends BaseApiController
     public function index(Request $request)
     {
         if ($this->relation) $this->associate();
-        $records = $this->repository->get();
-        return $this->response->collection($records, $this->formatter);
+
+        // filtering section
+        $filter = $request->input('filter');
+        if (is_array($filter)) {
+            foreach ($filter as $field => $value) {
+                $operation = '=';
+                if (preg_match('#(\<\=|\>\=|\<\>|\<|\>)(.+)#', $value, $matches)) {
+                    list(, $operation, $value) = $matches;
+                }
+                $this->repository = $this->repository->where($field, $operation, $value);
+            }
+        }
+
+        // sorting section
+        $sort = $request->input('sort');
+        if (is_array($sort)) {
+            foreach ($sort as $field => $order) {
+                if (!in_array($order, ['asc', 'desc'])) continue;
+                $this->repository = $this->repository->orderBy($field, $order);
+            }
+        }
+
+        // pagination section
+        $perPage = $request->input('per_page') ? : 10;
+        $records = $this->repository->paginate($perPage);
+
+        foreach ($request->all() as $key => $value) {
+            $records->appends($key, $value);
+        }
+
+        return $this->response->paginator(
+            $records,
+            $this->formatter
+        );
     }
 
     public function extract(Request $request)
@@ -60,15 +94,22 @@ abstract class SingularController extends BaseApiController
 
     public function create(Request $request)
     {
-        if (!$request->has($this->endpoint))
+        if (!$request->has('data'))
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
-        $data = $request->input($this->endpoint);
-        $record = $this->repository->newInstance();
+        $data = $request->input('data');
+
+        if ($this->repository instanceof BaseModel) {
+            $record = $this->repository->newInstance();
+        } elseif ($this->repository instanceof HasMany) {
+            $record = $this->repository->getRelated();
+            $record->{$this->repository->getPlainForeignKey()} = $this->relation->getParentKey();
+        } else {
+            throw ExceptionResolver::resolve('conflict', "cannot create {$this->endpoint} in via this relation");
+        }
+
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
-        if ($this->relation)
-          $record->{$this->relation->getPlainForeignKey()} = $this->relation->getParentKey();
         if (!$record->save())
             throw ExceptionResolver::resolve('resource', "cannot create new {$this->endpoint}");
         return $this->response->item($record, $this->formatter);
@@ -77,9 +118,9 @@ abstract class SingularController extends BaseApiController
     public function replace($id, Request $request)
     {
         if ($this->relation) $this->associate();
-        if (!$request->has($this->endpoint))
+        if (!$request->has('data'))
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
-        $data = $request->input($this->endpoint);
+        $data = $request->input('data');
         $record = $this->repository->find($id);
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
@@ -95,9 +136,9 @@ abstract class SingularController extends BaseApiController
     public function update($id, Request $request)
     {
         if ($this->relation) $this->associate();
-        if (!$request->has($this->endpoint))
+        if (!$request->has('data'))
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
-        $data = $request->input($this->endpoint);
+        $data = $request->input('data');
         $record = $this->repository->find($id);
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
@@ -111,6 +152,10 @@ abstract class SingularController extends BaseApiController
 
     protected function associate()
     {
-        $this->repository = $this->repository->where($this->relation->getForeignKey(), $this->relation->getParentKey());
+        if ($this->relation instanceof HasMany) {
+            $this->repository = $this->relation;
+        } elseif ($this->relation instanceof HasManyThrough) {
+            $this->repository = $this->relation;
+        }
     }
 }

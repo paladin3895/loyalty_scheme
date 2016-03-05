@@ -43,6 +43,7 @@ class SchemaCompoundController extends CompoundController
      */
     public function applyEndpoint($id, $endpoint, $endpoint_id, Entity $entity)
     {
+        $id = (int)$id;
         $schema = $this->repository->where('id', $id)->first();
         if (!$schema)
             throw ExceptionResolver::resolve('not found', "schema with id {$id} not exists");
