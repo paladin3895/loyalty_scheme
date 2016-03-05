@@ -35,12 +35,6 @@ class SchemaCompoundController extends CompoundController
     public function __construct(Schema $repository, ModelFormatter $formatter)
     {
         parent::__construct($repository, $formatter);
-
-        $this->middleware('oauth');
-
-        $this->scopes('read.schema', ['only' => ['index', 'extract', 'show']]);
-        $this->scopes('edit.schema', ['only' => ['create', 'update', 'delete']]);
-        $this->scopes('execute.schema', ['only' => ['apply']]);
     }
 
     /*

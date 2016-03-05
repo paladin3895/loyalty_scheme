@@ -15,10 +15,5 @@ class EntityController extends SingularController
     public function __construct(Entity $repository, EntityFormatter $formatter)
     {
         parent::__construct($repository, $formatter);
-
-        $this->middleware('oauth');
-
-        $this->scopes('read.entity', ['only' => ['index', 'extract', 'show']]);
-        $this->scopes('edit.entity', ['only' => ['create', 'update', 'delete']]);
     }
 }

@@ -42,12 +42,11 @@ return [
         //     'callback' => '\App\Http\Controllers\OAuthController@verify',
         //     'access_token_ttl' => 3600,
         // ],
-        // 'grant_types' => [
-        //     'authorization_code' => [
-        //         'class' => '\League\OAuth2\Server\Grant\AuthCodeGrant',
-        //         'access_token_ttl' => 3600,
-        //         'auth_token_ttl' => 60
-        //     ]
+        // 
+        // 'authorization_code' => [
+        //     'class' => '\League\OAuth2\Server\Grant\AuthCodeGrant',
+        //     'access_token_ttl' => 3600,
+        //     'auth_token_ttl' => 60
         // ]
     ],
 

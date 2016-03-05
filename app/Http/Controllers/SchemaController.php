@@ -17,12 +17,6 @@ class SchemaController extends SingularController
     public function __construct(Schema $repository, SchemaFormatter $formatter)
     {
         parent::__construct($repository, $formatter);
-
-        $this->middleware('oauth');
-
-        $this->scopes('read.schema', ['only' => ['index', 'extract', 'show']]);
-        $this->scopes('edit.schema', ['only' => ['create', 'update', 'delete']]);
-        $this->scopes('execute.schema', ['only' => ['apply']]);
     }
 
     public function apply($id, Request $request)

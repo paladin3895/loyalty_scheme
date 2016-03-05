@@ -21,6 +21,27 @@ class OAuth2Seeder extends Seeder
         ]);
 
         \DB::table('oauth_scopes')->insert([
+            'id' => 'read',
+            'description' => 'this scope grants the permission to read on all endpoints',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
+            'id' => 'edit',
+            'description' => 'this scope grants the permission to edit on all endpoints',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
+            'id' => 'execute',
+            'description' => 'this scope grants the permission to execute on all endpoints',
+            'created_at' => date('Y-m-d'),
+            'updated_at' => date('Y-m-d'),
+        ]);
+
+        \DB::table('oauth_scopes')->insert([
             'id' => 'read.entity',
             'description' => 'this scope grants the permission to read entity',
             'created_at' => date('Y-m-d'),
