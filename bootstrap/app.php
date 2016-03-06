@@ -45,8 +45,9 @@ $app->singleton(
 );
 
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
-$app->register(\LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class);
-$app->register(\LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class);
+$app->register(LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class);
+$app->register(LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class);
+$app->register(Barryvdh\Cors\LumenServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -66,14 +67,15 @@ $app->middleware([
     // Illuminate\View\Middleware\ShareErrorsFromSession::class,
     // Laravel\Lumen\Http\Middleware\VerifyCsrfToken::class,
     LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware::class,
+    Barryvdh\Cors\HandleCors::class,
 ]);
 
 $app->routeMiddleware([
-    'check-authorization-params' => \LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
-    'csrf' => \Laravel\Lumen\Http\Middleware\VerifyCsrfToken::class,
-    'oauth' => \App\Http\Middleware\OAuthPolicyMiddleware::class,
-    'oauth-client' => \LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,
-    'oauth-user' => \LucaDegasperi\OAuth2Server\Middleware\OAuthUserOwnerMiddleware::class,
+    'check-authorization-params' => LucaDegasperi\OAuth2Server\Middleware\CheckAuthCodeRequestMiddleware::class,
+    'csrf' => Laravel\Lumen\Http\Middleware\VerifyCsrfToken::class,
+    'oauth' => App\Http\Middleware\OAuthPolicyMiddleware::class,
+    'oauth-client' => LucaDegasperi\OAuth2Server\Middleware\OAuthClientOwnerMiddleware::class,
+    'oauth-user' => LucaDegasperi\OAuth2Server\Middleware\OAuthUserOwnerMiddleware::class,
 ]);
 
 /*
