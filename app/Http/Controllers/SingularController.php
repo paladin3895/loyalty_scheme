@@ -29,6 +29,10 @@ abstract class SingularController extends BaseApiController
     {
         if ($this->relation) $this->associate();
 
+        if ($this->repository instanceof BelongsToClient) {
+            $this->repository = $this->repository->belongsToClient($this->auth->user());
+        }
+
         // filtering section
         $filter = $request->input('filter');
         if (is_array($filter)) {
@@ -67,6 +71,11 @@ abstract class SingularController extends BaseApiController
     public function extract(Request $request)
     {
         if ($this->relation) $this->associate();
+
+        if ($this->repository instanceof BelongsToClient) {
+            $this->repository = $this->repository->belongsToClient($this->auth->user());
+        }
+
         $results['count'] = $this->repository->count();
         $response = new Response();
         foreach ($results as $key => $value) {
@@ -78,6 +87,11 @@ abstract class SingularController extends BaseApiController
     public function show($id)
     {
         if ($this->relation) $this->associate();
+
+        if ($this->repository instanceof BelongsToClient) {
+            $this->repository = $this->repository->belongsToClient($this->auth->user());
+        }
+
         $record = $this->repository->find($id);
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} not found");
@@ -87,6 +101,11 @@ abstract class SingularController extends BaseApiController
     public function delete($id)
     {
         if ($this->relation) $this->associate();
+
+        if ($this->repository instanceof BelongsToClient) {
+            $this->repository = $this->repository->belongsToClient($this->auth->user());
+        }
+
         $record = $this->repository->find($id);
         if (!$record)
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
@@ -126,6 +145,11 @@ abstract class SingularController extends BaseApiController
     public function replace($id, Request $request)
     {
         if ($this->relation) $this->associate();
+
+        if ($this->repository instanceof BelongsToClient) {
+            $this->repository = $this->repository->belongsToClient($this->auth->user());
+        }
+
         if (!$request->has('data'))
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
         $data = $request->input('data');
@@ -144,6 +168,11 @@ abstract class SingularController extends BaseApiController
     public function update($id, Request $request)
     {
         if ($this->relation) $this->associate();
+
+        if ($this->repository instanceof BelongsToClient) {
+            $this->repository = $this->repository->belongsToClient($this->auth->user());
+        }
+
         if (!$request->has('data'))
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
         $data = $request->input('data');

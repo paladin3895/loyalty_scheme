@@ -48,4 +48,9 @@ class Schema extends BaseModel implements BelongsToClient
     {
         return (string)$this->attributes['client_id'];
     }
+
+    public function scopeBelongsToClient($query, $id)
+    {
+        return $query->where('client_id', $id);
+    }
 }
