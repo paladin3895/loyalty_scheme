@@ -129,12 +129,12 @@ abstract class SingularController extends BaseApiController
             throw ExceptionResolver::resolve('conflict', "cannot create {$this->endpoint} via this relation");
         }
 
-        foreach ($data as $key => $value) {
-            $record->$key = $value;
-        }
-
         if ($record instanceof BelongsToClient) {
             $record->setClientIdAttribute($this->auth->user());
+        }
+
+        foreach ($data as $key => $value) {
+            $record->$key = $value;
         }
 
         if (!$record->save())

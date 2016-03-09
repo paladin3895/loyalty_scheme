@@ -77,22 +77,22 @@ class OAuth2Seeder extends Seeder
         ]);
 
         \DB::table('oauth_scopes')->insert([
-            'id' => 'read.action',
-            'description' => 'this scope grants the permission to read action',
+            'id' => 'read.event',
+            'description' => 'this scope grants the permission to read event',
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);
 
         \DB::table('oauth_scopes')->insert([
-            'id' => 'edit.action',
-            'description' => 'this scope grants the permission to edit action',
+            'id' => 'edit.event',
+            'description' => 'this scope grants the permission to edit event',
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);
 
         \DB::table('oauth_scopes')->insert([
-            'id' => 'execute.action',
-            'description' => 'this scope grants the permission to execute action',
+            'id' => 'execute.event',
+            'description' => 'this scope grants the permission to execute event',
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);

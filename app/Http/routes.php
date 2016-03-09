@@ -146,6 +146,56 @@ $api->version('v1', [
 
         });
 
+        $api->group(['middleware' => 'oauth:read.event'], function ($api) {
+            $api->get('/events', ['as' => 'event_index', 'uses' => 'EventController@index']);
+            $api->get('/event/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'event_show', 'uses' => 'EventController@show']);
+            // $api->match('head', '/event', ['as' => 'event_extract', 'uses' => 'EventController@extract']);
+        });
+
+        $api->group(['middleware' => 'oauth:edit.event'], function ($api) {
+            $api->post('/events', ['as' => 'event_create', 'uses' => 'EventController@create']);
+            $api->put('/event/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'event_replace', 'uses' => 'EventController@replace']);
+            $api->patch('/event/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'event_update', 'uses' => 'EventController@update']);
+            $api->delete('/event/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'event_delete', 'uses' => 'EventController@delete']);
+        });
+
+        $api->group(['prefix' => '/event/{id:[0-9a-zA-Z\.\-\_]+}'], function ($api) {
+
+            $api->group(['middleware' => 'oauth:read.event'], function ($api) {
+                $api->get('/{endpoint:[a-z]+}', [
+                    'as' => 'event_list_endpoint',
+                    'uses' => 'EventCompoundController@indexEndpoint'
+                ]);
+
+                $api->get('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+                    'as' => 'event_show_endpoint',
+                    'uses' => 'EventCompoundController@showEndpoint'
+                ]);
+            });
+
+            $api->group(['middleware' => 'oauth:edit.event'], function ($api) {
+                $api->post('/{endpoint:[a-z]+}', [
+                    'as' => 'event_create_endpoint',
+                    'uses' => 'EventCompoundController@createEndpoint'
+                ]);
+
+                $api->patch('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+                    'as' => 'event_update_endpoint',
+                    'uses' => 'EventCompoundController@updateEndpoint'
+                ]);
+
+                $api->put('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+                    'as' => 'event_replace_endpoint',
+                    'uses' => 'EventCompoundController@replaceEndpoint'
+                ]);
+
+                $api->delete('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
+                    'as' => 'event_delete_endpoint',
+                    'uses' => 'EventCompoundController@deleteEndpoint'
+                ]);
+            });
+        });
+
     });
 
 });

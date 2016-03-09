@@ -39,6 +39,16 @@ class Schema extends BaseModel implements BelongsToClient
         return $this->hasMany('App\Models\Link', 'schema_id', 'id');
     }
 
+    public function events()
+    {
+        return $this->belongsToMany(
+            'App\Models\Event',
+            'event_schema',
+            'schema_id',
+            'event_id'
+        );
+    }
+
     public function setClientIdAttribute($id)
     {
         $this->attributes['client_id'] = (string)$id;

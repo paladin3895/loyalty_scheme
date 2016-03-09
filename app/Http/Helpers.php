@@ -30,7 +30,9 @@ class Helpers
         switch ($endpoint) {
             case 'entity'    : return 'entities';
             case 'schema'    : return 'schemas';
+            case 'event'     : return 'events';
             case 'checkpoint': return 'checkpoints';
+            case 'subscriber': return 'subscribers';
             case 'policy'    : return 'policies';
             case 'reward'    : return 'rewards';
             case 'node'      : return 'nodes';
@@ -44,7 +46,9 @@ class Helpers
         switch ($endpoint) {
             case 'entities'   : return 'entity';
             case 'schemas'    : return 'schema';
+            case 'events'     : return 'event';
             case 'checkpoints': return 'checkpoint';
+            case 'subscribers': return 'subscriber';
             case 'policies'   : return 'policy';
             case 'rewards'    : return 'reward';
             case 'nodes'      : return 'node';
