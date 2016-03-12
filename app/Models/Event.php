@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Interfaces\BelongsToClient;
+use App\Models\Observers\EventObserver;
 
 class Event extends BaseModel implements BelongsToClient
 {
@@ -37,23 +38,16 @@ class Event extends BaseModel implements BelongsToClient
     //     );
     // }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::observe(new EventObserver);
+    }
+
     public function subscribers()
     {
         return $this->hasMany('App\Models\Subscriber', 'event_id', 'id');
-    }
-
-    public function setIdAttribute($id)
-    {
-        if (preg_match('#^' . preg_quote($this->attributes['client_id']) . '\..+$#', $id)) {
-            $this->attributes['id'] = (string)$id;
-        } else {
-            $this->attributes['id'] = $this->attributes['client_id'] . '.' . (string)$id;
-        }
-    }
-
-    public function getIdAttribute($id)
-    {
-        return (string)$this->attributes['id'];
     }
 
     public function setClientIdAttribute($id)

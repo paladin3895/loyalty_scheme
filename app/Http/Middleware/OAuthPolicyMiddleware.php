@@ -14,7 +14,7 @@ class OAuthPolicyMiddleware extends OAuthMiddleware
     public function handle($request, Closure $next, $scopesString = null)
     {
         try {
-            parent::handle($request, $next, $scopesString);
+            return parent::handle($request, $next, $scopesString);
         } catch (\Exception $e) {
             throw ExceptionResolver::resolve('unauthorized', $e->getMessage());
         }

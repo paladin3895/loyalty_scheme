@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call('OAuth2Seeder');
+        $this->call('ModelSeeder');
 
         Model::reguard();
     }

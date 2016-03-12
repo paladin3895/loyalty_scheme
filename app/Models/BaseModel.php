@@ -13,6 +13,18 @@ abstract class BaseModel extends Model
     const DELETED_AT = 'deleted_at';
 
     /**
+     * The dynamic connection config at runtime
+     * @var string
+     */
+    protected static $globalConnection;
+
+    public static function setGlobalConnection($connection)
+    {
+        static::$globalConnection = $connection;
+    }
+
+
+    /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
@@ -22,6 +34,10 @@ abstract class BaseModel extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
+        if (static::$globalConnection) {
+            $this->setConnection(static::$globalConnection);
+        }
     }
 
     /**
