@@ -7,11 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
+use App\Exceptions\ExceptionResolver;
+
 class OAuthController extends BaseController
 {
     public function authorize(Request $request)
     {
-        return Authorizer::issueAccessToken();
+        try {
+            return Authorizer::issueAccessToken();
+        } catch (\Exception $e) {
+            throw ExceptionResolver::resolve('bad request', $e->getMessage());
+        }
     }
 
     public function verify($username, $password)

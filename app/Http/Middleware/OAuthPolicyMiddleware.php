@@ -6,9 +6,20 @@ use LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware;
 use League\OAuth2\Server\Exception\InvalidScopeException;
 use Closure;
 
+use App\Exceptions\ExceptionResolver;
 
 class OAuthPolicyMiddleware extends OAuthMiddleware
 {
+
+    public function handle($request, Closure $next, $scopesString = null)
+    {
+        try {
+            parent::handle($request, $next, $scopesString);
+        } catch (\Exception $e) {
+            throw ExceptionResolver::resolve('unauthorized', $e->getMessage());
+        }
+    }
+
     /**
      * Validate the scopes.
      *

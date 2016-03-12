@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Schema;
+use App\Models\Observers\SubscriberObserver;
+
 class Subscriber extends BaseModel
 {
     /**
@@ -23,6 +26,13 @@ class Subscriber extends BaseModel
         'schema_id' => 'integer',
         'priority' => 'integer',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::observe(new SubscriberObserver);
+    }
 
     public function schema()
     {

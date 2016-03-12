@@ -25,6 +25,7 @@ class OAuthServiceProvider extends ServiceProvider
 
             $provider->setUserResolver(function ($id) {
                 // Logic to return a user by their ID.
+                return $id;
             });
 
             $provider->setClientResolver(function ($id) {

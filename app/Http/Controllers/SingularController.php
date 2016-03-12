@@ -120,11 +120,13 @@ abstract class SingularController extends BaseApiController
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
         $data = $request->input('data');
 
+        if ($this->relation) $this->associate();
+
         if ($this->repository instanceof BaseModel) {
             $record = $this->repository->newInstance();
         } elseif ($this->repository instanceof HasMany) {
             $record = $this->repository->getRelated();
-            $record->{$this->repository->getPlainForeignKey()} = $this->relation->getParentKey();
+            $record->{$this->repository->getPlainForeignKey()} = $this->repository->getParentKey();
         } else {
             throw ExceptionResolver::resolve('conflict', "cannot create {$this->endpoint} via this relation");
         }
@@ -189,10 +191,6 @@ abstract class SingularController extends BaseApiController
 
     protected function associate()
     {
-        if ($this->relation instanceof HasMany) {
-            $this->repository = $this->relation;
-        } elseif ($this->relation instanceof HasManyThrough) {
-            $this->repository = $this->relation;
-        }
+        $this->repository = $this->relation;
     }
 }
