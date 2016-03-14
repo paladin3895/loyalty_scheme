@@ -1,30 +1,52 @@
 <?php
 namespace App\Models\Traits;
 
+use App\Exceptions\ExceptionResolver;
+
 trait DynamicFieldTrait
 {
     protected $bucket;
 
     public function getAttribute($key)
     {
-        if (!in_array($key, $this->staticFields)) {
-            if (!isset($this->bucket)) $this->bucket = json_decode($this->attributes[$this->dynamicField]);
-            return $this->bucket->$key;
-        } else {
+        if (in_array($key, $this->staticFields)) {
             return parent::getAttribute($key);
+        } elseif ($key == $this->dynamicField) {
+            return $this->bucket;
+        } else {
+            if (!isset($this->bucket)){
+                $this->bucket = json_decode($this->attributes[$this->dynamicField]);
+            }
+            return $this->bucket->$key;
         }
     }
 
     public function setAttribute($key, $value)
     {
-        if (!in_array($key, $this->staticFields)) {
-            $dynamicField = isset($this->attributes[$this->dynamicField]) ?
-                $this->attributes[$this->dynamicField] : '{}';
-            if (!isset($this->bucket)) $this->bucket = (object)json_decode($dynamicField);
-            $this->bucket->$key = $value;
+        if (in_array($key, $this->staticFields)) {
+            parent::setAttribute($key, $value);
+        } elseif ($key == $this->dynamicField) {
+            if (is_scalar($value)) {
+                throw ExceptionResolver::resolve(
+                    'conflict',
+                    "cannot set single value for {$key} because it's reserved property"
+                );
+            }
+            if (!isset($this->bucket)) {
+                $dynamicField = isset($this->attributes[$this->dynamicField]) ?
+                    $this->attributes[$this->dynamicField] : '{}';
+                $this->bucket = (object)json_decode($dynamicField);
+            }
+            $this->bucket = (object)array_merge((array)$this->bucket, (array)$value);
             $this->attributes[$this->dynamicField] = json_encode($this->bucket);
         } else {
-            parent::setAttribute($key, $value);
+            if (!isset($this->bucket)) {
+                $dynamicField = isset($this->attributes[$this->dynamicField]) ?
+                    $this->attributes[$this->dynamicField] : '{}';
+                $this->bucket = (object)json_decode($dynamicField);
+            }
+            $this->bucket->$key = $value;
+            $this->attributes[$this->dynamicField] = json_encode($this->bucket);
         }
     }
 }

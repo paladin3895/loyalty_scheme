@@ -37,6 +37,8 @@ abstract class BaseModel extends Model
 
         if (static::$globalConnection) {
             $this->setConnection(static::$globalConnection);
+        } elseif (self::$globalConnection) {
+            $this->setConnection(static::$globalConnection);
         }
     }
 
