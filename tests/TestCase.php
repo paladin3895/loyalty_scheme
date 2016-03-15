@@ -13,7 +13,6 @@ class TestCase extends Laravel\Lumen\Testing\TestCase
     {
 
         $app = require __DIR__ . '/../bootstrap/app.php';
-
         return $app;
     }
 

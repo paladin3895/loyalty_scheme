@@ -16,7 +16,6 @@ $factory->defineAs(App\Models\Entity::class, 'person', function ($faker) {
         'name' => $faker->name,
         'email' => $faker->email,
         'category' => 'person',
-        'client_id' => null,
     ];
 });
 
@@ -25,7 +24,6 @@ $factory->defineAs(App\Models\Entity::class, 'property', function ($faker) {
         'name' => $faker->name,
         'location' => $faker->address,
         'category' => 'property',
-        'client_id' => null,
     ];
 });
 
@@ -34,19 +32,18 @@ $factory->define(App\Models\Schema::class, function ($faker) {
         'name' => implode(' ', $faker->words(3)),
         'link' => $faker->url,
         'description' => $faker->sentence(5),
-        'client_id' => null,
     ];
 });
 
 $factory->define(App\Models\Event::class, function ($faker) {
+    static $index = 1;
     return [
-        'id' => implode('_', $faker->words(3)),
+        'id' => implode('_', ['event', $index++]),
         'content' => json_encode([
             'point' => 5,
         ]),
         'condition' => json_encode([
             'category' => $faker->randomElement(['person', 'property', 'post'])
         ]),
-        'client_id' => null,
     ];
 });

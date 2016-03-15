@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware;
 use League\OAuth2\Server\Exception\InvalidScopeException;
+use League\OAuth2\Server\Exception\AccessDeniedException;
 use Closure;
 
 use App\Exceptions\ExceptionResolver;
@@ -16,11 +17,14 @@ class OAuthPolicyMiddleware extends OAuthMiddleware
         try {
             return parent::handle($request, $next, $scopesString);
         } catch (\Exception $e) {
-            if ($e->getCode() == 401) {
+            if ($e instanceof InvalidScopeException) {
+                throw ExceptionResolver::resolve('unauthorized', $e->getMessage());
+            } elseif ($e instanceof AccessDeniedException) {
                 throw ExceptionResolver::resolve('unauthorized', $e->getMessage());
             } else {
                 throw $e;
             }
+
         }
     }
 
