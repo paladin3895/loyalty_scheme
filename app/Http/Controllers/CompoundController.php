@@ -66,10 +66,12 @@ abstract class CompoundController extends BaseApiController
     protected function resolveRelation($id, $endpoint)
     {
         $record = $this->repository->where('id', $id)->first();
-        if (!$record)
+        if (!$record) {
             throw ExceptionResolver::resolve('not found', "parent endpoint not found");
-        if (!is_callable([$record, Helpers::plural($endpoint)]))
+        }
+        if (!is_callable([$record, Helpers::plural($endpoint)])) {
             throw ExceptionResolver::resolve('not found', "cannot access nested endpoint {$endpoint}");
+        }
         $relation = call_user_func([$record, Helpers::plural($endpoint)]);
         return $relation;
     }
@@ -86,8 +88,9 @@ abstract class CompoundController extends BaseApiController
 
     protected function resolveController($id, $endpoint)
     {
-        if (!array_key_exists($endpoint, $this->endpoints))
+        if (!array_key_exists($endpoint, $this->endpoints)) {
             throw ExceptionResolver::resolve('not found', "endpoint {$endpoint} not found");
+        }
         $ref = new \ReflectionClass($this->endpoints[$endpoint]['controller']);
         if ($ref->isInstantiable() && $ref->isSubclassOf('App\Http\Controllers\SingularController')) {
             $relation = $this->resolveRelation($id, $endpoint);
@@ -104,12 +107,17 @@ abstract class CompoundController extends BaseApiController
     protected function checkEndpoint($endpoint, $method)
     {
         $endpoint = Helpers::singular($endpoint);
-        if (!array_key_exists($endpoint, $this->endpoints))
+        if (!array_key_exists($endpoint, $this->endpoints)) {
             throw ExceptionResolver::resolve('not found', "endpoint {$endpoint} not found");
-        if (!preg_match('#^([a-z]+)Endpoint$#', $method, $matches))
+        }
+
+        if (!preg_match('#^([a-z]+)Endpoint$#', $method, $matches)) {
             throw ExceptionResolver::resolve('method not allowed', "invalid method");
+        }
+
         $method = $matches[1];
-        if (!in_array($method, $this->endpoints[$endpoint]['methods']))
+        if (!in_array($method, $this->endpoints[$endpoint]['methods'])) {
             throw ExceptionResolver::resolve('method not allowed', "method {$method} is not allowed in this endpoint");
+        }
     }
 }

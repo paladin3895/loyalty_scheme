@@ -16,4 +16,9 @@ class EventController extends SingularController
     {
         parent::__construct($repository, $formatter);
     }
+
+    public function apply($id, Request $request)
+    {
+      
+    }
 }

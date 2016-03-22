@@ -101,7 +101,6 @@ $api->version('v1', [
             'uses' => 'SchemaController@apply'
         ]);
 
-
         $api->group(['prefix' => '/schema/{id:[0-9]+}'], function ($api) {
 
             $api->group(['middleware' => 'oauth:read.schema'], function ($api) {
@@ -138,12 +137,6 @@ $api->version('v1', [
                 ]);
             });
 
-            $api->post('/{endpoint:[a-z]+}/{endpoint_id:[0-9]+}', [
-                'middleware' => 'oauth:execute.schema',
-                'as' => 'schema_apply_endpoint',
-                'uses' => 'SchemaCompoundController@applyEndpoint',
-            ]);
-
         });
 
         $api->group(['middleware' => 'oauth:read.event'], function ($api) {
@@ -158,6 +151,12 @@ $api->version('v1', [
             $api->patch('/event/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'event_update', 'uses' => 'EventController@update']);
             $api->delete('/event/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'event_delete', 'uses' => 'EventController@delete']);
         });
+
+        $api->post('/event/{id:[0-9a-zA-Z\.\-\_]+}', [
+            'middleware' => 'oauth:execute.event',
+            'as' => 'event_apply',
+            'uses' => 'EventController@apply'
+        ]);
 
         $api->group(['prefix' => '/event/{id:[0-9a-zA-Z\.\-\_]+}'], function ($api) {
 
