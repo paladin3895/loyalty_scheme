@@ -21,7 +21,7 @@ class Entity extends BaseModel implements BelongsToClient
      */
     protected $fillable = ['attributes'];
 
-    protected $staticFields = ['id', 'client_id', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
+    protected $staticFields = ['id', 'client_id', 'properties', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
 
     protected $dynamicField = 'attributes';
 

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Helpers;
-use Liquid\Records\Record;
 use App\Models\Schema;
+use App\Models\Entity;
 use App\Formatters\SchemaFormatter;
 use App\Exceptions\ExceptionResolver;
+
+use Liquid\Records\Record;
 use Liquid\Records\Traits\MergeTrait;
 
 class SchemaController extends SingularController
@@ -32,8 +34,9 @@ class SchemaController extends SingularController
         if ($request->has('target')) {
             $entityId = (integer)$request->input('target');
             $entity = Entity::find($entityId);
-            if (!$entity)
+            if (!$entity) {
                 throw ExceptionResolver::resolve('not found', "entity with id {$entityId} not exists");
+            }
 
             return $this->applyToEntity($schema, $entity);
 
@@ -66,26 +69,24 @@ class SchemaController extends SingularController
     protected function applyToEntity(Schema $schema, Entity $entity)
     {
         $checkpoint = $entity->checkpoints()->where('schema_id', $schema->id)->firstOrNew([
-            'schema_id' => $id
+            'schema_id' => $schema->id
         ]);
 
         $record = Helpers::prepareEntityRecord($entity, $checkpoint);
         $registry = Helpers::buildSchema($schema);
         $registry->process($record);
-        $results = array_column(Record::$history, 'result');
+        $result = Record::history('result');
 
         // apply results to entity properties
         $properties = (array)$entity->properties;
-        foreach ($results as $result) {
-            $properties = $this->_conditionedMerge($properties, $result);
-        }
+        $properties = array_merge($properties, $result);
 
         $entity->properties = $properties;
         $entity->save();
 
         // save record history to checkpoint
-        $checkpoint->state = Record::$history['checkpoint'];
+        $checkpoint->state = Record::history('checkpoint');
         $checkpoint->save();
-        return $this->response->item($checkpoint, new \App\Formatters\ModelFormatter);
+        return $this->response->item($entity, new \App\Formatters\EntityFormatter);
     }
 }
