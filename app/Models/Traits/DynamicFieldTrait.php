@@ -29,7 +29,7 @@ trait DynamicFieldTrait
             if (is_scalar($value)) {
                 throw ExceptionResolver::resolve(
                     'conflict',
-                    "cannot set single value for {$key} because it's reserved property"
+                    "cannot set single value for {$key} because it's a reserved property"
                 );
             }
             if (!isset($this->bucket)) {
@@ -48,5 +48,27 @@ trait DynamicFieldTrait
             $this->bucket->$key = $value;
             $this->attributes[$this->dynamicField] = json_encode($this->bucket);
         }
+    }
+
+    public function toArray()
+    {
+        $buffer = parent::toArray();
+        $result = [];
+
+        foreach ($buffer as $key => $value) {
+            if ($key != $this->dynamicField) {
+                $result[$key] = $value;
+            }
+        }
+
+        foreach ($buffer[$this->dynamicField] as $key => $value) {
+            if (!array_key_exists($key, $result)) {
+                $result[$key] = $value;
+            } else {
+                $result[$this->dynamicField][$key] = $value;
+            }
+        }
+
+        return $result;
     }
 }
