@@ -49,7 +49,7 @@ class SchemaEndpointTest extends TestCase
 
         $res = $this->client->post('schemas', [
             'json' => [
-                'data' => $schema->toArray()['attributes'],
+                'data' => $schema->toArray(),
             ],
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
@@ -73,7 +73,7 @@ class SchemaEndpointTest extends TestCase
 
         $res = $this->client->patch('schema/1', [
             'json' => [
-                'data' => $schema->toArray()['attributes'],
+                'data' => $schema->toArray(),
             ],
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
@@ -97,7 +97,7 @@ class SchemaEndpointTest extends TestCase
 
         $res = $this->client->put('schema/1', [
             'json' => [
-                'data' => $schema->toArray()['attributes'],
+                'data' => $schema->toArray(),
             ],
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
@@ -131,6 +131,125 @@ class SchemaEndpointTest extends TestCase
         $schema = \App\Models\Schema::find($data->id);
         $this->assertNull($schema);
     }
+
+    public function testSchemaCreateNode()
+    {
+        $accessToken = $this->authorize(['edit']);
+        $res = $this->client->post('schema/5/nodes', [
+            'json' => [
+                'data' => [
+                    'name' => 'testing_node',
+                    'config' => [
+                        'class' => 'someclass'
+                    ],
+                ],
+            ],
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $result = json_decode($res->getBody());
+        $this->assertTrue((boolean)$result->status);
+        $this->assertTrue(is_object($result->data));
+        $this->assertEquals('testing_node', $result->data->name);
+        $this->assertEquals(['class' => 'someclass'], (array)$result->data->config);
+    }
+
+    public function testSchemaIndexNode()
+    {
+        $accessToken = $this->authorize(['read']);
+        $res = $this->client->get('schema/5/nodes', [
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $result = json_decode($res->getBody());
+        $this->assertTrue((boolean)$result->status);
+        $this->assertTrue(is_array($result->data));
+    }
+
+    public function testSchemaShowNode()
+    {
+        $accessToken = $this->authorize(['read']);
+        $res = $this->client->get('schema/5/node/1', [
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $result = json_decode($res->getBody());
+        $this->assertTrue((boolean)$result->status);
+        $this->assertEquals('testing_node', $result->data->name);
+        $this->assertEquals(['class' => 'someclass'], (array)$result->data->config);
+    }
+
+    public function testSchemaUpdateNode()
+    {
+        $accessToken = $this->authorize(['edit']);
+        $res = $this->client->patch('schema/5/node/1', [
+            'json' => [
+                'data' => [
+                    'name' => 'testing_another_name',
+                ],
+            ],
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $result = json_decode($res->getBody());
+        $this->assertTrue((boolean)$result->status);
+        $this->assertEquals('testing_another_name', $result->data->name);
+        $this->assertEquals(['class' => 'someclass'], (array)$result->data->config);
+    }
+
+    public function testSchemaReplaceNode()
+    {
+        $accessToken = $this->authorize(['edit']);
+        $res = $this->client->put('schema/5/node/1', [
+            'json' => [
+                'data' => [
+                    'name' => 'testing_other_name',
+                    'config' => [
+                        'class' => 'other_class'
+                    ],
+                ],
+            ],
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $result = json_decode($res->getBody());
+        $this->assertTrue((boolean)$result->status);
+        $this->assertEquals('testing_other_name', $result->data->name);
+        $this->assertEquals(['class' => 'other_class'], (array)$result->data->config);
+    }
+
+  public function testSchemaDeleteNode()
+  {
+      $accessToken = $this->authorize(['edit']);
+      $res = $this->client->delete('schema/5/node/1', [
+          'headers' => [
+              'Authorization' => "Bearer {$accessToken}",
+              'Accept' => 'application/json',
+          ],
+      ]);
+
+      $data = json_decode($res->getBody())->data;
+      $this->assertTrue(is_object($data));
+      $this->assertObjectHasAttribute('id', $data);
+      $this->assertEquals($data->id, 1);
+      $node = \App\Models\Node::find($data->id);
+      $this->assertNull($node);
+  }
 
     public function testSchemaApplyData()
     {

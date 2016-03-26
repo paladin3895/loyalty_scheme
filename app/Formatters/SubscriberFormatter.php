@@ -6,17 +6,22 @@ use App\Models\Subscriber;
 
 class SubscriberFormatter extends ModelFormatter
 {
-    public function transform(BaseModel $model)
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [
+        'event', 'schema'
+    ];
+
+    protected function includeSchema(Subscriber $subscriber)
     {
-        if (!$model instanceof Subscriber) return $model->toArray();
-        $subscriber = [];
-        foreach ($model->toArray() as $field => $value) {
-            if ($field == 'schema_id') {
-                $subscriber['schema'] = $model->schema->get()->toArray();
-            } else {
-                $subscriber[$field] = $value;
-            }
-        }
-        return $subscriber;
+        return $this->item($subscriber->schema()->first(), new SchemaFormatter);
+    }
+
+    protected function includeEvent(Subscriber $subscriber)
+    {
+        return $this->item($subscriber->event()->first(), new EventFormatter);
     }
 }

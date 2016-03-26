@@ -19,7 +19,7 @@ class Subscriber extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['event_id', 'schema_id', 'priority'];
+    protected $fillable = ['schema_id', 'priority'];
 
     protected $casts = [
         'event_id' => 'string',

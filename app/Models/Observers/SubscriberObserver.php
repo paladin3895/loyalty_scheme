@@ -18,9 +18,7 @@ class SubscriberObserver
 
     public function updating(Subscriber $model)
     {
-        if ($this->checkMatch($model->event_id, $model->schema_id)) {
-            $model->save();
-        } else {
+        if (!$this->checkMatch($model->event_id, $model->schema_id)) {
             throw ExceptionResolver::resolve('conflict', 'event and schema not match');
         }
     }

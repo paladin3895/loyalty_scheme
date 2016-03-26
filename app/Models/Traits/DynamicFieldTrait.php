@@ -7,6 +7,16 @@ trait DynamicFieldTrait
 {
     protected $bucket;
 
+    public function getDynamicField()
+    {
+        return $this->dynamicField;
+    }
+
+    public function getStaticFields()
+    {
+        return $this->staticFields;
+    }
+
     public function getAttribute($key)
     {
         if (in_array($key, $this->staticFields)) {
@@ -50,18 +60,20 @@ trait DynamicFieldTrait
         }
     }
 
-    public function toArray()
+    public function toArray($isGrouped = false)
     {
         $buffer = parent::toArray();
-        $result = [];
 
+        if ($isGrouped) return $buffer;
+
+        $result = [];
         foreach ($buffer as $key => $value) {
             if ($key != $this->dynamicField) {
                 $result[$key] = $value;
             }
         }
 
-        foreach ($buffer[$this->dynamicField] as $key => $value) {
+        foreach ((array)$buffer[$this->dynamicField] as $key => $value) {
             if (!array_key_exists($key, $result)) {
                 $result[$key] = $value;
             } else {

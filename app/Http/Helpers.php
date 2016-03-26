@@ -19,8 +19,10 @@ class Helpers
 
     public static function prepareEntityRecord(Entity $entity, Checkpoint $checkpoint)
     {
-        $data = $entity->toArray();
-        $data = array_merge((array)$data['properties'], (array)$data['attributes']);
+        $buffer = $entity->toArray(true);
+        $data = [];
+
+        $data = array_merge((array)$buffer['properties'], (array)$buffer['attributes']);
         $record = new \Liquid\Records\Record((array)$data, (array)$checkpoint->state);
         return $record;
     }

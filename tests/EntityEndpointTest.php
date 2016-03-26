@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class EntityEndpointTest extends TestCase
 {
-    use DatabaseTransactions;
 
     public function testEntityIndex()
     {
@@ -49,7 +48,7 @@ class EntityEndpointTest extends TestCase
 
         $res = $this->client->post('entities', [
             'json' => [
-                'data' => $person->toArray()['attributes'],
+                'data' => $person->toArray(),
             ],
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
@@ -73,7 +72,7 @@ class EntityEndpointTest extends TestCase
 
         $res = $this->client->patch('entity/1', [
             'json' => [
-                'data' => $person->toArray()['attributes'],
+                'data' => $person->toArray(),
             ],
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
@@ -97,7 +96,7 @@ class EntityEndpointTest extends TestCase
 
         $res = $this->client->put('entity/1', [
             'json' => [
-                'data' => $person->toArray()['attributes'],
+                'data' => $person->toArray(),
             ],
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
@@ -130,5 +129,20 @@ class EntityEndpointTest extends TestCase
         $this->assertEquals($data->id, 1);
         $entity = \App\Models\Entity::find($data->id);
         $this->assertNull($entity);
+    }
+
+    public function testEntityIndexCheckpoint()
+    {
+        $accessToken = $this->authorize(['read']);
+        $res = $this->client->get('entity/2/checkpoints', [
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $result = json_decode($res->getBody());
+        $this->assertTrue((boolean)$result->status);
+        $this->assertTrue(is_array($result->data));
     }
 }

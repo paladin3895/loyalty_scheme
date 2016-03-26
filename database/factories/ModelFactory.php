@@ -39,11 +39,11 @@ $factory->define(App\Models\Event::class, function ($faker) {
     static $index = 1;
     return [
         'id' => implode('_', ['event', $index++]),
-        'content' => json_encode([
+        'content' => [
             'point' => 5,
-        ]),
-        'condition' => json_encode([
+        ],
+        'condition' => [
             'category' => $faker->randomElement(['person', 'property', 'post'])
-        ]),
+        ],
     ];
 });

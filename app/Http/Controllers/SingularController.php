@@ -93,8 +93,9 @@ abstract class SingularController extends BaseApiController
         }
 
         $record = $this->repository->find($id);
-        if (!$record)
+        if (!$record) {
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} not found");
+        }
         return $this->response->item($record, $this->formatter);
     }
 
@@ -107,17 +108,21 @@ abstract class SingularController extends BaseApiController
         }
 
         $record = $this->repository->find($id);
-        if (!$record)
+        if (!$record) {
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
-        if (!$record->delete())
+        }
+
+        if (!$record->delete()) {
             throw ExceptionResolver::resolve('resource', "cannot delete {$this->endpoint} with id {$id}");
+        }
         return $this->response->item($record, $this->formatter);
     }
 
     public function create(Request $request)
     {
-        if (!$request->has('data'))
+        if (!$request->has('data')) {
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
+        }
         $data = $request->input('data');
 
         if ($this->relation) $this->associate();
@@ -139,8 +144,9 @@ abstract class SingularController extends BaseApiController
             $record->$key = $value;
         }
 
-        if (!$record->save())
+        if (!$record->save()) {
             throw ExceptionResolver::resolve('resource', "cannot create new {$this->endpoint}");
+        }
         return $this->response->item($record, $this->formatter);
     }
 
@@ -152,18 +158,24 @@ abstract class SingularController extends BaseApiController
             $this->repository = $this->repository->belongsToClient($this->auth->user());
         }
 
-        if (!$request->has('data'))
+        if (!$request->has('data')) {
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
+        }
         $data = $request->input('data');
+
         $record = $this->repository->find($id);
-        if (!$record)
+        if (!$record) {
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
+        }
         $record->clear();
+
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
-        if (!$record->save())
+
+        if (!$record->save()) {
             throw ExceptionResolver::resolve('resource', "cannot replace {$this->endpoint} with id {$id}");
+        }
         return $this->response->item($record, $this->formatter);
     }
 
@@ -175,17 +187,23 @@ abstract class SingularController extends BaseApiController
             $this->repository = $this->repository->belongsToClient($this->auth->user());
         }
 
-        if (!$request->has('data'))
+        if (!$request->has('data')) {
             throw ExceptionResolver::resolve('bad request', "please provide data for {$this->endpoint}");
+        }
         $data = $request->input('data');
+
         $record = $this->repository->find($id);
-        if (!$record)
+        if (!$record) {
             throw ExceptionResolver::resolve('not found', "{$this->endpoint} with id {$id} not exists");
+        }
+
         foreach ($data as $key => $value) {
             $record->$key = $value;
         }
-        if (!$record->save())
+
+        if (!$record->save()) {
             throw ExceptionResolver::resolve('resource', "cannot update {$this->endpoint} with id {$id}");
+        }
         return $this->response->item($record, $this->formatter);
     }
 
