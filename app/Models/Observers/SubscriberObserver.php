@@ -9,14 +9,7 @@ use App\Exceptions\ExceptionResolver;
 
 class SubscriberObserver
 {
-    public function creating(Subscriber $model)
-    {
-        if (!$this->checkMatch($model->event_id, $model->schema_id)) {
-            throw ExceptionResolver::resolve('conflict', 'event and schema not match');
-        }
-    }
-
-    public function updating(Subscriber $model)
+    public function saving(Subscriber $model)
     {
         if (!$this->checkMatch($model->event_id, $model->schema_id)) {
             throw ExceptionResolver::resolve('conflict', 'event and schema not match');
