@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class OAuthEndpointTest extends TestCase
 {
-    use DatabaseTransactions;
-
     public function testOAuthAuthorization()
     {
         $accessToken = $this->authorize();

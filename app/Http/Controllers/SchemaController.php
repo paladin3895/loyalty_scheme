@@ -56,10 +56,9 @@ class SchemaController extends SingularController
 
         $record = new Record($data);
         $registry->process($record);
-        return $this->response->array([
-            'status' => 1,
-            'data' => json_decode(json_encode(Record::history(), JSON_FORCE_OBJECT)),
-        ]);
+        return $this->response->array(
+            ['status' => 1] + Record::history()
+        );
     }
 
     /*
@@ -87,6 +86,8 @@ class SchemaController extends SingularController
         // save record history to checkpoint
         $checkpoint->state = Record::history('checkpoint');
         $checkpoint->save();
-        return $this->response->item($entity, new \App\Formatters\EntityFormatter);
+        return $this->response->array(
+            ['status' => 1] + Record::history()
+        );
     }
 }

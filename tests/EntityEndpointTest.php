@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class EntityEndpointTest extends TestCase
 {
-
     public function testEntityIndex()
     {
         $accessToken = $this->authorize(['read']);

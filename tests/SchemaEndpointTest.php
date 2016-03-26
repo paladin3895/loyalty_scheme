@@ -151,11 +151,13 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertTrue(is_object($result->data));
-        $this->assertEquals('testing_node', $result->data->name);
-        $this->assertEquals(['class' => 'someclass'], (array)$result->data->config);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertTrue(is_object($response->data));
+        $this->assertEquals('testing_node', $response->data->name);
+        $this->assertEquals(['class' => 'someclass'], (array)$response->data->config);
+
+        self::$bucket['test_node']['node_id'] = $response->data->id;
     }
 
     public function testSchemaIndexNode()
@@ -168,31 +170,33 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertTrue(is_array($result->data));
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertTrue(is_array($response->data));
     }
 
     public function testSchemaShowNode()
     {
+        $node_id = self::$bucket['test_node']['node_id'];
         $accessToken = $this->authorize(['read']);
-        $res = $this->client->get('schema/5/node/1', [
+        $res = $this->client->get('schema/5/node/' . $node_id, [
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
                 'Accept' => 'application/json',
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals('testing_node', $result->data->name);
-        $this->assertEquals(['class' => 'someclass'], (array)$result->data->config);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals('testing_node', $response->data->name);
+        $this->assertEquals(['class' => 'someclass'], (array)$response->data->config);
     }
 
     public function testSchemaUpdateNode()
     {
+        $node_id = self::$bucket['test_node']['node_id'];
         $accessToken = $this->authorize(['edit']);
-        $res = $this->client->patch('schema/5/node/1', [
+        $res = $this->client->patch('schema/5/node/' . $node_id, [
             'json' => [
                 'data' => [
                     'name' => 'testing_another_name',
@@ -204,16 +208,17 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals('testing_another_name', $result->data->name);
-        $this->assertEquals(['class' => 'someclass'], (array)$result->data->config);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals('testing_another_name', $response->data->name);
+        $this->assertEquals(['class' => 'someclass'], (array)$response->data->config);
     }
 
     public function testSchemaReplaceNode()
     {
+        $node_id = self::$bucket['test_node']['node_id'];
         $accessToken = $this->authorize(['edit']);
-        $res = $this->client->put('schema/5/node/1', [
+        $res = $this->client->put('schema/5/node/' . $node_id, [
             'json' => [
                 'data' => [
                     'name' => 'testing_other_name',
@@ -228,16 +233,17 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals('testing_other_name', $result->data->name);
-        $this->assertEquals(['class' => 'other_class'], (array)$result->data->config);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals('testing_other_name', $response->data->name);
+        $this->assertEquals(['class' => 'other_class'], (array)$response->data->config);
     }
 
     public function testSchemaDeleteNode()
     {
+        $node_id = self::$bucket['test_node']['node_id'];
         $accessToken = $this->authorize(['edit']);
-        $res = $this->client->delete('schema/5/node/1', [
+        $res = $this->client->delete('schema/5/node/' . $node_id, [
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",
                 'Accept' => 'application/json',
@@ -247,7 +253,7 @@ class SchemaEndpointTest extends TestCase
         $data = json_decode($res->getBody())->data;
         $this->assertTrue(is_object($data));
         $this->assertObjectHasAttribute('id', $data);
-        $this->assertEquals($data->id, 1);
+        $this->assertEquals($data->id, $node_id);
         $node = \App\Models\Node::find($data->id);
         $this->assertNull($node);
     }
@@ -303,11 +309,11 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertTrue(is_object($result->data));
-        $this->assertEquals($node_from, $result->data->node_from);
-        $this->assertEquals($node_to, $result->data->node_to);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertTrue(is_object($response->data));
+        $this->assertEquals($node_from, $response->data->node_from);
+        $this->assertEquals($node_to, $response->data->node_to);
     }
 
     public function testSchemaIndexLink()
@@ -320,9 +326,9 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertTrue(is_array($result->data));
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertTrue(is_array($response->data));
     }
 
     public function testSchemaShowLink()
@@ -335,13 +341,13 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
 
         $node_from = self::$bucket['test_link']['node_from'];
         $node_to = self::$bucket['test_link']['node_to'];
-        $this->assertEquals($node_from, $result->data->node_from);
-        $this->assertEquals($node_to, $result->data->node_to);
+        $this->assertEquals($node_from, $response->data->node_from);
+        $this->assertEquals($node_to, $response->data->node_to);
     }
 
     public function testSchemaUpdateLink()
@@ -362,10 +368,10 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals($node_from, $result->data->node_to);
-        $this->assertEquals($node_to, $result->data->node_from);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals($node_from, $response->data->node_to);
+        $this->assertEquals($node_to, $response->data->node_from);
     }
 
     public function testSchemaReplaceLink()
@@ -386,10 +392,10 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals($node_from, $result->data->node_from);
-        $this->assertEquals($node_to, $result->data->node_to);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals($node_from, $response->data->node_from);
+        $this->assertEquals($node_to, $response->data->node_to);
     }
 
     public function testSchemaDeleteLink()
@@ -406,13 +412,13 @@ class SchemaEndpointTest extends TestCase
         $this->assertTrue(is_object($data));
         $this->assertObjectHasAttribute('id', $data);
         $this->assertEquals($data->id, 1);
-        $node = \App\Models\Node::find($data->id);
-        $this->assertNull($node);
+        $link = \App\Models\Link::find($data->id);
+        $this->assertNull($link);
     }
 
     public function testSchemaApplyData()
     {
-        $schema = Schema::find(2);
+        $schema = \App\Models\Schema::find(2);
         $node_1 = $schema->nodes()->create([
             'policies' => [
                 [
@@ -471,9 +477,9 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals(['point' => '10'], (array)$result->data->result);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals(['point' => '10'], (array)$response->result);
 
         $res = $this->client->post('schema/2', [
             'json' => [
@@ -487,14 +493,14 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals(['point' => '20'], (array)$result->data->result);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals(['point' => '20'], (array)$response->result);
     }
 
     public function testSchemaApplyTarget()
     {
-        $schema = Schema::find(3);
+        $schema = \App\Models\Schema::find(3);
         $node_1 = $schema->nodes()->create([
             'policies' => [
                 [
@@ -551,9 +557,9 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals([], (array)$result->data->properties);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals([], (array)$response->result);
 
         $this->client->patch('entity/2', [
             'json' => [
@@ -577,9 +583,9 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals(['point' => '10'], (array)$result->data->properties);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals(['point' => '10'], (array)$response->result);
 
         $this->client->patch('entity/2', [
             'json' => [
@@ -603,8 +609,8 @@ class SchemaEndpointTest extends TestCase
             ],
         ]);
 
-        $result = json_decode($res->getBody());
-        $this->assertTrue((boolean)$result->status);
-        $this->assertEquals(['point' => '20'], (array)$result->data->properties);
+        $response = json_decode($res->getBody());
+        $this->assertTrue((boolean)$response->status);
+        $this->assertEquals(['point' => '20'], (array)$response->result);
     }
 }

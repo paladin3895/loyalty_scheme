@@ -17,19 +17,19 @@ class ModelSeeder extends Seeder
     public function run()
     {
         $client = \DB::table('oauth_clients')->first();
-        factory(Entity::class, 'person', 5)->create([
+        factory(Entity::class, 'person', 10)->create([
             'client_id' => $client->id,
         ]);
 
-        factory(Entity::class, 'property', 5)->create([
+        factory(Entity::class, 'property', 10)->create([
             'client_id' => $client->id,
         ]);
 
-        factory(Schema::class, 5)->create([
+        factory(Schema::class, 10)->create([
             'client_id' => $client->id,
         ]);
 
-        factory(Event::class, 5)->create([
+        factory(Event::class, 10)->create([
             'client_id' => $client->id,
         ]);
     }

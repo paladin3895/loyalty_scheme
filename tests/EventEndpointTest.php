@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class EventEndpointTest extends TestCase
 {
-
     public function testEventIndex()
     {
         $accessToken = $this->authorize(['read']);
@@ -281,15 +280,75 @@ class EventEndpointTest extends TestCase
 
     public function testEventApply()
     {
-        // $accessToken = $this->authorize(['execute']);
-        // $res = $this->client->post('event/policy_testing_account.event_2', [
-        //     'json' => [
-        //         'target' => 4
-        //     ],
-        //     'headers' => [
-        //         'Authorization' => "Bearer {$accessToken}",
-        //         'Accept' => 'application/json',
-        //     ],
-        // ]);
+        $schema_1 = \App\Models\Schema::find(9);
+        $schema_1->nodes()->create([
+            'config' => [
+                'class' => 'this will fail',
+            ],
+        ]);
+
+        $schema_2 = \App\Models\Schema::find(10);
+        $schema_2->nodes()->create([
+            'policies' => [
+                [
+                    'class' => 'Liquid\Processors\Units\Policies\CheckValuePolicy',
+                    'attribute' => 'name',
+                    'condition' => 'regex:#.*#',
+                    ]
+            ],
+            'rewards' => [
+                [
+                    'class' => 'Liquid\Processors\Units\Rewards\AddValueReward',
+                    'attribute' => 'point',
+                    'value' => '${point} + 10',
+                    ]
+            ],
+            'config' => [
+                'class' => 'Liquid\Processors\PolicyProcessor',
+            ],
+        ]);
+
+        $accessToken = $this->authorize(['edit,execute']);
+
+        $this->client->post('event/policy_testing_account.event_5/subscribers', [
+            'json' => [
+                'data' => [
+                    'schema_id' => 9,
+                    'priority' => 1,
+                ],
+            ],
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $this->client->post('event/policy_testing_account.event_5/subscribers', [
+            'json' => [
+                'data' => [
+                    'schema_id' => 10,
+                    'priority' => 2,
+                ],
+            ],
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $res = $this->client->post('event/policy_testing_account.event_5', [
+            'json' => [
+                'target' => 5
+            ],
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $response = json_decode($res->getBody());
+        $this->assertTrue(((boolean)$response->status));
+        $this->assertEquals(1, count($response->errors));
+        $this->assertEquals(1, count($response->results));
     }
 }

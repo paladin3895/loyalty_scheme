@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app['Dingo\Api\Exception\Handler']->setErrorFormat([
+            'status' => 0,
             'error' => [
                 'message' => ':message',
                 'errors' => ':errors',

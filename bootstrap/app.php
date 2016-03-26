@@ -44,7 +44,7 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->register(Dingo\Api\Provider\LumenServiceProvider::class);
+$app->register(App\Providers\LiquidDingoServiceProvider::class);
 $app->register(LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class);
 $app->register(LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class);
 $app->register(Barryvdh\Cors\LumenServiceProvider::class);
