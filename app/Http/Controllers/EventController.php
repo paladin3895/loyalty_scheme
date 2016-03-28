@@ -10,6 +10,7 @@ use App\Exceptions\ExceptionResolver;
 use App\Models\Event;
 use App\Models\Entity;
 use App\Formatters\EventFormatter;
+use App\Http\Helpers;
 
 class EventController extends SingularController
 {
@@ -36,7 +37,19 @@ class EventController extends SingularController
             throw ExceptionResolver::resolve('not found', "target entity not found");
         }
 
-        $subscribers = $event->subscribers()->orderBy('priority', 'desc')->get()->toArray();
+        foreach ($event->condition as $key => $value) {
+            if (!isset($entity->$key) || ($entity->$key !== $value)) {
+                throw ExceptionResolver::resolve('not acceptable', 'entity not match the event condition');
+            }
+        }
+
+        foreach ($event->content as $key => $value) {
+            if (!isset($entity->$key)) {
+                $entity->$key = $value;
+            } else {
+                $entity->$key = Helpers::policyCompute($entity->$key, $value);
+            }
+        }
 
         $response = [
             'status' => 1,
@@ -48,6 +61,7 @@ class EventController extends SingularController
             $dispatcher->header($key, implode(',', $value));
         }
 
+        $subscribers = $event->subscribers()->orderBy('priority', 'desc')->get()->toArray();
         foreach ($subscribers as $subscriber) {
             $result = $this->api->be(app('Dingo\Api\Auth\Auth')->user())
                                 ->with(['target' => $target])

@@ -58,4 +58,35 @@ class Helpers
             default           : return $endpoint;
         }
     }
+
+    public static function policyMerge(array $merging, array $merged)
+    {
+        foreach ($merged as $key => $value) {
+            if (!array_key_exists($key, $merging)) {
+                $merging[$key] = $value;
+            } else {
+                $merging[$key] = self::policyCompute($merging[$key], $value);
+            }
+        }
+        return $merging;
+    }
+
+    public static function policyCompute($value, $delta)
+    {
+        if (!isset($value)) {
+            return $delta;
+        } else {
+            /* */ if (is_array($value)) {
+                return array_merge($delta, $value);
+            } elseif (is_object($value)) {
+                return (object)array_merge((array)$delta, (array)$value);
+            } elseif (is_string($value)) {
+                return (string)$delta;
+            } elseif (is_numeric($value)) {
+                return $value + $delta;
+            } elseif (is_bool($value)) {
+                return (boolean)$delta;
+            }
+        }
+    }
 }

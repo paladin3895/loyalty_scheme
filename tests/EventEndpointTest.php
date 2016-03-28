@@ -336,6 +336,18 @@ class EventEndpointTest extends TestCase
             ],
         ]);
 
+        $this->client->patch('entity/5', [
+            'json' => [
+                'data' => [
+                    'category' => 'person'
+                ],
+            ],
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
+                'Accept' => 'application/json',
+            ],
+        ]);
+
         $res = $this->client->post('event/policy_testing_account.event_5', [
             'json' => [
                 'target' => 5

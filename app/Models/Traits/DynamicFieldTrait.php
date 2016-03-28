@@ -24,9 +24,7 @@ trait DynamicFieldTrait
         } elseif ($key == $this->dynamicField) {
             return $this->bucket;
         } else {
-            if (!isset($this->bucket)){
-                $this->bucket = json_decode($this->attributes[$this->dynamicField]);
-            }
+            $this->initBucket();
             return $this->bucket->$key;
         }
     }
@@ -42,19 +40,11 @@ trait DynamicFieldTrait
                     "cannot set single value for {$key} because it's a reserved property"
                 );
             }
-            if (!isset($this->bucket)) {
-                $dynamicField = isset($this->attributes[$this->dynamicField]) ?
-                    $this->attributes[$this->dynamicField] : '{}';
-                $this->bucket = (object)json_decode($dynamicField);
-            }
+            $this->initBucket();
             $this->bucket = (object)array_merge((array)$this->bucket, (array)$value);
             $this->attributes[$this->dynamicField] = json_encode($this->bucket);
         } else {
-            if (!isset($this->bucket)) {
-                $dynamicField = isset($this->attributes[$this->dynamicField]) ?
-                    $this->attributes[$this->dynamicField] : '{}';
-                $this->bucket = (object)json_decode($dynamicField);
-            }
+            $this->initBucket();
             $this->bucket->$key = $value;
             $this->attributes[$this->dynamicField] = json_encode($this->bucket);
         }
@@ -82,5 +72,21 @@ trait DynamicFieldTrait
         }
 
         return $result;
+    }
+
+    public function __isset($key)
+    {
+        if (parent::__isset($key)) return true;
+        $this->initBucket();
+        return (property_exists($this->bucket, $key));
+    }
+
+    protected function initBucket()
+    {
+        if (!isset($this->bucket)) {
+            $dynamicField = isset($this->attributes[$this->dynamicField]) ?
+                $this->attributes[$this->dynamicField] : '{}';
+            $this->bucket = (object)json_decode($dynamicField);
+        }
     }
 }

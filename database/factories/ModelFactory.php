@@ -43,7 +43,7 @@ $factory->define(App\Models\Event::class, function ($faker) {
             'point' => 5,
         ],
         'condition' => [
-            'category' => $faker->randomElement(['person', 'property', 'post'])
+            'category' => 'person'
         ],
     ];
 });
