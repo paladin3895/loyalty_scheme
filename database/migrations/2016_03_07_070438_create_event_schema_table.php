@@ -14,8 +14,8 @@ class CreateEventSchemaTable extends Migration
     {
         Schema::create('event_schema', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('event_id', 40);
             $table->integer('schema_id')->unsigned();
+            $table->integer('event_id')->unsigned();
             $table->integer('priority');
 
             $table->timestamps();

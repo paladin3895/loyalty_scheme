@@ -36,9 +36,7 @@ $factory->define(App\Models\Schema::class, function ($faker) {
 });
 
 $factory->define(App\Models\Event::class, function ($faker) {
-    static $index = 1;
     return [
-        'id' => implode('_', ['event', $index++]),
         'content' => [
             'point' => 5,
         ],

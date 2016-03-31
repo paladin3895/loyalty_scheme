@@ -7,6 +7,8 @@ use App\Models\Observers\EventObserver;
 
 class Event extends BaseModel implements BelongsToClient
 {
+    use Traits\BelongsToClient;
+
     /**
      * The database table used by the model.
      *
@@ -19,14 +21,12 @@ class Event extends BaseModel implements BelongsToClient
      *
      * @var array
      */
-    protected $fillable = ['id', 'content', 'condition'];
+    protected $fillable = ['content', 'condition'];
 
     protected $casts = [
         'content' => 'array',
         'condition' => 'array',
     ];
-
-    public $incrementing = false;
 
     // public function schemas()
     // {
@@ -38,30 +38,8 @@ class Event extends BaseModel implements BelongsToClient
     //     );
     // }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        self::observe(new EventObserver);
-    }
-
     public function subscribers()
     {
         return $this->hasMany('App\Models\Subscriber', 'event_id', 'id');
-    }
-
-    public function setClientIdAttribute($id)
-    {
-        $this->attributes['client_id'] = (string)$id;
-    }
-
-    public function getClientIdAttribute()
-    {
-        return (string)$this->attributes['client_id'];
-    }
-
-    public function scopeBelongsToClient($query, $id)
-    {
-        return $query->where('client_id', $id);
     }
 }
