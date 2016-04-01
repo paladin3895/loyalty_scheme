@@ -17,18 +17,18 @@ class Node extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['policies', 'rewards', 'config', 'attributes'];
+    protected $fillable = ['policies', 'rewards', 'config', 'fields'];
 
     protected $staticFields = ['id', 'schema_id', 'config', 'policies', 'rewards',
         self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT,];
 
-    protected $dynamicField = 'attributes';
+    protected $dynamicField = 'fields';
 
     protected $casts = [
         'policies' => 'array',
         'rewards' => 'array',
         'config' => 'object',
-        'attributes' => 'object',
+        'fields' => 'object',
     ];
 
     public function schema()

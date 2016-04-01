@@ -22,7 +22,7 @@ class Helpers
         $buffer = $entity->toArray(true);
         $data = [];
 
-        $data = array_merge((array)$buffer['properties'], (array)$buffer['attributes']);
+        $data = array_merge((array)$buffer['properties'], (array)$buffer['fields']);
         $record = new \Liquid\Records\Record((array)$data, (array)$checkpoint->state);
         return $record;
     }

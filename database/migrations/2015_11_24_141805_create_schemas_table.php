@@ -16,7 +16,7 @@ class CreateSchemasTable extends Migration
             $table->increments('id');
             $table->string('client_id', 40);
 
-            $table->text('attributes');
+            $table->text('fields');
             $table->timestamps();
             $table->softDeletes();
 

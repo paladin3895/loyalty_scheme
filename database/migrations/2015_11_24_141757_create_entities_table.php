@@ -16,7 +16,7 @@ class CreateEntitiesTable extends Migration
             $table->increments('id');
             $table->string('client_id', 40);
 
-            $table->text('attributes')->nullable();
+            $table->text('fields')->nullable();
             $table->text('properties')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -21,16 +21,18 @@ class Entity extends BaseModel implements BelongsToClient
      *
      * @var array
      */
-    protected $fillable = ['attributes'];
+    protected $fillable = ['fields'];
 
-    protected $staticFields = ['id', 'client_id', 'properties', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
+    protected $staticFields = ['id', 'external_id', 'client_id', 'properties', self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
 
-    protected $dynamicField = 'attributes';
+    protected $dynamicField = 'fields';
 
     protected $casts = [
-        'attributes' => 'object',
+        'fields' => 'object',
         'properties' => 'array',
     ];
+
+    protected $appends = ['external_id'];
 
     public function checkpoints()
     {
