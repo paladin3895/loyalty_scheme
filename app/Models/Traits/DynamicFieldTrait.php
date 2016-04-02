@@ -21,10 +21,11 @@ trait DynamicFieldTrait
     {
         if (in_array($key, $this->staticFields)) {
             return parent::getAttribute($key);
-        } elseif ($key == $this->dynamicField) {
-            return $this->bucket;
         } else {
             $this->initBucket();
+            if ($key == $this->dynamicField) {
+                return $this->bucket;
+            }
             return $this->bucket->$key;
         }
     }

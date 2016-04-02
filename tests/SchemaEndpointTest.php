@@ -61,10 +61,12 @@ class SchemaEndpointTest extends TestCase
         $data = json_decode($res->getBody())->data;
         $this->assertObjectHasAttribute('id', $data);
         $this->seeInDatabase('schemas', ['id' => $data->id]);
-        $schema = \App\Models\Schema::find($data->id);
-        $this->assertArraySubset(
-            (array)$data, $schema->toArray()
-        );
+        $schema = \App\Models\Schema::find($data->id)->toArray();
+
+        foreach ($schema as $key => $value) {
+            if (!isset($data->$key)) continue;
+            $this->assertEquals($data->$key, $value);
+        }
     }
 
     public function testSchemaUpdate()
@@ -84,11 +86,13 @@ class SchemaEndpointTest extends TestCase
 
         $data = json_decode($res->getBody())->data;
         $this->assertObjectHasAttribute('id', $data);
-        $this->seeInDatabase('schemas', ['id' => 1]);
-        $schema = \App\Models\Schema::find($data->id);
-        $this->assertArraySubset(
-            (array)$data, $schema->toArray()
-        );
+        $this->seeInDatabase('schemas', ['id' => $data->id]);
+        $schema = \App\Models\Schema::find($data->id)->toArray();
+
+        foreach ($schema as $key => $value) {
+            if (!isset($data->$key)) continue;
+            $this->assertEquals($data->$key, $value);
+        }
     }
 
     public function testSchemaReplace()
@@ -108,11 +112,13 @@ class SchemaEndpointTest extends TestCase
 
         $data = json_decode($res->getBody())->data;
         $this->assertObjectHasAttribute('id', $data);
-        $this->seeInDatabase('schemas', ['id' => 1]);
-        $schema = \App\Models\Schema::find($data->id);
-        $this->assertArraySubset(
-            (array)$data, $schema->toArray()
-        );
+        $this->seeInDatabase('schemas', ['id' => $data->id]);
+        $schema = \App\Models\Schema::find($data->id)->toArray();
+
+        foreach ($schema as $key => $value) {
+            if (!isset($data->$key)) continue;
+            $this->assertEquals($data->$key, $value);
+        }
     }
 
     public function testSchemaDelete()

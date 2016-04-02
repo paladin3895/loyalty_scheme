@@ -28,8 +28,6 @@ class Event extends BaseModel implements BelongsToClient
         'condition' => 'array',
     ];
 
-    protected $appends = ['external_id'];
-
     // public function schemas()
     // {
     //     return $this->belongsToMany(

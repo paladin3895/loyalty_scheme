@@ -58,10 +58,12 @@ class EntityEndpointTest extends TestCase
         $data = json_decode($res->getBody())->data;
         $this->assertObjectHasAttribute('id', $data);
         $this->seeInDatabase('entities', ['id' => $data->id]);
-        $entity = \App\Models\Entity::find($data->id);
-        $this->assertArraySubset(
-            (array)$data, $entity->toArray()
-        );
+        $entity = \App\Models\Entity::find($data->id)->toArray();
+
+        foreach ($entity as $key => $value) {
+            if (!isset($data->$key)) continue;
+            $this->assertEquals($data->$key, $value);
+        }
     }
 
     public function testEntityUpdate()
@@ -81,11 +83,13 @@ class EntityEndpointTest extends TestCase
 
         $data = json_decode($res->getBody())->data;
         $this->assertObjectHasAttribute('id', $data);
-        $this->seeInDatabase('entities', ['id' => 1]);
-        $entity = \App\Models\Entity::find($data->id);
-        $this->assertArraySubset(
-            (array)$data, $entity->toArray()
-        );
+        $this->seeInDatabase('entities', ['id' => $data->id]);
+        $entity = \App\Models\Entity::find($data->id)->toArray();
+
+        foreach ($entity as $key => $value) {
+            if (!isset($data->$key)) continue;
+            $this->assertEquals($data->$key, $value);
+        }
     }
 
     public function testEntityReplace()
@@ -105,11 +109,13 @@ class EntityEndpointTest extends TestCase
 
         $data = json_decode($res->getBody())->data;
         $this->assertObjectHasAttribute('id', $data);
-        $this->seeInDatabase('entities', ['id' => 1]);
-        $entity = \App\Models\Entity::find($data->id);
-        $this->assertArraySubset(
-            (array)$data, $entity->toArray()
-        );
+        $this->seeInDatabase('entities', ['id' => $data->id]);
+        $entity = \App\Models\Entity::find($data->id)->toArray();
+
+        foreach ($entity as $key => $value) {
+            if (!isset($data->$key)) continue;
+            $this->assertEquals($data->$key, $value);
+        }
     }
 
     public function testEntityDelete()

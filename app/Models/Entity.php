@@ -32,8 +32,6 @@ class Entity extends BaseModel implements BelongsToClient
         'properties' => 'array',
     ];
 
-    protected $appends = ['external_id'];
-
     public function checkpoints()
     {
         return $this->hasMany('App\Models\Checkpoint', 'entity_id', 'id');

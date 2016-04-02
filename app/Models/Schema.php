@@ -31,8 +31,6 @@ class Schema extends BaseModel implements BelongsToClient
          'fields' => 'object',
      ];
 
-    protected $appends = ['external_id'];
-
     public function nodes()
     {
         return $this->hasMany('App\Models\Node', 'schema_id', 'id');
