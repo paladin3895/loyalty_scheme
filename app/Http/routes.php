@@ -30,18 +30,18 @@ $api->version('v1', [
 
         $api->group(['middleware' => 'oauth:read.entity'], function ($api) {
             $api->get('/entities', ['as' => 'entity_index', 'uses' => 'EntityController@index']);
-            $api->get('/entity/{id:[0-9]+}', ['as' => 'entity_show', 'uses' => 'EntityController@show']);
+            $api->get('/entity/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'entity_show', 'uses' => 'EntityController@show']);
             // $api->match('head', '/entity', ['as' => 'entity_extract', 'uses' => 'EntityController@extract']);
         });
 
         $api->group(['middleware' => 'oauth:edit.entity'], function ($api) {
             $api->post('/entities', ['as' => 'entity_create', 'uses' => 'EntityController@create']);
-            $api->put('/entity/{id:[0-9]+}', ['as' => 'entity_replace', 'uses' => 'EntityController@replace']);
-            $api->patch('/entity/{id:[0-9]+}', ['as' => 'entity_update', 'uses' => 'EntityController@update']);
-            $api->delete('/entity/{id:[0-9]+}', ['as' => 'entity_delete', 'uses' => 'EntityController@delete']);
+            $api->put('/entity/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'entity_replace', 'uses' => 'EntityController@replace']);
+            $api->patch('/entity/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'entity_update', 'uses' => 'EntityController@update']);
+            $api->delete('/entity/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'entity_delete', 'uses' => 'EntityController@delete']);
         });
 
-        $api->group(['prefix' => '/entity/{id:[0-9]+}'], function ($api) {
+        $api->group(['prefix' => '/entity/{id:[0-9a-zA-Z\.\-\_]+}'], function ($api) {
 
             $api->group(['middleware' => 'oauth:read.entity'], function ($api) {
                 $api->get('/{endpoint:[a-z]+}', [
@@ -80,7 +80,7 @@ $api->version('v1', [
 
         $api->group(['middleware' => 'oauth:read.schema'], function ($api) {
             $api->get('/schemas', ['as' => 'schema_index', 'uses' => 'SchemaController@index']);
-            $api->get('/schema/{id:[0-9]+}', ['as' => 'schema_show', 'uses' => 'SchemaController@show']);
+            $api->get('/schema/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'schema_show', 'uses' => 'SchemaController@show']);
             // $api->match('head', '/schema', ['as' => 'schema_extract', 'uses' => 'SchemaController@extract']);
 
             $api->get('/policies', ['as' => 'policy_index', 'uses' => 'ComponentController@getPolicies']);
@@ -90,18 +90,18 @@ $api->version('v1', [
 
         $api->group(['middleware' => 'oauth:edit.schema'], function ($api) {
             $api->post('/schemas', ['as' => 'schema_create', 'uses' => 'SchemaController@create']);
-            $api->put('/schema/{id:[0-9]+}', ['as' => 'schema_replace', 'uses' => 'SchemaController@replace']);
-            $api->patch('/schema/{id:[0-9]+}', ['as' => 'schema_update', 'uses' => 'SchemaController@update']);
-            $api->delete('/schema/{id:[0-9]+}', ['as' => 'schema_delete', 'uses' => 'SchemaController@delete']);
+            $api->put('/schema/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'schema_replace', 'uses' => 'SchemaController@replace']);
+            $api->patch('/schema/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'schema_update', 'uses' => 'SchemaController@update']);
+            $api->delete('/schema/{id:[0-9a-zA-Z\.\-\_]+}', ['as' => 'schema_delete', 'uses' => 'SchemaController@delete']);
         });
 
-        $api->post('/schema/{id:[0-9]+}', [
+        $api->post('/schema/{id:[0-9a-zA-Z\.\-\_]+}', [
             'middleware' => 'oauth:execute.schema',
             'as' => 'schema_apply',
             'uses' => 'SchemaController@apply'
         ]);
 
-        $api->group(['prefix' => '/schema/{id:[0-9]+}'], function ($api) {
+        $api->group(['prefix' => '/schema/{id:[0-9a-zA-Z\.\-\_]+}'], function ($api) {
 
             $api->group(['middleware' => 'oauth:read.schema'], function ($api) {
                 $api->get('/{endpoint:[a-z]+}', [

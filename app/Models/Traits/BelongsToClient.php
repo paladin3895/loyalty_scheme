@@ -42,16 +42,15 @@ trait BelongsToClient
     {
         parent::boot();
 
-        static::created(function (BelongsToClientInterface $model) {
+        static::saved(function (BelongsToClientInterface $model) {
             $type = last(explode('\\', get_class($model)));
             if (!$model->external_id) {
                 $model->external_id = Identifier::generate($model->id, $type);
             }
-            Identifier::create([
-                'external_id' => $model->client_id . '.' . $model->external_id,
-                'internal_id' => $model->id,
-                'type' => $type,
-            ]);
+            Identifier:: updateOrCreate(
+                ['internal_id' => $model->id, 'type' => $type],
+                ['external_id' => $model->client_id . '.' . $model->external_id]
+            );
         });
 
         static::deleting(function (BelongsToClientInterface $model) {

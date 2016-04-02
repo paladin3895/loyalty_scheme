@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Exceptions\ExceptionResolver;
+
 class Identifier extends BaseModel
 {
     /**
