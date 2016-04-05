@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Http\Helpers;
 use App\Models\Schema;
 use App\Models\Entity;
+use App\Models\Identifier;
 use App\Formatters\SchemaFormatter;
 use App\Exceptions\ExceptionResolver;
 
@@ -32,8 +33,12 @@ class SchemaController extends SingularController
         }
 
         if ($request->has('target')) {
-            $entityId = (integer)$request->input('target');
-            $entity = Entity::find($entityId);
+            $target = (integer)$request->input('target');
+
+            if (!Identifier::isInternal($target)) {
+                $target = Identifier::getInternalId($target, $this->auth->user());
+            }
+            $entity = Entity::find($target);
             if (!$entity) {
                 throw ExceptionResolver::resolve('not found', "entity with id {$entityId} not exists");
             }

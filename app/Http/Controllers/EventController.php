@@ -32,6 +32,9 @@ class EventController extends SingularController
             throw ExceptionResolver::resolve('bad request', "request with no target entity");
         }
         $target = (int)$request->input('target');
+        if (!Identifier::isInternal($target)) {
+            $target = Identifier::getInternalId($target, $this->auth->user());
+        }
         $entity = Entity::find($target);
         if (!$entity) {
             throw ExceptionResolver::resolve('not found', "target entity not found");

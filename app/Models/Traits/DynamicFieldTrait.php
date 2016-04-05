@@ -21,6 +21,9 @@ trait DynamicFieldTrait
     {
         if (in_array($key, $this->staticFields)) {
             return parent::getAttribute($key);
+        } elseif ($key == $this->dynamicField) {
+            $this->initBucket();
+            return $this->bucket;
         } else {
             $this->initBucket();
             if ($key == $this->dynamicField) {
@@ -54,7 +57,6 @@ trait DynamicFieldTrait
     public function toArray($isGrouped = false)
     {
         $buffer = parent::toArray();
-
         if ($isGrouped) return $buffer;
 
         $result = [];
@@ -64,11 +66,13 @@ trait DynamicFieldTrait
             }
         }
 
-        foreach ((array)$buffer[$this->dynamicField] as $key => $value) {
-            if (!array_key_exists($key, $result)) {
-                $result[$key] = $value;
-            } else {
-                $result[$this->dynamicField][$key] = $value;
+        if (isset($buffer[$this->dynamicField])) {
+            foreach ((array)$buffer[$this->dynamicField] as $key => $value) {
+                if (!array_key_exists($key, $result)) {
+                    $result[$key] = $value;
+                } else {
+                    $result[$this->dynamicField][$key] = $value;
+                }
             }
         }
 

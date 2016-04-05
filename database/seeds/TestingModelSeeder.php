@@ -7,7 +7,7 @@ use App\Models\Entity;
 use App\Models\Schema;
 use App\Models\Event;
 
-class ModelSeeder extends Seeder
+class TestingModelSeeder extends Seeder
 {
     /**
      * Run the database seeds.

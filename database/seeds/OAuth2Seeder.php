@@ -13,9 +13,9 @@ class OAuth2Seeder extends Seeder
     public function run()
     {
         \DB::table('oauth_clients')->insert([
-            'id' => 'policy_testing_account',
+            'id' => env('APP_ID'),
             'name' => 'come-stay.vn',
-            'secret' => 'policy_testing_secret',
+            'secret' => env('APP_SECRET'),
             'created_at' => date('Y-m-d'),
             'updated_at' => date('Y-m-d'),
         ]);
