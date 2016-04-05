@@ -27,13 +27,13 @@ class SchemaController extends SingularController
 
     public function apply($id, Request $request)
     {
-        $schema = $this->repository->find($id);
+        $schema = $this->find($id);
         if (!$schema) {
             throw ExceptionResolver::resolve('not found', "schema with id {$id} not exists");
         }
 
         if ($request->has('target')) {
-            $target = (integer)$request->input('target');
+            $target = $request->input('target');
 
             if (!Identifier::isInternal($target)) {
                 $target = Identifier::getInternalId($target, $this->auth->user());
@@ -83,7 +83,7 @@ class SchemaController extends SingularController
 
         // apply results to entity properties
         $properties = (array)$entity->properties;
-        $properties = array_merge($properties, $result);
+        $properties = Helpers::policyMerge($properties, $result);
 
         $entity->properties = $properties;
         $entity->save();
@@ -91,8 +91,10 @@ class SchemaController extends SingularController
         // save record history to checkpoint
         $checkpoint->state = Record::history('checkpoint');
         $checkpoint->save();
+        $history = (array)Record::history();
+        Record::forget();
         return $this->response->array(
-            ['status' => 1] + Record::history()
+            ['status' => 1] + $history
         );
     }
 }

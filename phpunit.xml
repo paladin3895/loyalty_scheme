@@ -12,6 +12,11 @@
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory>./tests/</directory>
+            <exclude>./tests/BasicCampaignTest.php</exclude>
+            <exclude>./tests/EntityEndpointTest.php</exclude>
+            <exclude>./tests/EventEndpointTest.php</exclude>
+            <exclude>./tests/SchemaEndpointTest.php</exclude>
+            <exclude>./tests/OAuthEndpointTest.php</exclude>
         </testsuite>
     </testsuites>
     <filter>

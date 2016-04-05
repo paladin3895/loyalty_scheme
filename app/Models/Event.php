@@ -7,6 +7,7 @@ use App\Models\Observers\EventObserver;
 
 class Event extends BaseModel implements BelongsToClient
 {
+    use Traits\DynamicFieldTrait;
     use Traits\BelongsToClient;
 
     /**
@@ -21,9 +22,14 @@ class Event extends BaseModel implements BelongsToClient
      *
      * @var array
      */
-    protected $fillable = ['content', 'condition'];
+    protected $fillable = ['fields', 'content', 'condition'];
+
+    protected $staticFields = ['id', 'external_id', 'client_id', 'content', 'condition',  self::CREATED_AT, self::UPDATED_AT, self::DELETED_AT];
+
+    protected $dynamicField = 'fields';
 
     protected $casts = [
+        'fields' => 'object',
         'content' => 'array',
         'condition' => 'array',
     ];

@@ -16,6 +16,7 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->string('client_id', 40);
 
+            $table->text('fields')->nullable();
             $table->text('content')->nullable();
             $table->text('condition')->nullable();
             $table->timestamps();
