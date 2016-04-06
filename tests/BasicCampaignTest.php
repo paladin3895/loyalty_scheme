@@ -11,7 +11,26 @@ use Illuminate\Support\Facades\Artisan;
 
 class BasicCampaignTest extends TestCase
 {
-    protected $userId = 'user.5';
+    protected $userId = 'user.1';
+
+    public function testBasicCampaignEventUserInitAuto()
+    {
+        $accessToken = $this->authorize(['read','edit','execute']);
+        $res = $this->userInit($accessToken, 'user.1000', true);
+
+        $this->assertEquals(1, $res->status);
+        $entity = $res->entity;
+        $this->assertArraySubset([
+            'external_id' => 'user.1000',
+            'client_id' => 'policy_testing_account',
+            'login' => 0,
+            'posting' => 0,
+            'sharing' => 0,
+            'rating' => 0,
+            'comment' => 0,
+            'category' => 'person',
+        ], (array)$entity);
+    }
 
     public function testBasicCampaignEventUserInit()
     {
@@ -181,13 +200,20 @@ class BasicCampaignTest extends TestCase
         $entity = $res->entity;
         $this->assertEquals(50, $entity->properties->point);
         $this->assertEquals(1, $entity->properties->level);
+
+        $accessToken = $this->authorize(['read','edit','execute']);
+        $res = $this->userPosting($accessToken, $this->userId);
+        $this->assertEquals(1, $res->status);
+        $entity = $res->entity;
+        $this->assertEquals(60, $entity->properties->point);
     }
 
-    protected function userInit($accessToken, $target)
+    protected function userInit($accessToken, $target, $init = false)
     {
         $res = $this->client->post('event/event.user.init', [
             'json' => [
-                'target' => $target
+                'target' => $target,
+                'init' => (int)$init,
             ],
             'headers' => [
                 'Authorization' => "Bearer {$accessToken}",

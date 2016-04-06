@@ -32,12 +32,25 @@ class EventController extends SingularController
         if (!$request->has('target')) {
             throw ExceptionResolver::resolve('bad request', "request with no target entity");
         }
+
         $target = $request->input('target');
-        if (!Identifier::isInternal($target)) {
-            $target = Identifier::getInternalId($target, $this->auth->user());
+
+        if (Identifier::isInternal($target)) {
+            $entity = Entity::find($target);
+        } else /* target is external id */ {
+            if (Identifier::checkExists($target, $this->auth->user())) {
+                $target = Identifier::getInternalId($target, $this->auth->user());
+                $entity = Entity::find($target);
+            } elseif ($request->input('init')) {
+                $entity = (new Entity)->newInstance();
+                $entity->client_id = $this->auth->user();
+                $entity->external_id = $target;
+                $entity->save();
+            } else {
+                // do nothing
+            }
         }
-        $entity = Entity::find($target);
-        if (!$entity) {
+        if (!isset($entity)) {
             throw ExceptionResolver::resolve('not found', "target entity not found");
         }
 
@@ -66,18 +79,14 @@ class EventController extends SingularController
             'results' => [],
             'errors' => [],
         ];
-        $dispatcher = $this->api;
-        foreach ($request->headers as $key => $value) {
-            $dispatcher->header($key, implode(',', $value));
-        }
 
         $subscribers = $event->subscribers()->orderBy('priority', 'asc')->get();
         foreach ($subscribers as $subscriber) {
-            $result = $this->api->be(app('Dingo\Api\Auth\Auth')->user())
-                                ->with(['target' => $target])
-                                ->raw()
-                                ->post("api/v1/schema/{$subscriber->schema_id}")
-                                ->getOriginalContent();
+            $result = $this->getPrepareDispatcher($this->auth->user(), $request->headers)
+                           ->with(['target' => $target])
+                           ->raw()
+                           ->post("api/v1/schema/{$subscriber->schema_id}")
+                           ->getOriginalContent();
 
             if ($result['status']) {
                 $response['results'][$subscriber->schema->external_id] = $result['result'];
@@ -89,5 +98,14 @@ class EventController extends SingularController
         $response['entity'] = Entity::find($entity->id)->toArray(false);
         $response['entity']['external_id'] = $entity->external_id;
         return $this->response->array($response);
+    }
+
+    protected function getPrepareDispatcher($auth, $headers)
+    {
+        $this->api->be($auth);
+        foreach ($headers as $key => $value) {
+            $this->api->header($key, implode(',', $value));
+        }
+        return $this->api;
     }
 }

@@ -76,6 +76,12 @@ class Identifier extends BaseModel
         return isset($identifier) ? $identifier->external_id : null;
     }
 
+    public static function checkExists($external_id, $client_id)
+    {
+        $id = "{$client_id}.{$external_id}";
+        return Identifier::where('external_id', $id)->exists();
+    }
+
     public static function generate($id, $type)
     {
         return strtolower($type . '_' . $id);

@@ -412,7 +412,7 @@ class BasicCampaignSeeder extends Seeder
                         'check_point_level_2' => [
                             'class' => "Liquid\\Processors\\Units\\Policies\\CheckValuePolicy",
                             'attribute' => 'point',
-                            'condition' => 'intType|min:100',
+                            'condition' => 'intType|min:150',
                             'name' => 'check_point_level_2',
                         ]
                     ],
@@ -441,7 +441,7 @@ class BasicCampaignSeeder extends Seeder
                         'check_point_level_3' => [
                             'class' => "Liquid\\Processors\\Units\\Policies\\CheckValuePolicy",
                             'attribute' => 'point',
-                            'condition' => 'intType|min:200',
+                            'condition' => 'intType|min:300',
                             'name' => 'check_point_level_3',
                         ]
                     ],
@@ -470,7 +470,7 @@ class BasicCampaignSeeder extends Seeder
                         'check_point_level_4' => [
                             'class' => "Liquid\\Processors\\Units\\Policies\\CheckValuePolicy",
                             'attribute' => 'point',
-                            'condition' => 'intType|min:400',
+                            'condition' => 'intType|min:500',
                             'name' => 'check_point_level_4',
                         ]
                     ],
@@ -499,7 +499,7 @@ class BasicCampaignSeeder extends Seeder
                         'check_point_level_5' => [
                             'class' => "Liquid\\Processors\\Units\\Policies\\CheckValuePolicy",
                             'attribute' => 'point',
-                            'condition' => 'intType|min:800',
+                            'condition' => 'intType|min:750',
                             'name' => 'check_point_level_5',
                         ]
                     ],
