@@ -13,9 +13,13 @@ class BasicCampaignSeeder extends Seeder
 
     public function __construct()
     {
+        // Base URI is used with relative requests
+        $base_uri =   env('API_PROTOCOL') . '://' .
+                      env('API_DOMAIN') . '/' .
+                      env('API_PREFIX') . '/' .
+                      env('API_VERSION') . '/';
         $this->client = new \GuzzleHttp\Client([
-            // Base URI is used with relative requests
-            'base_uri' => 'http://liquid.dev/api/v1/'
+            'base_uri' => $base_uri
         ]);
     }
 
