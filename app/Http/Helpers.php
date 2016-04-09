@@ -23,9 +23,8 @@ class Helpers
         $data = [];
 
         $data = array_merge((array)$buffer['properties'], (array)$buffer['fields']);
-        $record = new \Liquid\Records\Record(
-            $data, [], (array)$checkpoint->state
-        );
+        $record = new \Liquid\Records\Record($data);
+        \Liquid\Records\Record::remember((array)$checkpoint->state);
         return $record;
     }
 
