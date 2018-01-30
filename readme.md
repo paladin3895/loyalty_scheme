@@ -1,3 +1,6 @@
+## Description
+This is a RESTful service built on top of [Liquid](https://bitbucket.org/duydatyds/liquid) node processing framework to setup and execute a node-based processing flow. One example of such a system, which is the main purpose of this project, is to setup a reward hierrachy where users can collect points and level-up as they interact with a website activities and events.
+
 ## Deployment
 
 Step 1: copy environment configuration file .env.example to .env 
